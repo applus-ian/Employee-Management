@@ -49,8 +49,6 @@ return new class extends Migration
             $table->unsignedBigInteger('manager_id');
             $table->string('profile_pic_url')->nullable();
 
-            $table->foreign('job_position_id')->references('id')->on('job_positions')->onDelete('cascade');
-            $table->foreign('manager_id')->references('id')->on('employees')->onDelete('cascade');
             $table->timestamps();
         });
     }
