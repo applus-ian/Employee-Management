@@ -1,0 +1,20 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}
