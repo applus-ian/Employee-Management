@@ -3,8 +3,8 @@ import { useContext, useEffect, useState, ComponentType } from 'react';
 import { AuthContext } from '@/context/AuthContext'; // Auth context
 import { useRouter } from 'next/navigation';
 
-export default function withAuth<T extends WithAuthProps>(Component: ComponentType<T>) {
-  return function ProtectedRoute(props: T) {
+export default function withAuth(Component: ComponentType) {
+  return function ProtectedRoute() {
     const { user, loading } = useContext(AuthContext);
     const [mounted, setMounted] = useState(false); // Track if component is mounted
     const router = useRouter();
@@ -37,6 +37,6 @@ export default function withAuth<T extends WithAuthProps>(Component: ComponentTy
     }
 
     // If user is authenticated, render the protected component
-    return <Component {...props} />;
+    return <Component />;
   };
 }
