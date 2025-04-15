@@ -11,6 +11,6 @@ Route::controller(AuthController::class)
         Route::post('/login', 'login');
         Route::middleware('auth:sanctum')->group(function () {
             Route::post('/logout', 'logout');
-            Route::get('/fetchUser', 'fetchUser');
+            Route::get('/fetch-user', 'fetchUser');
         });
 });
