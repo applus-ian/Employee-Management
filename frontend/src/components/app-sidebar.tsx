@@ -1,7 +1,11 @@
 'use client';
 
-import * as React from 'react';
+import React from 'react';
 import { FolderOpen, LayoutDashboard, Archive, Settings, LogOut, Menu } from 'lucide-react';
+
+import { useContext, useState } from 'react';
+import { AuthContext } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 import {
   Sidebar,
@@ -14,41 +18,51 @@ import {
 } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 
-const data = {
-  navMain: [
-    {
-      image: '/Superadmin.png',
-      title: 'Liezel Mergenio',
-      subtitle: 'Super Admin',
-      url: '#',
-    },
-    {
-      image: <LayoutDashboard size={32} strokeWidth={2} />,
-      title: 'Dashboard',
-      url: '#',
-    },
-    {
-      image: <FolderOpen size={32} strokeWidth={2} />,
-      title: 'Projects',
-      url: '#',
-    },
-    {
-      image: <Archive size={32} strokeWidth={2} />,
-      title: 'Records',
-      url: '#',
-    },
-    {
-      image: <Settings size={32} strokeWidth={2} />,
-      title: 'Settings',
-      url: '#',
-    },
-  ],
-};
-
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+
+  const authContext = useContext(AuthContext);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+    await authContext.logout(); // Log out the user
+    router.push('/login'); // Redirect to the login page
+  };
+
+  const data = {
+    navMain: [
+      {
+        image: '/Superadmin.png',
+        title: authContext.user?.name,
+        subtitle: 'Super Admin',
+        url: '#',
+      },
+      {
+        image: <LayoutDashboard size={32} strokeWidth={2} />,
+        title: 'Dashboard',
+        url: '#',
+      },
+      {
+        image: <FolderOpen size={32} strokeWidth={2} />,
+        title: 'Projects',
+        url: '#',
+      },
+      {
+        image: <Archive size={32} strokeWidth={2} />,
+        title: 'Records',
+        url: '#',
+      },
+      {
+        image: <Settings size={32} strokeWidth={2} />,
+        title: 'Settings',
+        url: '#',
+      },
+    ],
+  };
 
   return (
     <div className="relative">
@@ -138,10 +152,17 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         <div className="mt-auto p-4">
           <img src="/motto.png" alt="Motto" className="w-32 h-auto mx-auto mb-4" />
           <div className="border-t border-gray-200">
-            <a href="#" className="font-semibold">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default anchor behavior
+                handleLogout(); // Trigger logout logic
+              }}
+              className="font-semibold"
+            >
               <div className="flex justify-center items-center gap-3 p-2 rounded-md hover:bg-gray-300">
                 <LogOut size={32} strokeWidth={2} />
-                <span className="font-medium text-center">Logout</span>
+                <span className="font-medium text-center">{isLoading ? 'Logging out...' : 'Logout'}</span>
               </div>
             </a>
           </div>
