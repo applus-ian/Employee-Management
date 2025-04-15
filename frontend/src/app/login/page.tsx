@@ -6,34 +6,55 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
-      {/* Left Side - Form */}
-      <div className="relative flex items-center justify-center p-8 overflow-hidden bg-orange-500">
-        {/* Light rays or glow effect */}
-        <div className="absolute -top-20 -left-20 w-[300px] h-[300px] bg-white opacity-20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-0 w-[250px] h-[250px] bg-yellow-100 opacity-10 rounded-full blur-2xl animate-pulse" />
-        <div className="absolute top-1/3 left-1/2 w-[200px] h-[200px] bg-white opacity-10 rounded-full blur-2xl animate-pulse" />
+  // List of images for the slider
+  const images = [
+    '/applus-image1.png',
+    '/applus-image3.png',
+    '/applus-image4.png',
+    '/applus-image5.png', // Add as many images as you like
+  ];
 
-        <Card className="w-full max-w-md backdrop-blur-lg rounded-xl shadow-xl z-10">
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Change image every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    }, 5000); // 3 seconds per image
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, [images.length]);
+
+  return (
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-[70%_30%]">
+      {/* Left Side - Image Slider (hidden on mobile) */}
+      <div className="hidden md:block relative w-full h-full overflow-hidden">
+        <img
+          src={images[currentImageIndex]}
+          alt="Applus team"
+          className="w-full h-full object-cover transition-all duration-1000 ease-in-out"
+        />
+      </div>
+
+      {/* Right Side - Form */}
+      <div className="relative flex items-center justify-center px-4 py-8 sm:px-0 sm:py-10 md:px-8 md:py-12 overflow-hidden bg-white">
+        <Card className="w-full max-w-md rounded-xl border-0">
           <CardContent className="space-y-6">
             <div className="text-center space-y-4">
               <div className="flex justify-center">
                 <img
                   src="/logo-applus.png"
                   alt="Applus team"
-                  className="w-[70%] h-[auto] object-contain drop-shadow-md"
+                  className="w-[70%] md:w-[50%] h-auto object-contain drop-shadow-md"
                 />
               </div>
-              <h2 className="text-2xl font-bold text-orange-600">Welcome back!</h2>
+              <h2 className="text-2xl font-bold text-black">Welcome back!</h2>
               <p className="text-sm text-gray-700">Please enter your details.</p>
             </div>
 
@@ -46,7 +67,7 @@ export default function LoginPage() {
                   placeholder="hello@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-white text-black"
+                  className="bg-[#1F2828] text-white border-0"
                 />
               </div>
 
@@ -58,7 +79,7 @@ export default function LoginPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-white text-black"
+                  className="bg-[#1F2828] text-white border-0"
                 />
               </div>
 
@@ -68,6 +89,7 @@ export default function LoginPage() {
                     id="remember"
                     checked={rememberMe}
                     onCheckedChange={(checked: boolean) => setRememberMe(checked)}
+                    className="border-2 border-[#1F2828] accent-white"
                   />
                   <Label htmlFor="remember" className="text-sm">
                     Remember for 30 days
@@ -82,10 +104,6 @@ export default function LoginPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
-      {/* Right Side - Image */}
-      <div className="relative">
-        <img src="/login-image.png" alt="Applus team" className="w-full h-full object-cover" />
       </div>
     </div>
   );

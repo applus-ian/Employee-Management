@@ -13,7 +13,11 @@ export default {
         border: 'hsl(var(--border))',
         ring: 'hsl(var(--ring))',
       },
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],  // Adding the custom font family
+      },
     },
+    
   },
   plugins: [],
 } satisfies Config;
