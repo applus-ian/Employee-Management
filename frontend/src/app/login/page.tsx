@@ -23,11 +23,15 @@ export default function LoginPage() {
         <div className="absolute bottom-0 right-0 w-[250px] h-[250px] bg-yellow-100 opacity-10 rounded-full blur-2xl animate-pulse" />
         <div className="absolute top-1/3 left-1/2 w-[200px] h-[200px] bg-white opacity-10 rounded-full blur-2xl animate-pulse" />
 
-        <Card className="w-full max-w-md bg-white/90 backdrop-blur-lg rounded-xl shadow-xl z-10">
+        <Card className="w-full max-w-md backdrop-blur-lg rounded-xl shadow-xl z-10">
           <CardContent className="space-y-6">
             <div className="text-center space-y-4">
               <div className="flex justify-center">
-                <img src="/logo-applus.png" alt="Applus team" className="w-32 h-auto object-contain drop-shadow-md" />
+                <img
+                  src="/logo-applus.png"
+                  alt="Applus team"
+                  className="w-[70%] h-[auto] object-contain drop-shadow-md"
+                />
               </div>
               <h2 className="text-2xl font-bold text-orange-600">Welcome back!</h2>
               <p className="text-sm text-gray-700">Please enter your details.</p>
