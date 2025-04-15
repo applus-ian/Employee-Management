@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('upload_date');
             $table->date('expiry_date');
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

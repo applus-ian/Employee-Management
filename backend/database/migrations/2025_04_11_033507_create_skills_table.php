@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedBigInteger('skill_category_id');
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }

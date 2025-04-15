@@ -49,6 +49,7 @@ return new class extends Migration
             $table->unsignedBigInteger('manager_id');
             $table->string('profile_pic_url')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
