@@ -36,28 +36,33 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const data = {
     navMain: [
       {
+        id: 1,
         image: '/Superadmin.png',
         title: authContext.user?.name,
         subtitle: 'Super Admin',
         url: '#',
       },
       {
-        image: <LayoutDashboard size={32} strokeWidth={2} />,
+        id: 2,
+        image: <LayoutDashboard size={22} strokeWidth={2} />,
         title: 'Dashboard',
         url: '#',
       },
       {
-        image: <FolderOpen size={32} strokeWidth={2} />,
+        id: 3,
+        image: <FolderOpen size={22} strokeWidth={2} />,
         title: 'Projects',
         url: '#',
       },
       {
-        image: <Archive size={32} strokeWidth={2} />,
+        id: 4,
+        image: <Archive size={22} strokeWidth={2} />,
         title: 'Records',
         url: '#',
       },
       {
-        image: <Settings size={32} strokeWidth={2} />,
+        id: 5,
+        image: <Settings size={22} strokeWidth={2} />,
         title: 'Settings',
         url: '#',
       },
@@ -81,9 +86,9 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       <Sidebar
         variant="floating"
         className={cn(
-          `fixed inset-y-0 left-0 z-40 w-[250px] bg-white shadow-lg transition-transform duration-300 ease-in-out transform`,
+          `inset-y-0 left-0 z-40 w-[250px] bg-white shadow-lg transition-transform duration-300 ease-in-out transform`,
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full',
-          'lg:translate-x-0 lg:static flex flex-col justify-between min-h-screen',
+          'lg:translate-x-0 lg:fixed overflow-y-auto flex flex-col justify-between h-screen',
         )}
         {...props}
       >
@@ -109,13 +114,13 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         {/* Main Content */}
         <SidebarContent>
           <SidebarGroup>
-            <SidebarMenu className="gap-4 flex-1">
+            <SidebarMenu className="gap-1 flex-1">
               {data.navMain.map((item, index) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
                     {index === 0 ? (
-                      <a href={item.url} className="w-full text-left py-8">
-                        <div className="flex items-center gap-3 bg-[#EE7A2A] rounded-[25%] p-6">
+                      <a href={item.url} className="w-full text-left py-8 bg-[#EE7A2A] rounded-[25%]">
+                        <div className="flex items-center gap-3 p-6">
                           {typeof item.image === 'string' ? (
                             <img src={item.image} alt={item.title} className="w-8 h-8" />
                           ) : (
@@ -128,8 +133,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                         </div>
                       </a>
                     ) : (
-                      <a href={item.url} className="w-full text-left py-5">
-                        <div className="flex items-center gap-3 hover:bg-gray-300 rounded-md p-6 w-full">
+                      <a href={item.url} className="w-full text-left">
+                        <div className="flex items-center gap-2 hover:bg-gray-300 rounded-md p-4 w-full">
                           {typeof item.image === 'string' ? (
                             <img src={item.image} alt={item.title} className="w-10 h-10" />
                           ) : (
@@ -155,14 +160,14 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
             <a
               href="#"
               onClick={(e) => {
-                e.preventDefault(); // Prevent default anchor behavior
-                handleLogout(); // Trigger logout logic
+                e.preventDefault();
+                handleLogout();
               }}
               className="font-semibold"
             >
               <div className="flex justify-center items-center gap-3 p-2 rounded-md hover:bg-gray-300">
-                <LogOut size={32} strokeWidth={2} />
-                <span className="font-medium text-center">{isLoading ? 'Logging out...' : 'Logout'}</span>
+                <LogOut size={22} strokeWidth={2} />
+                <span className="text-center">{isLoading ? 'Logging out...' : 'Logout'}</span>
               </div>
             </a>
           </div>
