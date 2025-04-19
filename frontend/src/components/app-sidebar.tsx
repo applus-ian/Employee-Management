@@ -156,7 +156,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         {/* Footer */}
         <div className="mt-auto p-4">
           <img src="/motto.png" alt="Motto" className="w-32 h-auto mx-auto mb-4" />
-          <div className="border-t border-gray-200">
+          <div className=" border-gray-200">
             <a
               href="#"
               onClick={(e) => {
