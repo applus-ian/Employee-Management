@@ -40,7 +40,7 @@ export default function Page() {
                 </div>
 
                 <CardDescription>
-                  <div className="flex flex-row">
+                  <div className="flex flex-row pt-3">
                     <div className="pr-6 pb-3">
                       <Mail size={18} strokeWidth={1.5} />
                     </div>
