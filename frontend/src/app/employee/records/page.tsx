@@ -23,13 +23,17 @@ export default function RecordsPage() {
           <div className="max-w-[100rem] mx-auto space-y-6 w-full">
             {/* Header */}
             <header className="flex h-16 shrink-0 items-center gap-2">
-              <Separator orientation="vertical" className="mr-2 h-4" />
+              <Separator orientation="vertical" className=" h-4" />
               <div>
                 <h1 className="text-3xl font-semibold leading-none">Records</h1>
                 <p className="text-muted-foreground text-sm mt-2 text-gray-500">Setup and edit employee records</p>
               </div>
             </header>
-
+            <div className="border-b border-gray-300">
+              <div className="text-sm text-orange-600 font-semibold border-b-2 border-orange-500 inline-block px-2 py-1">
+                Employee Records
+              </div>
+            </div>
             {/* Table Card */}
             <Card className="w-full rounded-2xl border bg-white shadow-sm">
               <CardHeader className="space-y-4">
