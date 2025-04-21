@@ -119,22 +119,28 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton asChild>
                     {index === 0 ? (
-                      <a href={item.url} className="w-full text-left py-8 bg-[#EE7A2A] rounded-[25%]">
-                        <div className="flex items-center gap-3 p-6">
+                      <a
+                        href={item.url}
+                        className="w-full hover:bg-gray-300 text-left py-8 focus:bg-[#EE7A2A] focus:text-white rounded-[25%]"
+                      >
+                        <div className="flex items-center gap-2 p-6">
                           {typeof item.image === 'string' ? (
                             <img src={item.image} alt={item.title} className="w-8 h-8" />
                           ) : (
                             <div className="w-8 h-8 flex items-center justify-center">{item.image}</div>
                           )}
                           <div>
-                            <div className="font-semibold text-white">{item.title}</div>
-                            <div className="text-sm text-white">{item.subtitle}</div>
+                            <div className="text-sm font-semibold">{item.title}</div>
+                            <div className="text-xs">{item.subtitle}</div>
                           </div>
                         </div>
                       </a>
                     ) : (
-                      <a href={item.url} className="w-full text-left">
-                        <div className="flex items-center gap-2 hover:bg-gray-300 rounded-md p-4 w-full">
+                      <a
+                        href={item.url}
+                        className="w-full hover:bg-gray-300 text-left focus:bg-[#EE7A2A] focus:text-white rounded-[25%]"
+                      >
+                        <div className="flex items-center rounded-md p-4 w-full">
                           {typeof item.image === 'string' ? (
                             <img src={item.image} alt={item.title} className="w-10 h-10" />
                           ) : (
