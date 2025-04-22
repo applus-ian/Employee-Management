@@ -1,7 +1,10 @@
+// "use client";
+
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import ClientProviders from './ClientProviders'; // Wrapper with React Query + Auth
 import type { Metadata } from 'next';
+import { AppSidebar } from '@/components/app-sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -22,11 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <ClientProviders>
-          <header>{/* Navbar */}</header>
-          <main>{children}</main>
-          <footer>{/* Footer */}</footer>
-        </ClientProviders>
+        <SidebarProvider style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
+          <AppSidebar />
+          <div className="flex flex-col w-full lg:pl-[16rem] p-4">{children}</div>
+        </SidebarProvider>
       </body>
     </html>
   );
