@@ -20,6 +20,16 @@ class EmployeeController extends Controller
         $this->employmentStatusHistoryService = $employmentStatusHistoryService;
     }
 
+    // Get all employees
+    public function index()
+    {
+        $employee_list = $this->employeeService->getAllEmployees();
+
+        return response()->json([
+            'employee_list' => $employee_list
+        ], 200);
+    }
+
     // Create Employee Method
     public function create(CreateEmployeeRequest $request): JsonResponse
     {
@@ -53,7 +63,17 @@ class EmployeeController extends Controller
         $updated_employee = $this->employeeService->updateEmployee($employee, $request->validated());
 
         // Return the updated employee as a JSON response
-        return response()->json($updated_employee, 200);
+        return response()->json([
+            'updated_employee' => $updated_employee
+        ], 200);
+    }
+
+    // Delete Employee Method
+    public function destroy(Employee $employee): JsonResponse
+    {
+        $this->employeeService->deleteEmployee($employee);
+
+        return response()->json(['message' => 'Employee deleted successfully!'], 200);
     }
 
 }
