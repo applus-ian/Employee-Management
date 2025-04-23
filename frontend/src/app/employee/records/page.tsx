@@ -3,11 +3,15 @@
 import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TrashIcon, PencilIcon } from 'lucide-react';
+import { TrashIcon } from 'lucide-react';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 // Updated: New Employee Form Component with Cancel Button
 function NewEmployeeForm({ onCancel }: { onCancel: () => void }) {
@@ -166,6 +170,8 @@ function NewEmployeeForm({ onCancel }: { onCancel: () => void }) {
 
 export default function RecordsPage() {
   const [showForm, setShowForm] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState('Personal Info');
 
   return (
     <SidebarProvider
@@ -177,9 +183,193 @@ export default function RecordsPage() {
     >
       <AppSidebar />
       <SidebarInset>
-        <div className="ml-0 lg:ml-[15rem] px-4 sm:px-6 py-6 bg-muted/40">
-          <div className="max-w-[100rem] mx-auto space-y-6 w-full">
+        <div className="ml-0 lg:ml-[15rem] px-4 sm:px-6 py-6 bg-muted/40 h-full">
+          <div className="max-w-[100rem] mx-auto space-y-6 w-full h-full flex flex-col">
             {/* Header */}
+            <Dialog open={showDialog} onOpenChange={setShowDialog}>
+              <DialogContent className="max-w-4xl px-10 py-12 bg-white  shadow-2xl flex w-[50%] h-[90%] overflow-y-auto ">
+                <DialogHeader className="space-y-10 w-full ">
+                  {/* Profile Header */}
+                  <div className="flex items-center gap-6">
+                    <Avatar className="w-24 h-24 ring-2 ring-orange-300 shadow-lg">
+                      <AvatarImage src="/applus-image1.png" alt="Profile" />
+                      <AvatarFallback>JJ</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h2 className="text-3xl font-bold text-gray-900">Julieza Jane Patac</h2>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Role: <span className="font-medium text-gray-800">Employee</span> · Status:{' '}
+                        <span className="ml-1 inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
+                          Active
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Tabs */}
+                  <Tabs value={activeTab} onValueChange={setActiveTab}>
+                    <TabsList className="flex gap-4 mt-1 mb-2 pb-[-0px] rounded-none border-b w-full justify-center">
+                      {[
+                        { value: 'personal', label: 'Personal Info' },
+                        { value: 'address', label: 'Address' },
+                        { value: 'employment', label: 'Employment Details' },
+                        { value: 'documents', label: 'Documents' },
+                      ].map(({ value, label }) => (
+                        <TabsTrigger
+                          key={value}
+                          value={value}
+                          className={`pb-2 text-sm font-medium border-b-2 rounded-none transition-colors ${
+                            activeTab === value
+                              ? 'text-orange-600 border-b-orange-600 data-[state=active]:bg-white rounded-none'
+                              : 'text-gray-500 border-transparent hover:text-orange-500 hover:border-b-orange-500'
+                          }`}
+                        >
+                          {label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+
+                    {/* PERSONAL INFO */}
+                    <TabsContent value="personal" className="mt-8 ">
+                      <Card className="rounded-xl border shadow-sm ">
+                        <CardHeader>
+                          <h3 className="text-xl font-semibold text-gray-900 ">👤 Personal Information</h3>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm text-gray-800">
+                          <div>
+                            <p className="text-gray-500">First Name</p>
+                            <p className="font-medium">Julieza Jane</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Middle Name</p>
+                            <p className="font-medium">Bernardo</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Last Name</p>
+                            <p className="font-medium">Patac</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Email Address</p>
+                            <p className="font-medium">Juliezajanepatac@gmail.com</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Phone No.</p>
+                            <p className="font-medium">+639768564738</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Gender</p>
+                            <p className="font-medium">Female</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Date of Birth</p>
+                            <p className="font-medium">August 02, 2003</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    {/* ADDRESS */}
+                    <TabsContent value="address" className="mt-8">
+                      <Card className="rounded-xl border shadow-sm">
+                        <CardHeader>
+                          <h3 className="text-xl font-semibold text-gray-900">📍 Address Information</h3>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm text-gray-800">
+                          <div>
+                            <p className="text-gray-500">Region</p>
+                            <p className="font-medium">Region VII - Central Visayas</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Province</p>
+                            <p className="font-medium">Cebu</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">City</p>
+                            <p className="font-medium">Cebu City</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Barangay</p>
+                            <p className="font-medium">Lahug</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Street</p>
+                            <p className="font-medium">Salinas Drive</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    {/* EMPLOYMENT */}
+                    <TabsContent value="employment" className="mt-8">
+                      <Card className="rounded-xl border shadow-sm">
+                        <CardHeader>
+                          <h3 className="text-xl font-semibold text-gray-900">💼 Employment Details</h3>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm text-gray-800">
+                          <div>
+                            <p className="text-gray-500">Position</p>
+                            <p className="font-medium">Software Engineer</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Department</p>
+                            <p className="font-medium">IT</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Date Hired</p>
+                            <p className="font-medium">February 15, 2022</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-500">Status</p>
+                            <p className="font-medium">Regular</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </TabsContent>
+
+                    {/* DOCUMENTS */}
+                    <TabsContent value="documents" className="mt-8">
+                      <div className="overflow-x-auto rounded-xl border border-gray-200">
+                        <table className="min-w-full text-sm">
+                          <thead className="bg-gray-100">
+                            <tr>
+                              <th className="px-4 py-2 text-left">Uploaded File</th>
+                              <th className="px-4 py-2 text-left">Name</th>
+                              <th className="px-4 py-2 text-left">Description</th>
+                              <th className="px-4 py-2 text-left">Type</th>
+                              <th className="px-4 py-2 text-left">Expiry Date</th>
+                              <th className="px-4 py-2 text-left">Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[...Array(3)].map((_, idx) => (
+                              <tr key={idx} className="even:bg-blue-50">
+                                <td className="px-4 py-2">Deloy-Certificate.png</td>
+                                <td className="px-4 py-2">Figma Certificate</td>
+                                <td className="px-4 py-2">Cherry Ann Deloy’s Figma Certificate.</td>
+                                <td className="px-4 py-2">
+                                  <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
+                                    Certificate
+                                  </span>
+                                </td>
+                                <td className="px-4 py-2">
+                                  <input type="date" className="border border-gray-300 rounded-md px-2 py-1 text-sm" />
+                                </td>
+                                <td className="px-4 py-2">
+                                  <button className="text-red-500 hover:text-red-600 text-lg">
+                                    <TrashIcon className="w-4 h-4" />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+
             <header className="flex h-16 shrink-0 items-center gap-2">
               <Separator orientation="vertical" className=" h-4" />
               <div>
@@ -301,7 +491,11 @@ export default function RecordsPage() {
                         </TableHeader>
                         <TableBody>
                           {[1, 2, 3, 4, 5, 6].map((i) => (
-                            <TableRow key={i} className="even:bg-[#F7F6FE]">
+                            <TableRow
+                              key={i}
+                              className="even:bg-[#F7F6FE] cursor-pointer hover:bg-gray-100"
+                              onClick={() => setShowDialog(true)}
+                            >
                               <TableCell className="font-medium">{i}</TableCell>
                               <TableCell>
                                 <img
@@ -315,24 +509,7 @@ export default function RecordsPage() {
                               <TableCell>IT</TableCell>
                               <TableCell>jane@gmail.com</TableCell>
                               <TableCell>Active</TableCell>
-                              <TableCell className="text-right space-x-2">
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="rounded-lg text-[#624DE3]"
-                                  aria-label="Edit"
-                                >
-                                  <PencilIcon className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="rounded-lg text-red-500 hover:bg-destructive/10"
-                                  aria-label="Delete"
-                                >
-                                  <TrashIcon className="w-4 h-4" />
-                                </Button>
-                              </TableCell>
+                              <TableCell className="text-right space-x-2">{/* actions */}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
