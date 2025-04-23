@@ -19,11 +19,11 @@ Route::controller(AuthController::class)
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
-        Route::get('/', 'index')->middleware('permission:employee-list');
-        Route::post('/', 'create')->middleware('permission:employee-create');
+        Route::get('/list-employee', 'index')->middleware('permission:employee-list');
+        Route::post('/new-employee', 'create')->middleware('permission:employee-create');
         // Route::get('/{employee}', 'show')->middleware('permission:employee-view');
-        Route::put('/{employee}', 'update')->middleware('permission:employee-update');
-        // Route::delete('/{employee}', 'destroy')->middleware('permission:employee-delete');
+        Route::put('/update-employee/{employee}', 'update')->middleware('permission:employee-update');
+        // Route::delete('/delete-employee/{employee}', 'destroy')->middleware('permission:employee-delete');
     });
 });
 
