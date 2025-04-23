@@ -50,6 +50,12 @@ class EmployeeService
         return Employee::findOrFail($id);
     }
 
+    // Get all employees
+    public function getAllEmployees()
+    {
+        return Employee::all();
+    }
+
     // Encode Employee ID
     public function encodeEmployeeId(string $employeeId): string
     {
@@ -60,6 +66,12 @@ class EmployeeService
     public function decodeEmployeeId(string $encodedId): ?int // This function will return either an int or null.
     {
         return Hashids::decode($encodedId)[0] ?? null; // output of decoding is always array
+    }
+
+    // Delete Employee
+    public function deleteEmployee(Employee $employee): bool
+    {
+        return $employee->delete();
     }
 
 }

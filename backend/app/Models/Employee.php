@@ -34,10 +34,10 @@ class Employee extends Model
         'phone_number',
         'emergency_contact1',
         'emergency_contact2',
-        'email_address',
+        'email',
         'job_position_id',
         'date_hired',
-        'employment_type',
+        'employment_type_id',
         'manager_id',
         'profile_pic_url',
     ];
