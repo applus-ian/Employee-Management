@@ -15,7 +15,7 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $super_admin = Employee::insert([
+        $super_admin = Employee::create([
             'first_name' => 'Super',
             'middle_name' => null,
             'last_name' => 'Admin',
