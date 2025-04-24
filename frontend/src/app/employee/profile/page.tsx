@@ -336,7 +336,7 @@ export default function Page() {
                     <FilePenLine size={22} strokeWidth={2} className="text-[#EE7A2A]" />
                   </button>
                 </DialogTrigger>
-                <DialogContent className="w-full lg:max-w-[60rem] lg:!max-w-[60rem] lg:h-fit md:h-auto sm:h-[90vh] h-[90vh] flex flex-col">
+                <DialogContent className="w-full lg:!max-w-[60rem] lg:h-fit md:h-auto sm:h-[90vh] h-[90vh] flex flex-col">
                   <DialogHeader className="shrink-0 pb-4">
                     <DialogTitle>Edit Residential Information</DialogTitle>
                   </DialogHeader>
