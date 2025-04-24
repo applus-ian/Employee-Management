@@ -5,19 +5,81 @@ import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableFooter } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-
-import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle } from '@/components/ui/dialog';
+import { Trash2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { Label } from '@/components/ui/label';
 
 function EditProjectForm({ onCancel }: { onCancel: () => void }) {
+  const [openAssignModal, setOpenAssignModal] = useState(false);
+  const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const employees = [
+    {
+      id: '1234',
+      profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
+      fullName: 'John Doe',
+      jobPosition: 'Developer',
+      department: 'Engineering',
+    },
+    {
+      id: '2345',
+      profileImg: 'https://randomuser.me/api/portraits/women/2.jpg',
+      fullName: 'Jane Smith',
+      jobPosition: 'Designer',
+      department: 'Design',
+    },
+    {
+      id: '3456',
+      profileImg: 'https://randomuser.me/api/portraits/men/3.jpg',
+      fullName: 'Bob Johnson',
+      jobPosition: 'Project Manager',
+      department: 'Management',
+    },
+    // Add more employee data as needed
+  ];
+
   return (
-    <div className="border-t pt-6 mt-6">
-      <h2 className="text-xl font-semibold mb-4 text-orange-600">Edit Project</h2>
+    <div className="mt-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-black">View Project</h2>
+        <div className="flex gap-2">
+          <Button
+            variant="destructive"
+            className="bg-red-500 text-white hover:bg-red-600"
+            onClick={() => setOpenDeleteDialog(true)} // Open delete confirmation dialog
+          >
+            Delete
+          </Button>
+        </div>
+      </div>
+      <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex justify-center items-center">
+              <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Deletion?</span>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center items-center">
+            <p className="text-center">Do you want to delete this Employee?</p>
+          </div>
+          <DialogClose asChild>
+            <div className=" px-5 pt-5 flex justify-center gap-x-6">
+              <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
+              <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
+            </div>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+
       <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Project Name</label>
@@ -25,20 +87,68 @@ function EditProjectForm({ onCancel }: { onCancel: () => void }) {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Start Date</label>
-          <Input defaultValue="2025-04-10" className="border rounded-xl" />
+          <Input type="date" placeholder="dd/mm/yyyy" className="pr-10" />
+        </div>
+
+        <div className="md:col-span-1">
+          <label className="block text-sm font-medium mb-1">Description</label>
+          <textarea
+            className="w-full border rounded-xl px-3 py-2 text-sm resize-none h-[80px]"
+            placeholder="Project Description"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">End Date</label>
-          <Input defaultValue="2025-05-20" className="border rounded-xl" />
-        </div>
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            defaultValue="Short project description..."
-            className="w-full border rounded-xl px-3 py-2 text-sm resize-none h-[80px]"
-          />
+          <Input type="date" placeholder="dd/mm/yyyy" className="pr-10" />
         </div>
       </form>
+
+      {/* Table for Assigned Employees */}
+      <div className="mt-6">
+        <div className="flex justify-between items-center mb-8 border-t pt-8 border-gray-400">
+          <h3 className="text-lg font-semibold">Assigned Employees</h3>
+          <Button
+            className="border-2 border-orange-500 text-orange-500 hover:text-white hover:bg-orange-600"
+            onClick={() => setOpenAssignModal(true)} // Open the assign employee dialog
+          >
+            Assign Employee
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 -960 960 960" fill="currentColor">
+              <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Z" />
+            </svg>
+          </Button>
+        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Employee ID</TableHead>
+              <TableHead>Profile</TableHead>
+              <TableHead>Full Name</TableHead>
+              <TableHead>Job Position</TableHead>
+              <TableHead>Department</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {employees.map((emp) => (
+              <TableRow key={emp.id}>
+                <TableCell>{emp.id}</TableCell>
+                <TableCell>
+                  <img src={emp.profileImg} alt={emp.fullName} className="w-8 h-8 rounded-full" />
+                </TableCell>
+                <TableCell>{emp.fullName}</TableCell>
+                <TableCell>{emp.jobPosition}</TableCell>
+                <TableCell>{emp.department}</TableCell>
+                <TableCell>
+                  <Button variant="outline" size="sm" className="text-red-500 border-none bg-white">
+                    <Trash2 className="mr-2" /> {/* Icon with margin to the right */}
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>{/* Optional footer, for example if you want to add a total */}</TableFooter>
+        </Table>
+      </div>
 
       <div className="flex gap-2 mt-6 pt-3">
         <Button className="bg-orange-500 text-white hover:bg-orange-600">Save Changes</Button>
@@ -46,6 +156,52 @@ function EditProjectForm({ onCancel }: { onCancel: () => void }) {
           Cancel
         </Button>
       </div>
+
+      {/* Dialog for Assigning Employee */}
+      <Dialog open={openAssignModal} onOpenChange={setOpenAssignModal}>
+        <DialogContent className="sm:max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-orange-500 text-center">AVAILABLE EMPLOYEES</DialogTitle>
+            <p className="text-sm text-center mt-1">Select an employee/s</p>
+          </DialogHeader>
+          <div className="border-t bg-gray-300"></div>
+          <div className="max-h-60 overflow-y-auto rounded-md p-2 space-y-2 pt-3">
+            {employees.map((emp) => (
+              <label
+                key={emp.id}
+                className="flex items-start gap-3 text-sm cursor-pointer px-2 py-1 hover:bg-muted/50 rounded-md pt-3"
+              >
+                <Checkbox
+                  className="border border-gray-300 focus:ring-0 focus:ring-offset-0 focus:outline-none data-[state=checked]:bg-orange-500 data-[state=checked]:text-white"
+                  checked={selectedEmployees.includes(emp.id)}
+                  onCheckedChange={(checked) => {
+                    setSelectedEmployees((prev) => (checked ? [...prev, emp.id] : prev.filter((id) => id !== emp.id)));
+                  }}
+                />
+                <div>
+                  <p className="font-medium">{emp.fullName}</p>
+                  <p className="text-muted-foreground text-xs">{emp.jobPosition}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          <DialogFooter className="mt-4 flex justify-center gap-2">
+            <Button
+              className="bg-orange-500 text-white hover:bg-orange-600 px-6"
+              onClick={() => {
+                console.log('Assigned:', selectedEmployees);
+                setOpenAssignModal(false); // Close dialog after assignment
+              }}
+            >
+              Assign
+            </Button>
+            <Button variant="outline" onClick={() => setOpenAssignModal(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -188,7 +344,7 @@ function NewProjectForm({ onCancel }: { onCancel: () => void }) {
 export default function ProjectsPage() {
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState<null | 'new' | 'edit'>(null);
-
+  const [open, setOpen] = useState(false);
   return (
     <SidebarProvider style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
       <AppSidebar />
@@ -223,15 +379,63 @@ export default function ProjectsPage() {
                 {!showForm && (
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div className="flex flex-wrap gap-2">
-                      <Button variant="outline" size="sm">
-                        Start Date
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        End Date
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Employees
-                      </Button>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Calendar />
+                            Start Date
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-64 bg-white border-gray-300">
+                          <Label htmlFor="start-date" className="block text-sm mb-2">
+                            Start Date From :
+                          </Label>
+                          <Input id="start-date" type="date" />
+                          <Label htmlFor="start-date" className="block text-sm mb-2 pt-3">
+                            Start Date To :
+                          </Label>
+                          <Input id="start-date" type="date" />
+                        </PopoverContent>
+                      </Popover>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <Calendar />
+                            End Date
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-64 bg-white border-gray-300">
+                          <Label htmlFor="end-date" className="block text-sm mb-2">
+                            End Date From :
+                          </Label>
+                          <Input id="end-date" type="date" />
+                          <Label htmlFor="end-date" className="block text-sm mb-2 pt-3">
+                            End Date To :
+                          </Label>
+                          <Input id="end-date" type="date" />
+                        </PopoverContent>
+                      </Popover>
+
+                      <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                          <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+                            <Button variant="outline" size="sm">
+                              Employees
+                            </Button>
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-64 bg-white border-gray-300"
+                          onMouseEnter={() => setOpen(true)}
+                          onMouseLeave={() => setOpen(false)}
+                        >
+                          <div className="text-sm space-y-2">
+                            <div>1 Employee</div>
+                            <div>2 Employees</div>
+                            <div>3 Employees</div>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                     <Button
                       variant="outline"
@@ -340,7 +544,7 @@ export default function ProjectsPage() {
                   <div className="flex justify-between items-center pt-4 text-sm text-muted-foreground">
                     <div>Previous</div>
                     <div className="flex items-center gap-1">
-                      <Badge className="bg-orange-600 text-white px-3 py-1">1</Badge>
+                      <Badge className="bg-[#624DE3] text-white px-3 py-1">1</Badge>
                       <Button variant="ghost" size="sm">
                         2
                       </Button>
