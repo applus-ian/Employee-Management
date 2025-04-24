@@ -12,9 +12,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@radix-ui/react-separator';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 // 🔐 TabKey now inferred from navLinks — no duplication needed
 const navLinks = [
@@ -115,7 +118,7 @@ export default function EmployeeRolePage() {
                 </span>
               </button>
             </DialogTrigger>
-            <DialogContent className="w-full lg:!max-w-[45rem] lg:h-fit md:h-[90vh] sm:h-[90vh] h-[90vh] flex flex-col">
+            <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col">
               <DialogHeader>
                 <DialogTitle>Create New Employee {activeTab.slice(0, -1)}</DialogTitle>
               </DialogHeader>
@@ -125,9 +128,9 @@ export default function EmployeeRolePage() {
                     <div className="grid">
                       <div className="flex flex-col p-5">
                         <div>
-                          <label>
+                          <Label>
                             <h3 className="text-black font-base">User Role</h3>
-                          </label>
+                          </Label>
                         </div>
                         <div>
                           <input
@@ -137,18 +140,49 @@ export default function EmployeeRolePage() {
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col p-5">
-                        <label>
+                      <div className="p-5">
+                        <Label htmlFor="airplane-mode">
                           <h3 className="text-black font-base">Permissions</h3>
-                        </label>
+                        </Label>
                         <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2"></div>
+                          <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3">
+                            <div className="flex flex-col py-2 p-3">
+                              <h4 className="text-sm font-medium">Permission 1</h4>
+                              <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
+                              <div className="flex justify-between h-5 space-x-4 text-sm">
+                                <div className="order-1 text-gray-500">Can update employee records.</div>
+                                <div className="order-2">
+                                  <Switch
+                                    id="airplane-mode"
+                                    className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col py-2 p-3">
+                              <h4 className="text-sm font-medium">Permission 2</h4>
+                              <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
+                              <div className="flex justify-between h-5 space-x-4 text-sm">
+                                <div className="order-1 text-gray-500">Can set employee status.</div>
+                                <div className="order-2">
+                                  <Switch
+                                    id="airplane-mode"
+                                    className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <div className=" px-5 pt-5 flex justify-center gap-x-6">
-                        <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
-                        <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
-                      </div>
+                      <DialogClose asChild>
+                        <div className=" px-5 pt-5 flex justify-center gap-x-6">
+                          <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
+                          <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">
+                            Cancel
+                          </Button>
+                        </div>
+                      </DialogClose>
                     </div>
                   </form>
                 )}
@@ -228,12 +262,82 @@ export default function EmployeeRolePage() {
                         <Edit size={18} />
                       </button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col">
                       <DialogHeader>
-                        <DialogTitle>Edit Employee {activeTab}</DialogTitle>
+                        <DialogTitle>Update Employee {activeTab.slice(0, -1)}</DialogTitle>
                       </DialogHeader>
                       <div>
-                        <p>Edit functionality for {activeTab} goes here.</p>
+                        {activeTab == 'Roles' && (
+                          <form action="" method="post">
+                            <div className="grid">
+                              <div className="flex flex-col p-5">
+                                <div>
+                                  <Label>
+                                    <h3 className="text-black font-base">User Role</h3>
+                                  </Label>
+                                </div>
+                                <div>
+                                  <input
+                                    type="text"
+                                    className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm"
+                                    placeholder="Enter role name"
+                                  />
+                                </div>
+                              </div>
+                              <div className="p-5">
+                                <Label htmlFor="airplane-mode">
+                                  <h3 className="text-black font-base">Permissions</h3>
+                                </Label>
+                                <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm">
+                                  <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3">
+                                    <div className="flex flex-col py-2 p-3">
+                                      <h4 className="text-sm font-medium">Permission 1</h4>
+                                      <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
+                                      <div className="flex justify-between h-5 space-x-4 text-sm">
+                                        <div className="order-1 text-gray-500">Can update employee records.</div>
+                                        <div className="order-2">
+                                          <Switch
+                                            id="airplane-mode"
+                                            className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col py-2 p-3">
+                                      <h4 className="text-sm font-medium">Permission 2</h4>
+                                      <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
+                                      <div className="flex justify-between h-5 space-x-4 text-sm">
+                                        <div className="order-1 text-gray-500">Can set employee status.</div>
+                                        <div className="order-2">
+                                          <Switch
+                                            id="airplane-mode"
+                                            className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <DialogClose asChild>
+                                <div className=" px-5 pt-5 flex justify-center gap-x-6">
+                                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
+                                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">
+                                    Cancel
+                                  </Button>
+                                </div>
+                              </DialogClose>
+                            </div>
+                          </form>
+                        )}
+
+                        {/* {activeTab == 'Skills' && (
+                          
+                          )}
+
+                          {activeTab == 'Documents' && (
+                          
+                          )} */}
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -247,15 +351,21 @@ export default function EmployeeRolePage() {
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>Delete {activeTab}</DialogTitle>
+                        <DialogTitle className="flex justify-center items-center">
+                          <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Deletion?</span>
+                        </DialogTitle>
                       </DialogHeader>
-                      <div>
-                        <p>Are you sure you want to delete this {activeTab.toLowerCase().slice(0, -1)}?</p>
-                        <div className="flex justify-end gap-2 mt-4">
-                          <button className="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
-                          <button className="px-4 py-2 bg-red-500 text-white rounded-md">Delete</button>
-                        </div>
+                      <div className="flex justify-center items-center">
+                        <p className="text-center">Do you want to delete this Employee {activeTab.slice(0, -1)}?</p>
                       </div>
+                      <DialogClose asChild>
+                        <div className=" px-5 pt-5 flex justify-center gap-x-6">
+                          <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
+                          <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">
+                            Cancel
+                          </Button>
+                        </div>
+                      </DialogClose>
                     </DialogContent>
                   </Dialog>
                 </div>
