@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Action;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,10 +15,9 @@ return new class extends Migration
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->enum('action', ['update', 'delete', 'create']); // to be reviewed!
+            $table->enum('action', array_column( Action::cases(), 'value')); // to be reviewed!
             $table->string('affected_table');
             $table->string('changes_made');
-
 
             $table->timestamps();
         });

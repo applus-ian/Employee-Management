@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\CivilStatus;
+use App\Enums\Gender;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,17 +19,9 @@ return new class extends Migration
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('suffix')->nullable();
-            $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->enum('gender', array_column(Gender::cases(), 'value'))->nullable();
             $table->date('birthdate');
-            $table->enum('civil_status', [
-                'single',
-                'married',
-                'widowed',
-                'divorced',
-                'separated',
-                'anulled',
-                // 'cohabiting', should we add cohabiting/live-in?
-            ]);
+            $table->enum('civil_status', array_column( CivilStatus::cases(), 'value'));
             $table->string('nationality');
             $table->string('region');
             $table->string('province');
