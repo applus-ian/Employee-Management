@@ -26,7 +26,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Cherry"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
         <div>
@@ -34,7 +34,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Ann"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
@@ -44,7 +44,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Deloy"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
         <div>
@@ -52,7 +52,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Jr."
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
@@ -62,7 +62,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="email"
             defaultValue="cherry@example.com"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
         <div>
@@ -70,14 +70,17 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="tel"
             defaultValue="09171234567"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
         {/* Row 4 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">Gender</label>
-          <select defaultValue="Female" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full">
+          <select
+            defaultValue="Female"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          >
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -88,7 +91,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="date"
             defaultValue="1998-10-05"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
@@ -98,7 +101,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Region IV-A"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
         <div>
@@ -106,7 +109,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Laguna"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
@@ -116,7 +119,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Calamba"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
         <div>
@@ -124,7 +127,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Mamatid"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
@@ -134,7 +137,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="123 F. Gomez"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
 
@@ -143,7 +146,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <label className="block text-sm text-gray-700 mb-1">Skills</label>
           <textarea
             defaultValue="UI/UX Design, Figma"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
             rows={3}
           />
         </div>
@@ -154,7 +157,7 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="UX Designer"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
         <div>
@@ -162,14 +165,14 @@ function EditRecordForm({ onCancel }: { onCancel: () => void }) {
           <input
             type="text"
             defaultValue="Design Department"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
           />
         </div>
       </form>
       <div className="mt-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Upload Documents</h2>
-          <button className="border border-orange-500 text-orange-500 px-4 py-1 text-sm rounded-full hover:bg-orange-50">
+          <button className="border border-orange-500 text-orange-500 px-4 py-1 text-sm rounded-full hover:bg-orange-500 hover:text-white">
             Upload Document
           </button>
         </div>
@@ -237,37 +240,55 @@ function NewEmployeeForm({ onCancel }: { onCancel: () => void }) {
         {/* Row 1 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">First Name</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
         <div>
           <label className="block text-sm text-gray-700 mb-1">Middle Name</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 2 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">Last Name</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
         <div>
           <label className="block text-sm text-gray-700 mb-1">Suffix</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 3 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">Email Address</label>
-          <input type="email" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="email"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
         <div>
           <label className="block text-sm text-gray-700 mb-1">Phone No.</label>
-          <input type="tel" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="tel"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 4 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">Gender</label>
-          <select className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full">
+          <select className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500">
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -275,49 +296,76 @@ function NewEmployeeForm({ onCancel }: { onCancel: () => void }) {
         </div>
         <div>
           <label className="block text-sm text-gray-700 mb-1">Date of Birth</label>
-          <input type="date" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="date"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 5 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">Region</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
         <div>
           <label className="block text-sm text-gray-700 mb-1">Province</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 6 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">City/Municipality</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
         <div>
           <label className="block text-sm text-gray-700 mb-1">Barangay</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 7 */}
         <div>
           <label className="block text-sm text-gray-700 mb-1">Street</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
 
         {/* Row 8 */}
         <div className="col-span-1 md:col-span-2">
           <label className="block text-sm text-gray-700 mb-1">Skills</label>
-          <textarea className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" rows={3} />
+          <textarea
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+            rows={3}
+          />
         </div>
 
         {/* Row 9 */}
         <div>
           <label className="block text-sm text-gray-800 mb-1">Job Position</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
         <div>
           <label className="block text-sm text-gray-800 mb-1">Location Assignment</label>
-          <input type="text" className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full" />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+          />
         </div>
       </form>
 
@@ -325,7 +373,7 @@ function NewEmployeeForm({ onCancel }: { onCancel: () => void }) {
       <div className="mt-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Upload Documents</h2>
-          <button className="border border-orange-500 text-orange-500 px-4 py-1 text-sm rounded-full hover:bg-orange-50">
+          <button className="border border-orange-500 text-orange-500 px-4 py-1 text-sm rounded-full hover:bg-orange-500 hover:text-white">
             Upload Document
           </button>
         </div>
