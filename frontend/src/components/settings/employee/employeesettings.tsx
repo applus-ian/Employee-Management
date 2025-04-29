@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@radix-ui/react-separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import AddSkillForm from './skills/add_skill';
 
 // 🔐 TabKey now inferred from navLinks — no duplication needed
 const navLinks = [
@@ -187,11 +188,9 @@ export default function EmployeeRolePage() {
                   </form>
                 )}
 
-                {/* {activeTab == 'Skills' && (
-                  
-                  )}
+                {activeTab == 'Skills' && <AddSkillForm />}
 
-                  {activeTab == 'Documents' && (
+                {/* {activeTab == 'Documents' && (
                   
                   )} */}
               </div>
