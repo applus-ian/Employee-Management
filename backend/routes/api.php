@@ -1,7 +1,7 @@
 <?php
 
-
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -19,11 +19,11 @@ Route::controller(AuthController::class)
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
-        Route::get('/list-employee', 'index')->middleware('permission:employee-list');
-        Route::post('/new-employee', 'create')->middleware('permission:employee-create');
+        Route::get('/list-employee', 'index')->middleware('permission:employee_list');
+        Route::post('/new-employee', 'create')->middleware('permission:employee_create');
         // Route::get('/{employee}', 'show')->middleware('permission:employee-view');
-        Route::put('/update-employee/{employee}', 'update')->middleware('permission:employee-update');
-        // Route::delete('/delete-employee/{employee}', 'destroy')->middleware('permission:employee-delete');
+        Route::put('/update-employee/{employee}', 'update')->middleware('permission:employee_update');
+        // Route::delete('/delete-employee/{employee}', 'destroy')->middleware('permission:employee_delete');
     });
 });
 

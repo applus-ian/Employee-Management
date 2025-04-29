@@ -9,6 +9,7 @@ use App\Services\EmployeeService;
 use App\Services\EmploymentStatusHistoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -30,6 +31,16 @@ class EmployeeController extends Controller
         ], 200);
     }
 
+    // Get single employee
+    public function getEmployeeData($employee_id)
+    {
+        $employee_data = $this->employeeService->getEmployeeById($employee_id);
+
+        return response()->json([
+            'employee_data' => $employee_data
+        ],200);
+    }
+
     // Create Employee Method
     public function create(CreateEmployeeRequest $request): JsonResponse
     {
@@ -41,31 +52,36 @@ class EmployeeController extends Controller
     }
 
     // Update Employee Method
-    public function update(UpdateEmployeeRequest $request, $employee_id): JsonResponse
+    public function update(Request $request, $employee_id): JsonResponse
     {
-        // Decode the employee ID
         $id = $this->employeeService->decodeEmployeeId($employee_id);
 
-        // If the ID is invalid (null), return a custom error message and status code
-        if ($id === null) {
-            return response()->json(['message' => 'Invalid ID provided!'], 400); // 400 Bad Request
+        if (!$id) {
+            return response()->json(['message' => 'Invalid employee ID.'], 400);
         }
 
-        // Find the employee by ID
-        $employee =$this->employeeService->getEmployeeById($id);
+        // Merge decoded ID into request if your rules depend on it
+        $data = array_merge($request->all(), ['decoded_employee_id' => $id]);
 
-        // If the employee is not found, return a 404 response
+        // Validate using UpdateEmployeeRequest
+        $validator = Validator::make($data, (new UpdateEmployeeRequest())->rules());
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // At this point, the request is valid
+        $validated = $validator->validated();
+
+        // Retrieve and update employee
+        $employee = $this->employeeService->getEmployeeById($id);
         if (!$employee) {
-            return response()->json(['message' => 'Employee not found!'], 404);
+            return response()->json(['message' => 'Employee not found.'], 404);
         }
 
-        // Proceed with updating the employee's details
-        $updated_employee = $this->employeeService->updateEmployee($employee, $request->validated());
+        $updatedEmployee = $this->employeeService->updateEmployee($employee, $validated);
 
-        // Return the updated employee as a JSON response
-        return response()->json([
-            'updated_employee' => $updated_employee
-        ], 200);
+        return response()->json(['updated_employee' => $updatedEmployee], 200);
     }
 
     // Delete Employee Method

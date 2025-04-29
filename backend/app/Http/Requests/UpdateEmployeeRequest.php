@@ -22,7 +22,7 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $employeeId = $this->route('employee'); // Assuming route model binding or use $this->employee->id
+        $employeeId = $this->input('decoded_employee_id');
 
         return [
             'first_name' => ['required', 'string', 'max:255'],
