@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateEmploymentTypeRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class UpdateEmploymentTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', Rule::unique('employment_types', 'name')->ignore($this->employment_type_id)],
         ];
     }
 }
