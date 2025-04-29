@@ -32,14 +32,13 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
     await authContext.logout(); // Log out the user
     router.push('/login'); // Redirect to the login page
   };
-
   const data = {
     navMain: [
       {
         id: 1,
         image: '/Superadmin.png',
-        title: authContext.user?.name,
-        subtitle: 'Super Admin',
+        title: `${authContext.user?.employee.first_name} ${authContext.user?.employee.middle_name || ''} ${authContext.user?.employee.last_name}`,
+        subtitle: `${authContext.user?.employee.suffix ? authContext.user?.employee.suffix : 'Super Admin'}`,
         url: '/employee/profile',
       },
       {
