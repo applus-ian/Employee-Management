@@ -17,7 +17,7 @@ class EmploymentTypeSeeder extends Seeder
             ['name' => 'Full-time'],
             ['name' => 'Part-time'],
             ['name' => 'Contractual'],
-            ['name' => 'On-the-job-training'],
+            ['name' => 'Internship'],
         ]);
     }
 }

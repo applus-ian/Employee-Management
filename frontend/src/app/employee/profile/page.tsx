@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AuthContext } from '@/context/AuthContext';
+import { useContext } from 'react';
 
 export default function Page() {
+  const authContext = useContext(AuthContext);
   return (
     <div className="flex flex-col w-full">
       <h1 className="lg:hidden md:block sm:block ml-20 mb-0 mt-4 text-3xl text-[#EE7A2A] font-bold">
@@ -23,7 +26,11 @@ export default function Page() {
             <div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <CardTitle className="text-2xl text-[#EE7A2A]">User Name</CardTitle>
+                  <CardTitle className="text-2xl text-[#EE7A2A]">
+                    {`${authContext.user?.employee.first_name} 
+                  ${authContext.user?.employee.middle_name || ''} 
+                  ${authContext.user?.employee.last_name}`}
+                  </CardTitle>
                   <span className="text-sm text-gray-600">( Role )</span>
                 </div>
               </div>
@@ -33,13 +40,13 @@ export default function Page() {
                   <div className="pr-6 pb-3">
                     <Mail size={18} strokeWidth={1.5} />
                   </div>
-                  <div className="text-xs">Email</div>
+                  <div className="text-xs">{`${authContext.user?.email}`}</div>
                 </div>
                 <div className="flex flex-row">
                   <div className="pr-6">
                     <Phone size={18} strokeWidth={1.5} />
                   </div>
-                  <div className="text-xs">Phone</div>
+                  <div className="text-xs">{`${authContext.user?.employee.phone_number}`}</div>
                 </div>
               </CardDescription>
             </div>
@@ -255,49 +262,49 @@ export default function Page() {
               <div>
                 <h3 className="text-gray-600">First Name</h3>
               </div>
-              <div className="font-medium">First Name</div>
+              <div className="font-medium">{`${authContext.user?.employee.first_name}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Middle Name</h3>
               </div>
-              <div className="font-medium">Middle Name</div>
+              <div className="font-medium">{`${authContext.user?.employee.middle_name}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Last Name</h3>
               </div>
-              <div className="font-medium">Last Name</div>
+              <div className="font-medium">{`${authContext.user?.employee.last_name}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Suffix</h3>
               </div>
-              <div className="font-medium">Suffix</div>
+              <div className="font-medium">{`${authContext.user?.employee.suffix}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Email Address</h3>
               </div>
-              <div className="font-medium">Email Address</div>
+              <div className="font-medium">{`${authContext.user?.employee.email}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Phone No.</h3>
               </div>
-              <div className="font-medium">Phone No.</div>
+              <div className="font-medium">{`${authContext.user?.employee.phone_number}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Gender</h3>
               </div>
-              <div className="font-medium">Gender</div>
+              <div className="font-medium">{`${authContext.user?.employee.gender}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Date of Birth</h3>
               </div>
-              <div className="font-medium">Date of Birth</div>
+              <div className="font-medium">{`${authContext.user?.employee.birthdate}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
@@ -323,7 +330,7 @@ export default function Page() {
                   <FilePenLine size={22} strokeWidth={2} className="text-[#EE7A2A]" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="w-full lg:max-w-[60rem] lg:!max-w-[60rem] lg:h-fit md:h-auto sm:h-[90vh] h-[90vh] flex flex-col">
+              <DialogContent className="w-full lg:!max-w-[60rem] lg:h-fit md:h-auto sm:h-[90vh] h-[90vh] flex flex-col">
                 <DialogHeader className="shrink-0 pb-4">
                   <DialogTitle>Edit Residential Information</DialogTitle>
                 </DialogHeader>
@@ -409,31 +416,31 @@ export default function Page() {
               <div>
                 <h3 className="text-gray-600">Region</h3>
               </div>
-              <div className="font-medium">Region 7</div>
+              <div className="font-medium">{`${authContext.user?.employee.region}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Province</h3>
               </div>
-              <div className="font-medium">Cebu</div>
+              <div className="font-medium">{`${authContext.user?.employee.province}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">City/Municipality</h3>
               </div>
-              <div className="font-medium">Cebu City</div>
+              <div className="font-medium">{`${authContext.user?.employee.city_or_municipality}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Barangay</h3>
               </div>
-              <div className="font-medium">Jaclupan</div>
+              <div className="font-medium">{`${authContext.user?.employee.barangay}`}</div>
             </div>
             <div className="flex flex-col p-5">
               <div>
                 <h3 className="text-gray-600">Street</h3>
               </div>
-              <div className="font-medium">Purok Sambag</div>
+              <div className="font-medium">P{`${authContext.user?.employee.street}`}</div>
             </div>
           </div>
         </CardContent>

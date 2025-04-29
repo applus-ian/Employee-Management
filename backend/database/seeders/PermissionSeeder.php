@@ -14,8 +14,19 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         Permission::insert([
-            ['name' => 'employee-create', 'description' => 'Create New Employee.'],
-            ['name' => 'employee-update', 'description' => 'Update Employee Record.'],
+            // Employee Records Permission
+            ['name' => 'employee_list', 'description' => 'Get All Employee Record.'],
+            ['name' => 'employee_view', 'description' => 'Get Single Employee Record.'],
+            ['name' => 'employee_create', 'description' => 'Create New Employee.'],
+            ['name' => 'employee_update', 'description' => 'Update Employee Record.'],
+            ['name' => 'employee_delete', 'description' => 'Delete Employee Record.'],
+
+            // Project Records Permission
+            ['name' => 'project_list', 'description' => 'Get All Project Record.'],
+            ['name' => 'project_view', 'description' => 'Get Single Project Record.'],
+            ['name' => 'project_create', 'description' => 'Create New Project.'],
+            ['name' => 'project_update', 'description' => 'Update Project Record.'],
+            ['name' => 'project_delete', 'description' => 'Delete Project Record.'],
         ]);
     }
 }

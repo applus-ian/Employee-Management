@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Services\AuthService;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    protected $authService;
+    protected $authService, $userService;
 
-    public function __construct(AuthService $authService)
+    public function __construct(AuthService $authService, UserService $userService)
     {
         $this->authService = $authService;
+        $this->userService = $userService;
     }
 
     // Login Method
@@ -45,7 +47,8 @@ class AuthController extends Controller
     // Fetch User Method
     public function fetchUser(): JsonResponse
     {
-        return response()->json(Auth::user(), 200);
+        $user = $this->userService->fetchUser();
+        return response()->json($user, 200);
     }
 
     // Method to validate the token
@@ -53,8 +56,10 @@ class AuthController extends Controller
     {
         $isValid = $this->authService->checkToken($request->bearerToken());
 
-        return response()->json([
-            'isValid' => $isValid,
-        ], 200);
+        if ($isValid) {
+            return response()->json(['isValid' => $isValid], 200);
+        } else {
+            return response()->json(['isValid' => $isValid], 401);
+        }
     }
 }

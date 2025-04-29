@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
+use App\Models\Role;
 use App\Models\RolePermission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,8 +15,14 @@ class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        RolePermission::insert([
-            ['role_id' => 1, 'permission_id' => 1]
-        ]);
+        $superAdminRoleId = Role::where('name', 'Super Admin')->first()->id;
+        $permissions = Permission::all();
+
+        foreach ($permissions as $permission) {
+            RolePermission::create([
+                'role_id' => $superAdminRoleId,
+                'permission_id' => $permission->id,
+            ]);
+        }
     }
 }
