@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamAssignController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -27,3 +28,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 });
 
+
+// Routes for Team Assign
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::controller(TeamAssignController::class)->prefix('team-assigns')->group(function () {
+        Route::get('/list-team-assigns', 'index')->middleware('permission:team_assign-list');
+        Route::post('/new-team-assign', 'create')->middleware('permission:team_assign-create');
+        // Route::get('/{team_assign}', 'show')->middleware('permission:team_assign-view');
+        Route::put('/update-team-asign/{team_assign}', 'update')->middleware('permission:team_assign-update');
+        // Route::delete('/delete-team-assign/{team_assign}', 'destroy')->middleware('permission:team_assign-delete');
+    });
+});
