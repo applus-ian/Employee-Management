@@ -26,7 +26,7 @@ class TeamAssignController extends Controller
     }
 
     // Update Team Assign Method
-    public function update(UpdateTeamAssignRequest $request, TeamAssign $project): JsonResponse
+    public function update(UpdateTeamAssignRequest $request, TeamAssign $team_assign): JsonResponse
     {
         // Proceed with updating the assigned team's details
         $updated_team_assign = $this->team_assignService->updateTeamAssign($team_assign, $request->validated());
@@ -38,7 +38,7 @@ class TeamAssignController extends Controller
     // Get All Teams Assigned Method
     public function index(): JsonResponse
     {
-        $team_assigns = $this->team_assignService->getAllProjects();
+        $team_assigns = $this->team_assignService->getAllTeamAssigns();
 
         return response()->json($team_assigns, 200);
     }
