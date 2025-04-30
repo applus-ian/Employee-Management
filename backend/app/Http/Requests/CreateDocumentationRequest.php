@@ -23,7 +23,7 @@ class CreateDocumentationRequest extends FormRequest
     {
         return [
             'employee_id' => ['required', 'exists:documentations,employee_id'],
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', 'unique:documentations, name'],
             'description' => ['nullable', 'string'],
             'file_url' => ['required', 'url'],
             'document_type_id' => ['required', 'exists:documentations,document_type_id'],
