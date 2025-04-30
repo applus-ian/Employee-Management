@@ -23,7 +23,7 @@ class UpdateSkillCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('skill_categories', 'name')->ignore($this->skill_category_id)],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('skill_categories', 'name')->ignore($this->skill_category_id)],
         ];
     }
 }

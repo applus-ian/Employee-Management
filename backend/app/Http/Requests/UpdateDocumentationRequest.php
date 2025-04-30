@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProjectRequest extends FormRequest
+class UpdateDocumentationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,13 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('projects', 'name')->ignore($this->project_id)],
+            'employee_id' => ['required', 'exists:documentations,employee_id'],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('documentations', 'name')->ignore($this->documentation_id)],
             'description' => ['nullable', 'string'],
-            'start_date' => ['required', 'date', 'after_or_equal:today'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'file_url' => ['required', 'url'],
+            'document_type_id' => ['required', 'exists:documentations,document_type_id'],
+            'upload_date' => ['required', 'date', 'after_or_equal:today'],
+            'expiry_date' => ['nullable', 'date', 'after_or_equal:upload_date']
         ];
     }
 }
