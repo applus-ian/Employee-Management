@@ -35,7 +35,7 @@ class EmployeeSkillController extends Controller
         return response()->json($updated_employee_skill, 200);
     }
 
-    // Get All Teams Assigned Method
+    // Get All Employee Skills Method
     public function index(): JsonResponse
     {
         $employee_skills = $this->employee_skillService->getAllEmployeeSkills();
