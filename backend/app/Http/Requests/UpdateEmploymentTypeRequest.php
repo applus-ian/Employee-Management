@@ -23,7 +23,7 @@ class UpdateEmploymentTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('employment_types', 'name')->ignore($this->employment_type_id)],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('employment_types', 'name')->ignore($this->employment_type_id)],
         ];
     }
 }
