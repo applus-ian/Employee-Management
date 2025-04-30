@@ -3,6 +3,7 @@
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TeamAssignController;
+use App\Http\Controllers\EmployeeSkillController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -35,7 +36,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/list-team-assigns', 'index')->middleware('permission:team_assign-list');
         Route::post('/new-team-assign', 'create')->middleware('permission:team_assign-create');
         // Route::get('/{team_assign}', 'show')->middleware('permission:team_assign-view');
-        Route::put('/update-team-asign/{team_assign}', 'update')->middleware('permission:team_assign-update');
+        Route::put('/update-team-assign/{team_assign}', 'update')->middleware('permission:team_assign-update');
         // Route::delete('/delete-team-assign/{team_assign}', 'destroy')->middleware('permission:team_assign-delete');
+    });
+});
+
+
+// Routes for Employee Skill
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::controller(EmployeeController::class)->prefix('employee-skills')->group(function () {
+        Route::get('/list-employee-skills', 'index')->middleware('permission:employee_skill-list');
+        Route::post('/new-employee-skill', 'create')->middleware('permission:employee_skill-create');
+        // Route::get('/{employee_skills}', 'show')->middleware('permission:employee_skills-view');
+        Route::put('/update-team-asign/{employee_skill}', 'update')->middleware('permission:employee_skill-update');
+        // Route::delete('/delete-employee-skill/{employee_skill}', 'destroy')->middleware('permission:employee_skill-delete');
     });
 });
