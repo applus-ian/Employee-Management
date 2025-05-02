@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-
+import { Eye, EyeClosed } from 'lucide-react';
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
@@ -22,7 +22,7 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { loginMutation } = authContext;
-
+  const [showPassword, setShowPassword] = useState(false);
   // Initialize react-hook-form with Zod validation
   const {
     register,
@@ -77,8 +77,8 @@ export default function LoginPage() {
 
       {/* Right Side - Form */}
       <div className="relative flex items-center justify-center px-4 py-8 sm:px-0 sm:py-10 md:px-8 md:py-12 overflow-hidden bg-white">
-        <Card className="w-full max-w-md rounded-xl border-0">
-          <CardContent className="space-y-6">
+        <Card className="w-full max-w-md shadow-none border-none">
+          <CardContent className="space-y-6 border-none">
             <div className="text-center space-y-4">
               <div className="flex justify-center">
                 <img
@@ -99,8 +99,8 @@ export default function LoginPage() {
                   <Input
                     {...register('email')}
                     type="email"
-                    placeholder="hello@example.com"
-                    className="bg-[#1F2828] text-white border-0"
+                    // placeholder='Enter your email'
+                    className="bg-[#1F2828] text-white border-0 focus:bg-[#1F2828] focus:ring-0 autofill:bg-[#1F2828]"
                   />
                   {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                 </div>
@@ -108,12 +108,21 @@ export default function LoginPage() {
                 {/* Password Input */}
                 <div className="space-y-1">
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    {...register('password')}
-                    type="password"
-                    placeholder="••••••••"
-                    className="bg-[#1F2828] text-white border-0"
-                  />
+                  <div className="relative">
+                    <Input
+                      {...register('password')}
+                      type={showPassword ? 'text' : 'password'}
+                      // placeholder='Enter your password'
+                      className="bg-[#1F2828] text-white border-0 pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white"
+                    >
+                      {showPassword ? <Eye size={18} /> : <EyeClosed size={18} />}
+                    </button>
+                  </div>
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                 </div>
 
