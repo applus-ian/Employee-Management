@@ -2,7 +2,6 @@
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
@@ -77,7 +76,7 @@ export default function LoginPage() {
       {/* Right Side - Form */}
       <div className="relative flex items-center justify-center px-4 py-8 sm:px-0 sm:py-10 md:px-8 md:py-12 overflow-hidden bg-white">
         <Card className="w-full max-w-md shadow-none border-none">
-          <CardContent className="space-y-6 border-none">
+          <CardContent className="space-y-6 border-none ">
             <div className="text-center space-y-4">
               <div className="flex justify-center">
                 <img
@@ -91,7 +90,7 @@ export default function LoginPage() {
                 <p className="text-sm text-gray-700">Please enter your details.</p>
               </div>
             </div>
-            {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>} {/* Display error message */}
+            {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" data-testid="login-form">
               {/* Email Input */}
               <div className="space-y-4">
@@ -119,8 +118,7 @@ export default function LoginPage() {
                       className="placeholder:text-xs bg-[#1F2828] text-white border-0 pr-10 pl-10"
                       placeholder="Enter your password"
                     />
-                    <LockKeyhole className="absolute left-3 top-1/2 -translate-y-1/2 text-white" size={18} />{' '}
-                    {/* Lock Keyhole Icon */}
+                    <LockKeyhole className="absolute left-3 top-1/2 -translate-y-1/2 text-white" size={18} />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -132,7 +130,6 @@ export default function LoginPage() {
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                 </div>
 
-                {/* Login Button with Bouncing Dots */}
                 <div className="pt-4">
                   <Button
                     type="submit"
