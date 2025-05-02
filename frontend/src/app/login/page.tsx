@@ -2,21 +2,20 @@
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-import { Eye, EyeClosed } from 'lucide-react';
+import { LockKeyhole, Eye, EyeClosed } from 'lucide-react'; // Import the icons
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, LoginFormInputs } from '@/schemas';
+import { FaEnvelope } from 'react-icons/fa';
 
 export default function LoginPage() {
-  const [rememberMe, setRememberMe] = useState(false);
-
   const authContext = useContext(AuthContext);
   const router = useRouter();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -84,37 +83,44 @@ export default function LoginPage() {
                 <img
                   src="/logo-applus.png"
                   alt="Applus team"
-                  className="w-[70%] md:w-[50%] h-auto object-contain drop-shadow-md"
+                  className="w-[80%] md:w-[60%] lg:w-[80%] h-auto object-contain drop-shadow-md"
                 />
               </div>
-              <h2 className="text-2xl font-bold text-black">Welcome back!</h2>
-              <p className="text-sm text-gray-700">Please enter your details.</p>
+              <div className="space-y-1">
+                <h2 className="text-2xl font-bold text-black">Welcome back!</h2>
+                <p className="text-sm text-gray-700">Please enter your details.</p>
+              </div>
             </div>
             {errorMessage && <p className="text-red-500 mb-4">{errorMessage}</p>} {/* Display error message */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" data-testid="login-form">
               {/* Email Input */}
               <div className="space-y-4">
-                <div className="space-y-1">
+                <div className="space-y-1 mt-6">
                   <Label htmlFor="email">Email</Label>
-                  <Input
-                    {...register('email')}
-                    type="email"
-                    // placeholder='Enter your email'
-                    className="bg-[#1F2828] text-white border-0 focus:bg-[#1F2828] focus:ring-0 autofill:bg-[#1F2828]"
-                  />
+                  <div className="relative">
+                    <Input
+                      {...register('email')}
+                      type="email"
+                      className="placeholder:text-xs bg-[#1F2828] text-white border-0 focus:bg-[#1F2828] focus:ring-0 autofill:bg-[#1F2828] pl-10"
+                      placeholder="Enter your email"
+                    />
+                    <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-white w-4 h-4 pointer-events-none" />
+                  </div>
                   {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                 </div>
 
                 {/* Password Input */}
-                <div className="space-y-1">
+                <div className="space-y-1 ">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
                     <Input
                       {...register('password')}
                       type={showPassword ? 'text' : 'password'}
-                      // placeholder='Enter your password'
-                      className="bg-[#1F2828] text-white border-0 pr-10"
+                      className="placeholder:text-xs bg-[#1F2828] text-white border-0 pr-10 pl-10"
+                      placeholder="Enter your password"
                     />
+                    <LockKeyhole className="absolute left-3 top-1/2 -translate-y-1/2 text-white" size={18} />{' '}
+                    {/* Lock Keyhole Icon */}
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -126,31 +132,16 @@ export default function LoginPage() {
                   {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="remember"
-                      checked={rememberMe}
-                      onCheckedChange={(checked: boolean) => setRememberMe(checked)}
-                      className="border-2 border-[#1F2828] accent-white"
-                    />
-                    <Label htmlFor="remember" className="text-sm">
-                      Remember for 30 days
-                    </Label>
-                  </div>
-                  <a href="#" className="text-sm text-orange-600 underline hover:text-orange-700">
-                    Forgot password?
-                  </a>
-                </div>
-
                 {/* Login Button with Bouncing Dots */}
-                <Button
-                  type="submit"
-                  disabled={loginMutation.isPending}
-                  className="w-full bg-orange-600 hover:bg-orange-700 text-white"
-                >
-                  {loginMutation.isPending ? <Spinner /> : 'Login'}
-                </Button>
+                <div className="pt-4">
+                  <Button
+                    type="submit"
+                    disabled={loginMutation.isPending}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+                  >
+                    {loginMutation.isPending ? <Spinner /> : 'Login'}
+                  </Button>
+                </div>
               </div>
             </form>
           </CardContent>
