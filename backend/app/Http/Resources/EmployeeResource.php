@@ -26,6 +26,8 @@ class EmployeeResource extends JsonResource
             'suffix' => $this->suffix,
             'gender' => $this->gender,
             'birthdate' => $this->birthdate,
+            'age' => $this->age,
+            'is_birthday' => $this->is_birthday, // Laravel automatically converts accessor method names to snake_case
             'civil_status' => $this->civil_status,
             'nationality' => $this->nationality,
             'region' => $this->region,
@@ -37,11 +39,11 @@ class EmployeeResource extends JsonResource
             'emergency_contact1' => $this->emergency_contact1,
             'emergency_contact2' => $this->emergency_contact2,
             'email' => $this->email,
-            'job_position_id' => $this->job_position_id,
+            'job_position' => new JobPositionResource($this->whenLoaded('jobPosition')),
             'date_hired' => $this->date_hired,
-            'employment_type_id' => $this->employment_type_id,
-            'manager_id' => $this->manager_id,
-            'profile_pic_url' => $this->profile_pic_url,
+            'employment_type' => new EmploymentTypeResource($this->whenLoaded('employmentType')),
+            'manager' => $this->manager_id,
+            'profile_pic_url' => new ManagerResource($this->whenLoaded('manager')),
         ];
     }
 }

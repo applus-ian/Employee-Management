@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use App\Enums\Gender;
 use App\Enums\CivilStatus;
+use Carbon\Carbon;
 
 class Employee extends Model
 {
@@ -48,4 +50,29 @@ class Employee extends Model
         'manager_id',
         'profile_pic_url',
     ];
+
+    public function jobPosition(): BelongsTo
+    {
+        return $this->belongsTo(JobPosition::class);
+    }
+
+    public function employmentType(): BelongsTo
+    {
+        return $this->belongsTo(EmploymentType::class);
+    }
+
+    public function Manager(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class, 'manager_id');
+    }
+
+    public function getAgeAttribute(): int
+    {
+        return Carbon::parse($this->birthdate)->age;
+    }
+
+    public function getIsBirthdayAttribute(): bool
+    {
+        return Carbon::parse($this->birthdate)->isBirthday();
+    }
 }

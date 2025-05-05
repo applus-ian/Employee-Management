@@ -15,7 +15,7 @@ class UserService
     {
         $user = Auth::user();
 
-        return new UserResource($user->load('employee'));
+        return new UserResource($user->load('employee', 'employee.jobPosition', 'employee.employmentType', 'employee.manager', 'roles'));
     }
 
     public function registerUser(array $data)
