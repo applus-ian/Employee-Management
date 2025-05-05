@@ -15,11 +15,9 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@radix-ui/react-separator';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import AddSkillForm from './skills/add_skill';
 import NewRoleForm from './role-permission/create-form';
+import EditRoleForm from './role-permission/edit-form';
 
 // 🔐 TabKey now inferred from navLinks — no duplication needed
 const navLinks = [
@@ -223,67 +221,9 @@ export default function EmployeeRolePage() {
                       </DialogHeader>
                       <div>
                         {activeTab == 'Roles' && (
-                          <form action="" method="post">
-                            <div className="grid">
-                              <div className="flex flex-col p-5">
-                                <div>
-                                  <Label>
-                                    <h3 className="text-black font-base">User Role</h3>
-                                  </Label>
-                                </div>
-                                <div>
-                                  <input
-                                    type="text"
-                                    className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm"
-                                    placeholder="Enter role name"
-                                  />
-                                </div>
-                              </div>
-                              <div className="p-5">
-                                <Label htmlFor="airplane-mode">
-                                  <h3 className="text-black font-base">Permissions</h3>
-                                </Label>
-                                <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm">
-                                  <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3">
-                                    <div className="flex flex-col py-2 p-3">
-                                      <h4 className="text-sm font-medium">Permission 1</h4>
-                                      <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
-                                      <div className="flex justify-between h-5 space-x-4 text-sm">
-                                        <div className="order-1 text-gray-500">Can update employee records.</div>
-                                        <div className="order-2">
-                                          <Switch
-                                            id="airplane-mode"
-                                            className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="flex flex-col py-2 p-3">
-                                      <h4 className="text-sm font-medium">Permission 2</h4>
-                                      <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
-                                      <div className="flex justify-between h-5 space-x-4 text-sm">
-                                        <div className="order-1 text-gray-500">Can set employee status.</div>
-                                        <div className="order-2">
-                                          <Switch
-                                            id="airplane-mode"
-                                            className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <DialogClose asChild>
-                                <div className=" px-5 pt-5 flex justify-center gap-x-6">
-                                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
-                                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">
-                                    Cancel
-                                  </Button>
-                                </div>
-                              </DialogClose>
-                            </div>
-                          </form>
+                          <div>
+                            <EditRoleForm onCancel={handleCancel} onSave={handleSave} />
+                          </div>
                         )}
 
                         {/* {activeTab == 'Skills' && (
