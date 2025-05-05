@@ -18,8 +18,6 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@radix-ui/react-separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import AddSkillForm from './skills/add_skill';
-import NewRoleForm from './role-permission/create-form';
 
 // 🔐 TabKey now inferred from navLinks — no duplication needed
 const navLinks = [
@@ -59,13 +57,13 @@ export default function EmployeeRolePage() {
   const [activeTab, setactiveTab] = useState<TabKey>('Roles');
 
   // Placeholder functions for onCancel and onSave
-  const handleCancel = () => {
-    console.log('Cancelled');
-  };
+  //   const handleCancel = () => {
+  //     console.log('Cancelled');
+  //   };
 
-  const handleSave = () => {
-    console.log('Saved');
-  };
+  //   const handleSave = () => {
+  //     console.log('Saved');
+  //   };
 
   return (
     <div>
@@ -136,13 +134,9 @@ export default function EmployeeRolePage() {
                 <DialogTitle>Create New Employee {activeTab.slice(0, -1)}</DialogTitle>
               </DialogHeader>
               <div>
-                {activeTab == 'Roles' && (
-                  <div>
-                    <NewRoleForm onCancel={handleCancel} onSave={handleSave} />
-                  </div>
-                )}
+                {activeTab == 'Roles' && <div>{/* <NewRoleForm onCancel={handleCancel} onSave={handleSave} /> */}</div>}
 
-                {activeTab == 'Skills' && <AddSkillForm />}
+                {activeTab == 'Skills'}
 
                 {/* {activeTab == 'Documents' && (
                   
