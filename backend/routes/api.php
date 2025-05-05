@@ -6,6 +6,7 @@ use App\Http\Controllers\TeamAssignController;
 use App\Http\Controllers\EmployeeSkillController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CountryAssignController;
 
 Route::controller(AuthController::class)
     ->prefix('auth')
@@ -28,6 +29,19 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Route::delete('/delete-employee/{employee}', 'destroy')->middleware('permission:employee_delete');
     });
 });
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::controller(CountryAssignController::class)->prefix('country-assigns')->group(function () {
+        Route::get('/list-country-assign', 'index')->middleware('permission:country_assign-list');
+        Route::post('/new-country-assign', 'create')->middleware('permission:country_assign-create');
+        // Route::get('/{country_assign}', 'show')->middleware('permission:country_assign-view');
+        Route::put('/update-country-assign/{country_assign}', 'update')->middleware('permission:country_assign-update');
+        // Route::delete('/delete-country-assign/{country_assign}', 'destroy')->middleware('permission:country_assign-delete');
+    });
+});
+
+
+
 
 
 // Routes for Team Assign
