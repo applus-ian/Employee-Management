@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAuthPage = pathname === '/' || pathname === '/login';
+  const isAuthPage = pathname === '/' || pathname === '/landingpage' || pathname === '/login';
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
