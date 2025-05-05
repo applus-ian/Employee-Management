@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Constants for protected routes and login route
-const PROTECTED_ROUTES = ['/dashboard', '/employee'];
+const PROTECTED_ROUTES = ['/dashboard', '/employee', '/records', '/projects'];
 const LOGIN_ROUTE = '/login';
 
 // Helper function to validate the token
@@ -61,5 +61,5 @@ export async function middleware(req: NextRequest) {
 
 // Config to apply the middleware only to the specified routes
 export const config = {
-  matcher: ['/dashboard', '/login', '/employee'], // Define which routes to apply middleware to
+  matcher: ['/dashboard', '/login', '/employee', '/records', '/projects'], // Define which routes to apply middleware to
 };

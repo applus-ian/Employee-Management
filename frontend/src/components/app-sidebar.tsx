@@ -32,13 +32,14 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
     await authContext.logout(); // Log out the user
     router.push('/login'); // Redirect to the login page
   };
+  const roleNames = authContext.user?.roles.map((role) => role.name).join(', ');
   const data = {
     navMain: [
       {
         id: 1,
         image: '/Superadmin.png',
-        title: `${authContext.user?.employee.first_name} ${authContext.user?.employee.middle_name || ''} ${authContext.user?.employee.last_name}`,
-        subtitle: `${authContext.user?.employee.suffix ? authContext.user?.employee.suffix : 'Super Admin'}`,
+        title: `${authContext.user?.employee.first_name} ${authContext.user?.employee.middle_name || ''} ${authContext.user?.employee.last_name} ${authContext.user?.employee.suffix || ''}`,
+        subtitle: `${roleNames}`,
         url: '/employee/profile',
       },
       {
@@ -51,13 +52,13 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         id: 3,
         image: <FolderOpen size={18} strokeWidth={2} />,
         title: 'Projects',
-        url: '#',
+        url: '/projects',
       },
       {
         id: 4,
         image: <Archive size={18} strokeWidth={2} />,
         title: 'Records',
-        url: '#',
+        url: '/records',
       },
       {
         id: 5,

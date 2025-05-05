@@ -1,3 +1,9 @@
+// Interface for role data
+export interface Role {
+  id: number;
+  name: string;
+}
+
 // Interface for user data
 export interface User {
   id: number;
@@ -10,6 +16,8 @@ export interface User {
     suffix: string | null; // Nullable
     gender: string;
     birthdate: string; // Date format
+    age: number;
+    is_birthday: boolean;
     civil_status: string;
     nationality: string;
     region: string;
@@ -21,12 +29,25 @@ export interface User {
     emergency_contact1: string;
     emergency_contact2: string;
     email: string;
-    job_position_id: number;
     date_hired: string; // Date format
-    employment_type_id: number;
-    manager_id: number | null; // Nullable
     profile_pic_url: string | null; // Nullable
+
+    // Nested data
+    job_position: {
+      id: number;
+      title: string;
+    };
+    employment_type: {
+      id: number;
+      name: string;
+    };
+    manager: {
+      id: number;
+      email: string;
+      full_name: string;
+    } | null;
   };
+  roles: Role[]; // Add roles as an array of Role objects
 }
 
 // Interface for login request credentials
