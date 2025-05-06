@@ -1,7 +1,7 @@
 'use client';
 
 import GeneralSettingsPage from '@/components/settings/general/generalsettings';
-import EmployeeRolePage from '@/components/settings/employee/employeesettings';
+import EmployeeRolePage from '@/components/settings/employee/employee-settings';
 import JobPositionPage from '@/components/settings/jobposition/jobpositionsettings';
 import AuditLogPage from '@/components/settings/auditlog/auditlogsettings';
 import { cn } from '@/lib/utils';
@@ -43,7 +43,7 @@ export default function Page() {
             return (
               <li key={link.name} className="flex items-center justify-center pr-5">
                 <button
-                  onClick={() => setActivePage(link.href)} // Update active page on click
+                  onClick={() => setActivePage(link.href)}
                   className={cn(
                     'inline-block items-center transition-colors font-medium text-sm pb-2 text-gray-500 hover:text-[#EE7A2A]',
                     isActive && 'text-[#EE7A2A] border-b-2 border-[#EE7A2A]',
@@ -57,7 +57,6 @@ export default function Page() {
         </ul>
       </nav>
 
-      {/* Dynamic Content Rendering */}
       <div className="bg-white rounded-xl w-full p-5">
         {activePage === 'general' && <GeneralSettingsPage />}
         {activePage === 'employee' && <EmployeeRolePage />}
