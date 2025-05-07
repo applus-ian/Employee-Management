@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-// import EditSkillCategoryForm from './edit-form';
+import EditSkillCategoryForm from './edit-form';
 
 // This type defines each row's data
 export type Skill_Category = {
@@ -22,17 +22,17 @@ export const columns: ColumnDef<Skill_Category>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: () => {
-      // const item = row.original;
+    cell: ({ row }) => {
+      const item = row.original;
 
       // These functions live inside the cell function and are available to your dialog
-      // const handleCancel = () => {
-      //   console.log('Cancelled');
-      // };
+      const handleCancel = () => {
+        console.log('Cancelled');
+      };
 
-      // const handleSave = () => {
-      //   console.log('Saved', item); // You can access the current item here too
-      // };
+      const handleSave = () => {
+        console.log('Saved', item); // You can access the current item here too
+      };
 
       return (
         <div className="flex gap-2">
@@ -43,7 +43,7 @@ export const columns: ColumnDef<Skill_Category>[] = [
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            {/* <EditSkillCategoryForm onCancel={handleCancel} onSave={handleSave} /> */}
+            <EditSkillCategoryForm onCancel={handleCancel} onSave={handleSave} />
           </Dialog>
 
           <Dialog>

@@ -3,12 +3,12 @@ import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/compone
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
-interface NewSkillCategoryFormProps {
+interface EditSkillCategoryFormProps {
   onCancel: () => void;
   onSave: (roleData: { skillName: string }) => void;
 }
 
-export default function NewSkillCategoryForm({ onCancel, onSave }: NewSkillCategoryFormProps) {
+export default function EditSkillCategoryForm({ onCancel, onSave }: EditSkillCategoryFormProps) {
   const [skillName, setSkillName] = useState('');
 
   const handleSave = () => {
@@ -17,9 +17,9 @@ export default function NewSkillCategoryForm({ onCancel, onSave }: NewSkillCateg
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[35rem] h-fit flex flex-col bg-white">
+    <DialogContent className="w-full lg:!max-w-[35rem] h-fit flex flex-col">
       <DialogHeader>
-        <DialogTitle>Create New Skill Category</DialogTitle>
+        <DialogTitle>Create Edit Skill Category</DialogTitle>
       </DialogHeader>
       <div>
         <form>
@@ -49,7 +49,7 @@ export default function NewSkillCategoryForm({ onCancel, onSave }: NewSkillCateg
               </DialogClose>
               <DialogClose asChild>
                 <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                  Cancel
+                  Cancel New
                 </Button>
               </DialogClose>
             </div>
