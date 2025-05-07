@@ -1,50 +1,107 @@
+'use client';
+
+import { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePenLine } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 import { AuthContext } from '@/context/AuthContext';
-import { useContext } from 'react';
-import PSGCSelect from './psgc-select'; // Import PSGCSelect component
+import { updateResidentialInfoSchema, UpdateResidentialInfoInput } from '@/schemas/residentialInformationSchema';
+import { useUpdateResidentialInfo } from '@/hooks/use-update-residential-info';
+import PSGCSelect from './psgc-select';
 
 export default function EditResidentialInformation() {
-  const authContext = useContext(AuthContext);
-  const employee = authContext.user?.employee;
+  const { user } = useContext(AuthContext);
+  const employee = user?.employee;
 
-  // Handle form submission
-  const handleSave = () => {
-    // handle data to be saved
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<UpdateResidentialInfoInput>({
+    resolver: zodResolver(updateResidentialInfoSchema),
+    defaultValues: {
+      region: employee?.region || '',
+      province: employee?.province || '',
+      city_or_municipality: employee?.city_or_municipality || '',
+      barangay: employee?.barangay || '',
+      street: employee?.street || '',
+    },
+  });
+
+  const { mutate } = useUpdateResidentialInfo();
+
+  const onSubmit = (data: UpdateResidentialInfoInput) => {
+    mutate(data);
+  };
+
+  const handleFieldChange = (field: string, value: string) => {
+    setValue(field as keyof UpdateResidentialInfoInput, value);
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="order-2">
+        <button className="order-2" aria-label="Edit Residential Info">
           <FilePenLine size={22} strokeWidth={2} className="text-[#EE7A2A]" />
         </button>
       </DialogTrigger>
 
-      <DialogContent className="w-full lg:!max-w-[60rem] lg:h-fit md:h-auto sm:h-[90vh] h-[90vh] flex flex-col">
+      <DialogContent className="w-full lg:!max-w-[60rem] h-[90vh] flex flex-col">
         <DialogHeader className="shrink-0 pb-4">
           <DialogTitle>Edit Residential Information</DialogTitle>
         </DialogHeader>
 
-        <div className="overflow-y-auto lg:flex-0 lg:px-0 md:overflow-y-auto md:flex-1 md:px-5 sm:overflow-y-auto sm:flex-1 sm:px-5">
-          <form action="" method="post">
+        <div className="overflow-y-auto flex-1 px-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* PSGC Selector */}
             <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {/* PSGCSelect component */}
-              <div className="flex flex-col p-5 col-span-1 md:col-span-2 lg:col-span-3">
+              <div className="col-span-full flex flex-col">
                 <PSGCSelect
                   initialRegion={employee?.region}
                   initialProvince={employee?.province}
                   initialCity={employee?.city_or_municipality}
                   initialBarangay={employee?.barangay}
-                  initialStreet={employee?.street}
+                  onChange={handleFieldChange}
+                  onRegionChange={(value) => setValue('region', value)}
+                  onProvinceChange={(value) => setValue('province', value)}
+                  onCityChange={(value) => setValue('city_or_municipality', value)}
+                  onBarangayChange={(value) => setValue('barangay', value)}
                 />
+
+                {/* Error messages */}
+                {errors.region && <span className="text-red-500 text-sm mt-1">{errors.region.message}</span>}
+                {errors.province && <span className="text-red-500 text-sm mt-1">{errors.province.message}</span>}
+                {errors.city_or_municipality && (
+                  <span className="text-red-500 text-sm mt-1">{errors.city_or_municipality.message}</span>
+                )}
+                {errors.barangay && <span className="text-red-500 text-sm mt-1">{errors.barangay.message}</span>}
               </div>
-              <div className="col-span-1 md:col-span-2 lg:col-span-3 px-5 pt-5 flex justify-center gap-x-6">
-                <Button onClick={handleSave} className="bg-[#EE7A2A] text-white w-[10rem]">
-                  Save Changes
-                </Button>
+
+              {/* Street Field */}
+              <div className="col-span-full">
+                <label htmlFor="street" className="block text-sm font-medium text-gray-700 mb-1">
+                  Street
+                </label>
+                <input
+                  id="street"
+                  type="text"
+                  {...register('street')}
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                />
+                {errors.street && <span className="text-red-500 text-sm mt-1">{errors.street.message}</span>}
               </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="pt-5 flex justify-center gap-x-6">
+              <Button type="submit" className="bg-[#EE7A2A] text-white w-[10rem]">
+                Save Changes
+              </Button>
             </div>
           </form>
         </div>

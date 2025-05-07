@@ -51,4 +51,26 @@ class AuthService
             return false;
         }
     }
+
+    public function changeLoggedUserPassword(User $user, string $newPassword): User
+    {
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        return $user;
+    }
+
+    // Update Employee Personal Info
+    public function updateLoggedUserPersonalInfo(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
+
+    // Update Employee Residential Info
+    public function updateLoggedUserResidentialInfo(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
 }

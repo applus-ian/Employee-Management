@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterUserRequest;
 use App\Services\EmploymentStatusHistoryService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -29,22 +30,24 @@ class UserController extends Controller
     }
 
     // Change Password
-    public function changePassword(PasswordChangeRequest $request, int $userId): JsonResponse
+    public function changePassword(PasswordChangeRequest $request): JsonResponse
     {
         try {
-            // Call the service to change the password
-            $user = $this->userService->changePassword(
-                $userId,
-                $request->current_password,
-                $request->new_password,
-                $request->new_password_confirmation
+            $user = Auth::user(); // Authenticated user
+            $updatedUser = $this->userService->changeUserPassword(
+                $user,
+                $request->input('new_password')
             );
 
-            // Return a success response with the updated user data
-            return response()->json(['message' => 'Password changed successfully.', 'user' => $user], 200);
-        } catch (\Exception $e) {
-            // Return an error response if any exception is thrown
-            return response()->json(['message' => $e->getMessage()], 400);
+            return response()->json([
+                'message' => 'Password changed successfully.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to change password.',
+                'error' => $e->getMessage(),
+            ], 400);
         }
     }
 
