@@ -16,7 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { CirclePlus } from 'lucide-react';
-// import NewSkillCategoryForm from './create-form';
+import NewSkillCategoryForm from './create-form';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -48,13 +48,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   });
 
   // Placeholder functions for onCancel and onSave
-  // const handleCancel = () => {
-  //   console.log('Cancelled');
-  // };
+  const handleCancel = () => {
+    console.log('Cancelled');
+  };
 
-  // const handleSave = () => {
-  //   console.log('Saved');
-  // };
+  const handleSave = () => {
+    console.log('Saved');
+  };
 
   return (
     <div>
@@ -92,7 +92,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 </span>
               </button>
             </DialogTrigger>
-            <div>{/* <NewSkillCategoryForm onCancel={handleCancel} onSave={handleSave} /> */}</div>
+            <div>
+              <NewSkillCategoryForm onCancel={handleCancel} onSave={handleSave} />
+            </div>
           </Dialog>
         </div>
       </div>
