@@ -3,10 +3,12 @@ import RolePermission from './role-permission/role-permission';
 import Skills from './skills/skills';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-// import NewRoleForm from './role-permission/create-form';
+import NewRoleForm from './role-permission/create-form';
 import { CirclePlus, TextSearch } from 'lucide-react';
 import NewSkillForm from './skills/create-form';
 import Skill_Categories from './skills/skill-category/skill-category';
+import NewDocumentForm from './document/create-form';
+import Documents from './document/document';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
@@ -84,11 +86,9 @@ export default function EmployeeRolePage() {
               </button>
             </DialogTrigger>
             <div>
-              {/* {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={handleSave} />} */}
+              {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Skills' && <NewSkillForm onCancel={handleCancel} onSave={handleSave} />}
-              {/* {activeTab === 'Documents' && (
-                
-              )} */}
+              {activeTab === 'Documents' && <NewDocumentForm onCancel={handleCancel} onSave={handleSave} />}
             </div>
           </Dialog>
         </div>
@@ -96,7 +96,7 @@ export default function EmployeeRolePage() {
 
       {activeTab === 'Roles' && <RolePermission />}
       {activeTab === 'Skills' && <Skills />}
-      {/* {activeTab === 'Documents' && <JobPositionPage />} */}
+      {activeTab === 'Documents' && <Documents />}
     </div>
   );
 }
