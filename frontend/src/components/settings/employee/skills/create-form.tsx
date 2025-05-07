@@ -20,7 +20,7 @@ export default function NewSkillForm({ onCancel, onSave }: NewSkillFormProps) {
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col">
+    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
       <DialogHeader>
         <DialogTitle>Create New Employee Skill</DialogTitle>
       </DialogHeader>

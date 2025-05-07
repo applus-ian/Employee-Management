@@ -102,7 +102,7 @@ export const columns: ColumnDef<Skill>[] = [
                 <Trash2 size={18} />
               </button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="bg-white">
               <DialogHeader>
                 <DialogTitle className="flex justify-center items-center">
                   <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Deletion?</span>

@@ -14,6 +14,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { CirclePlus } from 'lucide-react';
+// import NewSkillCategoryForm from './create-form';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,6 +47,15 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     },
   });
 
+  // Placeholder functions for onCancel and onSave
+  // const handleCancel = () => {
+  //   console.log('Cancelled');
+  // };
+
+  // const handleSave = () => {
+  //   console.log('Saved');
+  // };
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -65,11 +77,24 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <span className="text-sm">entries</span>
         </div>
         <Input
-          placeholder="Search role or permission..."
+          placeholder="Search category..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          className="w-full"
+          className="max-w-xs"
         />
+        <div className="pl-5">
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="px-2 py-1 text-[#EE7A2A] font-medium text-xs rounded-md hover:bg-[#FFA161] hover:text-white border border-[#EE7A2A] size-fit">
+                <span className="flex items-center gap-1">
+                  Add New Category
+                  <CirclePlus size={18} strokeWidth={2} />
+                </span>
+              </button>
+            </DialogTrigger>
+            <div>{/* <NewSkillCategoryForm onCancel={handleCancel} onSave={handleSave} /> */}</div>
+          </Dialog>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

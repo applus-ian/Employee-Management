@@ -65,7 +65,7 @@ export default function EditRoleForm({ onCancel, onSave }: EditRoleFormProps) {
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col">
+    <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto">
       <DialogHeader>
         <DialogTitle>Update Employee Role</DialogTitle>
       </DialogHeader>
@@ -92,7 +92,7 @@ export default function EditRoleForm({ onCancel, onSave }: EditRoleFormProps) {
               <h3 className="text-black font-base">Permissions</h3>
             </Label>
             <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm">
-              <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3 max-h-80 overflow-y-auto gap-4">
+              <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3 max-h-50 overflow-y-auto gap-4">
                 {permissionsList.map((perm) => (
                   <div key={perm.id} className="flex flex-col py-2 p-3">
                     <h4 className="text-sm font-medium">{perm.name}</h4>

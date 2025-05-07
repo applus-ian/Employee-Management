@@ -65,7 +65,7 @@ export default function NewRoleForm({ onCancel, onSave }: NewRoleFormProps) {
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col">
+    <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto rounded-m">
       <DialogHeader>
         <DialogTitle>Create New Employee Role and Permissions</DialogTitle>
       </DialogHeader>

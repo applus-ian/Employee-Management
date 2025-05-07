@@ -2,29 +2,19 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-import EditRoleForm from './edit-form';
+// import EditSkillCategoryForm from './edit-form';
 
 // This type defines each row's data
-export type Role_Permission = {
-  role: string;
-  permission: number;
+export type Skill_Category = {
+  categoryName: string;
 };
 
-export const columns: ColumnDef<Role_Permission>[] = [
+export const columns: ColumnDef<Skill_Category>[] = [
   {
-    accessorKey: 'role',
+    accessorKey: 'categoryName',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        User Role
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-  },
-  {
-    accessorKey: 'permission',
-    header: ({ column }) => (
-      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Permissions
+        Category Name
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -32,17 +22,17 @@ export const columns: ColumnDef<Role_Permission>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: ({ row }) => {
-      const item = row.original;
+    cell: () => {
+      // const item = row.original;
 
       // These functions live inside the cell function and are available to your dialog
-      const handleCancel = () => {
-        console.log('Cancelled');
-      };
+      // const handleCancel = () => {
+      //   console.log('Cancelled');
+      // };
 
-      const handleSave = () => {
-        console.log('Saved', item); // You can access the current item here too
-      };
+      // const handleSave = () => {
+      //   console.log('Saved', item); // You can access the current item here too
+      // };
 
       return (
         <div className="flex gap-2">
@@ -53,7 +43,7 @@ export const columns: ColumnDef<Role_Permission>[] = [
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            <EditRoleForm onCancel={handleCancel} onSave={handleSave} />
+            {/* <EditSkillCategoryForm onCancel={handleCancel} onSave={handleSave} /> */}
           </Dialog>
 
           <Dialog>
@@ -69,7 +59,7 @@ export const columns: ColumnDef<Role_Permission>[] = [
                 </DialogTitle>
               </DialogHeader>
               <div className="flex justify-center items-center">
-                <p className="text-center">Do you want to delete this Employee Role?</p>
+                <p className="text-center">Do you want to delete this Skill Category?</p>
               </div>
               <DialogClose asChild>
                 <div className=" px-5 pt-5 flex justify-center gap-x-6">
