@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import RolePermission from './role-permission/role-permission';
+import Skills from './skills/skills';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import NewRoleForm from './role-permission/create-form';
@@ -95,8 +96,8 @@ export default function EmployeeRolePage() {
       </nav>
 
       {activeTab === 'Roles' && <RolePermission />}
-      {/* {activeTab === 'Skills' && <EmployeeRolePage />}
-      {activeTab === 'Documents' && <JobPositionPage />} */}
+      {activeTab === 'Skills' && <Skills />}
+      {/* {activeTab === 'Documents' && <JobPositionPage />} */}
     </div>
   );
 }
