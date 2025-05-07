@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { cn } from '@/lib/utils';
 import NewRoleForm from './role-permission/create-form';
 import { CirclePlus, TextSearch } from 'lucide-react';
+import NewSkillForm from './skills/create-form';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
@@ -84,9 +85,7 @@ export default function EmployeeRolePage() {
             </DialogTrigger>
             <div>
               {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={handleSave} />}
-              {/* {activeTab === 'Skills' && (
-                
-              )} */}
+              {activeTab === 'Skills' && <NewSkillForm onCancel={handleCancel} onSave={handleSave} />}
               {/* {activeTab === 'Documents' && (
                 
               )} */}

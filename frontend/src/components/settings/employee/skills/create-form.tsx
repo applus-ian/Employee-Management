@@ -9,7 +9,7 @@ interface NewSkillFormProps {
   onSave: (roleData: { skillName: string; description: string; category: string }) => void;
 }
 
-export default function NewRoleForm({ onCancel, onSave }: NewSkillFormProps) {
+export default function NewSkillForm({ onCancel, onSave }: NewSkillFormProps) {
   const [skillName, setSkillName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
