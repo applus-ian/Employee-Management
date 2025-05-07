@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        dialog: '80rem', // adjust as needed (e.g., 1280px)
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -17,6 +20,7 @@ export default {
         roboto: ['Roboto', 'sans-serif'],  // Adding the custom font family
       },
     },
+    
     
   },
   plugins: [],
