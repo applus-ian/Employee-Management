@@ -4,6 +4,7 @@ import { TrashIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+
 export const NewEmployeeForm = ({ onCancel }: { onCancel: () => void }) => {
   const [tags, setTags] = useState(['design', 'ux', 'figma']);
   return (

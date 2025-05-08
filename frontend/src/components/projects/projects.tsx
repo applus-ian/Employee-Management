@@ -14,7 +14,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+
 import NewProjectForm from './create-form';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
@@ -56,9 +56,6 @@ export default function EmployeeProjectsPage() {
         <div className="flex gap-4">
           {/* Status Filter */}
           <div className="relative">
-            <Label htmlFor="status" className="text-sm font-medium text-gray-700">
-              Status
-            </Label>
             <Select>
               <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-gray-100 text-sm flex items-center gap-2">
                 <SelectValue placeholder="All Statuses" />
@@ -74,9 +71,6 @@ export default function EmployeeProjectsPage() {
 
           {/* Priority Filter */}
           <div className="relative">
-            <Label htmlFor="priority" className="text-sm font-medium text-gray-700">
-              Priority
-            </Label>
             <Select>
               <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-gray-100 text-sm flex items-center gap-2">
                 <SelectValue placeholder="All Priorities" />
