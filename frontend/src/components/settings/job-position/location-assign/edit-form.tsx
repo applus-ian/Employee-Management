@@ -147,7 +147,7 @@ export default function NewLocationAssignForm({ onCancel, onSave }: NewLocationA
         <div className="pt-5 flex justify-center gap-x-6">
           <DialogClose asChild>
             <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-              Create
+              Save Changes
             </Button>
           </DialogClose>
           <DialogClose asChild>
