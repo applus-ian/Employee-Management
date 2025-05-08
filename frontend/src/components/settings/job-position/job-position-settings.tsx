@@ -10,6 +10,7 @@ import CountryAssign from './country-assign/country-assign';
 import NewCountryAssignForm from './country-assign/create-form';
 import OfficeAssign from './office-assign/office-assign';
 import NewOfficeAssignForm from './office-assign/create-form';
+import TeamAssign from './team-assign/team-assign';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -87,8 +88,7 @@ export default function JobPositionPage() {
       {activeTab === 'Location Assigns' && <LocationAssign />}
       {activeTab === 'Country Assigns' && <CountryAssign />}
       {activeTab === 'Office Assigns' && <OfficeAssign />}
-      {/* {activeTab === '' && < />} */}
-      {/* {activeTab === '' && < />} */}
+      {activeTab === 'Team Assigns' && <TeamAssign />}
     </div>
   );
 }
