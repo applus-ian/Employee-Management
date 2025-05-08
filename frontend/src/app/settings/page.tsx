@@ -2,11 +2,9 @@
 
 import GeneralSettingsPage from '@/components/settings/general/generalsettings';
 import EmployeeRolePage from '@/components/settings/employee/employee-settings';
-import JobPositionPage from '@/components/settings/jobposition/jobpositionsettings';
+import JobPositionPage from '@/components/settings/job-position/job-position-settings';
 import AuditLogPage from '@/components/settings/auditlog/auditlogsettings';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
 import { useState } from 'react';
 
 const navLinks = [
@@ -26,12 +24,6 @@ export default function Page() {
         <div className="flex justify-between">
           <div className="order-1">
             <p className="text-gray-600 pb-8">Setup and edit system settings and preferences</p>
-          </div>
-          <div className="order-2 pr-10">
-            <div className="relative w-full bg-white rounded-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
-              <Input type="text" placeholder="Search Settings..." className="pl-10 text-gray-500" />
-            </div>
           </div>
         </div>
 
