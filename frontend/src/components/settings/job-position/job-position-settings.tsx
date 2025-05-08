@@ -4,6 +4,8 @@ import { cn } from '@/lib/utils';
 import { CirclePlus } from 'lucide-react';
 import NewJobPositionForm from './job-position/create-form';
 import JobPosition from './job-position/job-position';
+import NewLocationAssignForm from './location-assign/create-form';
+import LocationAssign from './location-assign/location-assign';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -67,16 +69,20 @@ export default function JobPositionPage() {
             </DialogTrigger>
             <div>
               {activeTab === 'Job Positions' && <NewJobPositionForm onCancel={handleCancel} onSave={handleSave} />}
-              {/* {activeTab === '' && < onCancel={handleCancel} onSave={handleSave} />} */}
-              {/* {activeTab === '' && < onCancel={handleCancel} onSave={handleSave} />} */}
-              {/* {activeTab === '' && < onCancel={handleCancel} onSave={handleSave} />} */}
+              {activeTab === 'Location Assigns' && (
+                <NewLocationAssignForm onCancel={handleCancel} onSave={handleSave} />
+              )}
+              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
+              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
+              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
+              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
             </div>
           </Dialog>
         </div>
       </nav>
 
       {activeTab === 'Job Positions' && <JobPosition />}
-      {/* {activeTab === '' && < />} */}
+      {activeTab === 'Location Assigns' && <LocationAssign />}
       {/* {activeTab === '' && < />} */}
       {/* {activeTab === '' && < />} */}
     </div>
