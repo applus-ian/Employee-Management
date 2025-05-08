@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-// import EditDepartmentAssignForm from './edit-form';
+import EditDepartmentAssignForm from './edit-form';
 
 // This type defines each row's data
 export type Department_Assign = {
@@ -32,16 +32,16 @@ export const columns: ColumnDef<Department_Assign>[] = [
   {
     id: 'actions',
     header: 'Actions',
-    cell: (/* { row } */) => {
-      // const item = row.original;
+    cell: ({ row }) => {
+      const item = row.original;
 
-      // const handleCancel = () => {
-      //   console.log('Cancelled');
-      // };
+      const handleCancel = () => {
+        console.log('Cancelled');
+      };
 
-      // const handleSave = () => {
-      //   console.log('Saved', item);
-      // };
+      const handleSave = () => {
+        console.log('Saved', item);
+      };
 
       return (
         <div className="flex gap-2">
@@ -52,7 +52,7 @@ export const columns: ColumnDef<Department_Assign>[] = [
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            {/* <EditDepartmentAssignForm onCancel={handleCancel} onSave={handleSave} /> */}
+            <EditDepartmentAssignForm onCancel={handleCancel} onSave={handleSave} />
           </Dialog>
 
           <Dialog>

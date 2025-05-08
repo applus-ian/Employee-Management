@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
             }}
           >
             {[5, 10, 20, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
+              <option key={pageSize} value={pageSize} className="bg-white">
                 {pageSize}
               </option>
             ))}
