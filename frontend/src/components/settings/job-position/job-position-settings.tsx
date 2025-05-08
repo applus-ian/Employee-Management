@@ -11,6 +11,7 @@ import NewCountryAssignForm from './country-assign/create-form';
 import OfficeAssign from './office-assign/office-assign';
 import NewOfficeAssignForm from './office-assign/create-form';
 import TeamAssign from './team-assign/team-assign';
+import NewTeamAssignForm from './team-assign/create-form';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -79,6 +80,7 @@ export default function JobPositionPage() {
               )}
               {activeTab === 'Country Assigns' && <NewCountryAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Office Assigns' && <NewOfficeAssignForm onCancel={handleCancel} onSave={handleSave} />}
+              {activeTab === 'Team Assigns' && <NewTeamAssignForm onCancel={handleCancel} onSave={handleSave} />}
             </div>
           </Dialog>
         </div>
