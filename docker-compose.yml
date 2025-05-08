@@ -57,7 +57,12 @@ services:
       DB_DATABASE: backend
       DB_USERNAME: team_joshua
       DB_PASSWORD: lac_ojt_applus
-    command: php artisan serve --host=0.0.0.0
+    command: >
+      sh -c "
+        php artisan migrate --force &&
+        php artisan db:seed --class=DefaultDataSeeder &&
+        php artisan serve --host=0.0.0.0
+      "
 
   # Next.js Frontend Service
   frontend:
