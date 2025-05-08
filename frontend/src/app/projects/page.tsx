@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ProjectsPage from '@/components/projects/projects';
 
@@ -19,16 +17,11 @@ export default function Page() {
           <div className="order-1">
             <p className="text-gray-600 pb-8">Setup and manage Projects</p>
           </div>
-          <div className="order-2 pr-10">
-            <div className="relative w-full bg-white rounded-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
-              <Input type="text" placeholder="Search Settings..." className="pl-10 text-gray-500" />
-            </div>
-          </div>
+          <div className="order-2 pr-10"></div>
         </div>
 
         {/* Nav links */}
-        <ul className="flex gap-3 border-b-2 border-gray-300 pb-0 w-full mb-4">
+        <ul className="flex gap-3 border-b border-gray-300 pb-0 w-full mb-4">
           {navLinks.map((link) => {
             const isActive = activePage === link.href;
 
@@ -38,7 +31,7 @@ export default function Page() {
                   onClick={() => setActivePage(link.href)} // Update active page on click
                   className={cn(
                     'inline-block items-center transition-colors font-medium text-sm pb-2 text-gray-500 hover:text-[#EE7A2A]',
-                    isActive && 'text-[#EE7A2A] border-b-2 border-[#EE7A2A]',
+                    isActive && 'text-orange-600 border-b-2 border-orange-500',
                   )}
                 >
                   {link.name}
@@ -50,7 +43,7 @@ export default function Page() {
       </nav>
 
       {/* Dynamic Content Rendering */}
-      <div className="bg-white rounded-xl w-full p-5">{activePage === 'project' && <ProjectsPage />}</div>
+      <div className="bg-white rounded-xl w-full p-5 shadow-sm">{activePage === 'project' && <ProjectsPage />}</div>
     </div>
   );
 }

@@ -7,6 +7,9 @@ export default {
   ],
   theme: {
     extend: {
+      maxWidth: {
+        dialog: '80rem', // adjust as needed (e.g., 1280px)
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -28,6 +31,7 @@ export default {
     animation: {
       waveOnce: 'wave 1s ease-in-out',
     },
+    
     
   },
   plugins: [],
