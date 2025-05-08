@@ -12,6 +12,7 @@ import OfficeAssign from './office-assign/office-assign';
 import NewOfficeAssignForm from './office-assign/create-form';
 import TeamAssign from './team-assign/team-assign';
 import NewTeamAssignForm from './team-assign/create-form';
+import DepartmentAssign from './department-assign/department-assign';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -91,6 +92,7 @@ export default function JobPositionPage() {
       {activeTab === 'Country Assigns' && <CountryAssign />}
       {activeTab === 'Office Assigns' && <OfficeAssign />}
       {activeTab === 'Team Assigns' && <TeamAssign />}
+      {activeTab === 'Department Assigns' && <DepartmentAssign />}
     </div>
   );
 }
