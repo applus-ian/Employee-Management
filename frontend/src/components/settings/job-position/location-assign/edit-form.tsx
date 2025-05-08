@@ -34,128 +34,221 @@ export default function EditLocationAssignForm({ onCancel, onSave }: EditLocatio
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[35rem] h-fit flex flex-col bg-white">
+    <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto rounded-m">
       <DialogHeader>
-        <DialogTitle>Create New Location Assignment</DialogTitle>
+        <DialogTitle>Create Edit Location Assignment</DialogTitle>
       </DialogHeader>
+      <div>
+        <form>
+          <div className="grid">
+            <div className="flex flex-col p-5">
+              <div>
+                <Label>
+                  <h3 className="text-black font-base">Job Position</h3>
+                </Label>
+              </div>
+              <div>
+                <Select value={job_positionName} onValueChange={(value) => setJob_PositionName(value)}>
+                  <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
+                    <SelectValue placeholder="Choose Category" className="text-gray-500" />
+                  </SelectTrigger>
+                  <SelectContent className="border rounded-xl border-gray-500 bg-white">
+                    <SelectItem value="Software Developer" className="hover:bg-gray-300 text-black">
+                      Software Developer
+                    </SelectItem>{' '}
+                    <SelectItem value="Solutions Architect" className="hover:bg-gray-300 text-black">
+                      Solutions Architect
+                    </SelectItem>{' '}
+                    <SelectItem value="Senior Software Developer" className="hover:bg-gray-300 text-black">
+                      Senior Software Developer
+                    </SelectItem>{' '}
+                    <SelectItem value="Software QA Systems Tester" className="hover:bg-gray-300 text-black">
+                      Software QA Systems Tester
+                    </SelectItem>{' '}
+                    <SelectItem value="Software QA Automation Tester" className="hover:bg-gray-300 text-black">
+                      Software QA Automation Tester
+                    </SelectItem>{' '}
+                    <SelectItem value="System Administrator" className="hover:bg-gray-300 text-black">
+                      System Administrator
+                    </SelectItem>{' '}
+                    <SelectItem value="HR Officer" className="hover:bg-gray-300 text-black">
+                      HR Officer
+                    </SelectItem>{' '}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3 max-h-80 overflow-y-auto gap-4">
+              <div className="flex flex-col py-2 p-3">
+                <div>
+                  <Label>
+                    <h3 className="text-black font-base">Country Assign</h3>
+                  </Label>
+                </div>
+                <div>
+                  <Select value={country_assignName} onValueChange={(value) => setCountry_AssignName(value)}>
+                    <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
+                      <SelectValue placeholder="Choose Category" className="text-gray-500" />
+                    </SelectTrigger>
+                    <SelectContent className="border rounded-xl border-gray-500 bg-white">
+                      <SelectItem value="Australia" className="hover:bg-gray-300 text-black">
+                        Australia
+                      </SelectItem>{' '}
+                      <SelectItem value="Spain" className="hover:bg-gray-300 text-black">
+                        Spain
+                      </SelectItem>{' '}
+                      <SelectItem value="Malaysia" className="hover:bg-gray-300 text-black">
+                        Malaysia
+                      </SelectItem>{' '}
+                      <SelectItem value="Philippines" className="hover:bg-gray-300 text-black">
+                        Philippines
+                      </SelectItem>{' '}
+                      <SelectItem value="Indonesia" className="hover:bg-gray-300 text-black">
+                        Indonesia
+                      </SelectItem>{' '}
+                      <SelectItem value="Canada" className="hover:bg-gray-300 text-black">
+                        Canada
+                      </SelectItem>{' '}
+                      <SelectItem value="Japan" className="hover:bg-gray-300 text-black">
+                        Japan
+                      </SelectItem>{' '}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
 
-      <div className="p-5 space-y-4">
-        {/* Two-column layout for 6 dropdowns */}
-        <div className="grid grid-cols-2 sm:grid-cols-1 gap-4">
-          <div className="colspan-2">
-            <Label htmlFor="title">
-              <h3 className="text-black font-base">Job Position</h3>
-            </Label>
-            <Select value={job_positionName} onValueChange={(value) => setJob_PositionName(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a Job Position..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Software_Developer">Software Developer</SelectItem>
-                <SelectItem value="Solutions_Architect">Solutions Architect</SelectItem>
-                <SelectItem value="Senior_Software_Developer">Senior Software Developer</SelectItem>
-                <SelectItem value="Software_QA_Systems_Tester">Software QA Systems Tester</SelectItem>
-                <SelectItem value="Software_QA_Automation_Tester">Software QA Automation Tester</SelectItem>
-                <SelectItem value="System_Administrator">System Administrator</SelectItem>
-                <SelectItem value="HR_Officer">HR Officer</SelectItem>
-              </SelectContent>
-            </Select>
+              <div className="flex flex-col py-2 p-3">
+                <div>
+                  <Label>
+                    <h3 className="text-black font-base">Office Assign</h3>
+                  </Label>
+                </div>
+                <div>
+                  <Select value={office_assignName} onValueChange={(value) => setOffice_AssignName(value)}>
+                    <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
+                      <SelectValue placeholder="Choose Category" className="text-gray-500" />
+                    </SelectTrigger>
+                    <SelectContent className="border rounded-xl border-gray-500 bg-white">
+                      <SelectItem value="Ayala Cebu Tower 1 Office" className="hover:bg-gray-300 text-black">
+                        Ayala Cebu Tower 1 Office
+                      </SelectItem>{' '}
+                      <SelectItem value="Subangdaku Mandaue Office" className="hover:bg-gray-300 text-black">
+                        Subangdaku Mandaue Office
+                      </SelectItem>{' '}
+                      <SelectItem value="Basak Mandaue Office" className="hover:bg-gray-300 text-black">
+                        Basak Mandaue Office
+                      </SelectItem>{' '}
+                      <SelectItem value="Barili Office" className="hover:bg-gray-300 text-black">
+                        Barili Office
+                      </SelectItem>{' '}
+                      <SelectItem value="Talisay Office" className="hover:bg-gray-300 text-black">
+                        Talisay Office
+                      </SelectItem>{' '}
+                      <SelectItem value="Moalboal Office" className="hover:bg-gray-300 text-black">
+                        Moalboal Office
+                      </SelectItem>{' '}
+                      <SelectItem value="Bantayan Office" className="hover:bg-gray-300 text-black">
+                        Bantayan Office
+                      </SelectItem>{' '}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex flex-col py-2 p-3">
+                <div>
+                  <Label>
+                    <h3 className="text-black font-base">Team Assign</h3>
+                  </Label>
+                </div>
+                <div>
+                  <Select value={team_assignName} onValueChange={(value) => setTeam_AssignName(value)}>
+                    <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
+                      <SelectValue placeholder="Choose Category" className="text-gray-500" />
+                    </SelectTrigger>
+                    <SelectContent className="border rounded-xl border-gray-500 bg-white">
+                      <SelectItem value="Employee Management Team" className="hover:bg-gray-300 text-black">
+                        Employee Management Team
+                      </SelectItem>{' '}
+                      <SelectItem value="Attendance Team" className="hover:bg-gray-300 text-black">
+                        Attendance Team
+                      </SelectItem>{' '}
+                      <SelectItem value="Recruitment Team" className="hover:bg-gray-300 text-black">
+                        Recruitment Team
+                      </SelectItem>{' '}
+                      <SelectItem value="Onboarding Team" className="hover:bg-gray-300 text-black">
+                        Onboarding Team
+                      </SelectItem>{' '}
+                      <SelectItem value="HR Team" className="hover:bg-gray-300 text-black">
+                        HR Team
+                      </SelectItem>{' '}
+                      <SelectItem value="Admin Team" className="hover:bg-gray-300 text-black">
+                        Admin Team
+                      </SelectItem>{' '}
+                      <SelectItem value="Joshua Team" className="hover:bg-gray-300 text-black">
+                        Joshua Team
+                      </SelectItem>{' '}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex flex-col py-2 p-3">
+                <div>
+                  <Label>
+                    <h3 className="text-black font-base">Department Assign</h3>
+                  </Label>
+                </div>
+                <div>
+                  <Select value={department_assignName} onValueChange={(value) => setDepartment_AssignName(value)}>
+                    <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
+                      <SelectValue placeholder="Choose Category" className="text-gray-500" />
+                    </SelectTrigger>
+                    <SelectContent className="border rounded-xl border-gray-500 bg-white">
+                      <SelectItem value="Information Technology" className="hover:bg-gray-300 text-black">
+                        Information Technology
+                      </SelectItem>{' '}
+                      <SelectItem value="Finance" className="hover:bg-gray-300 text-black">
+                        Finance
+                      </SelectItem>{' '}
+                      <SelectItem value="Human Resource" className="hover:bg-gray-300 text-black">
+                        Human Resource
+                      </SelectItem>{' '}
+                      <SelectItem value="IT Support" className="hover:bg-gray-300 text-black">
+                        IT Support
+                      </SelectItem>{' '}
+                      <SelectItem value="Engineering" className="hover:bg-gray-300 text-black">
+                        Engineering
+                      </SelectItem>{' '}
+                      <SelectItem value="Backend" className="hover:bg-gray-300 text-black">
+                        Backend
+                      </SelectItem>{' '}
+                      <SelectItem value="DevOps" className="hover:bg-gray-300 text-black">
+                        DevOps
+                      </SelectItem>{' '}
+                      <SelectItem value="Flower" className="hover:bg-gray-300 text-black">
+                        Flower
+                      </SelectItem>{' '}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            <div className=" px-5 pt-5 flex justify-center gap-x-6">
+              <DialogClose asChild>
+                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
+                  Confirm
+                </Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
+                  Cancel
+                </Button>
+              </DialogClose>
+            </div>
           </div>
-
-          <div>
-            <Label htmlFor="title">
-              <h3 className="text-black font-base">Country Assign</h3>
-            </Label>
-            <Select value={country_assignName} onValueChange={(value) => setCountry_AssignName(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Assign a country..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="australia">Australia</SelectItem>
-                <SelectItem value="spain">Spain</SelectItem>
-                <SelectItem value="malaysia">Malaysia</SelectItem>
-                <SelectItem value="philippines">Philippines</SelectItem>
-                <SelectItem value="indonesia">Indonesia</SelectItem>
-                <SelectItem value="canada">Canada</SelectItem>
-                <SelectItem value="japan">Japan</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="title">
-              <h3 className="text-black font-base">Office Assign</h3>
-            </Label>
-            <Select value={office_assignName} onValueChange={(value) => setOffice_AssignName(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Assign an office..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ayala_cebu_tower_1_office">Ayala Cebu Tower 1 Office</SelectItem>
-                <SelectItem value="Subangdaku Mandaue Office">Subangdaku Mandaue Office</SelectItem>
-                <SelectItem value="Basak Mandaue Office">Basak Mandaue Office</SelectItem>
-                <SelectItem value="Barili Office">Barili Office</SelectItem>
-                <SelectItem value="Talisay Office">Talisay Office</SelectItem>
-                <SelectItem value="Moalboal Office">Moalboal Office</SelectItem>
-                <SelectItem value="Bantayan Office">Bantayan Office</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="title">
-              <h3 className="text-black font-base">Team Assign</h3>
-            </Label>
-            <Select value={team_assignName} onValueChange={(value) => setTeam_AssignName(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Assign a team..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Employee Management Team">Employee Management Team</SelectItem>
-                <SelectItem value="Attendance Team">Attendance Team</SelectItem>
-                <SelectItem value="Recruitment Team">Recruitment Team</SelectItem>
-                <SelectItem value="Onboarding Team">Onboarding Team</SelectItem>
-                <SelectItem value="HR Team">HR Team</SelectItem>
-                <SelectItem value="Admin Team">Admin Team</SelectItem>
-                <SelectItem value="Joshua Team">Joshua Team</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label htmlFor="title">
-              <h3 className="text-black font-base">Department Assign</h3>
-            </Label>
-            <Select value={department_assignName} onValueChange={(value) => setDepartment_AssignName(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Assign a department..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Information Technology">Information Technology</SelectItem>
-                <SelectItem value="Finance ">Finance </SelectItem>
-                <SelectItem value="Human Resource">Human Resource</SelectItem>
-                <SelectItem value="IT Support">IT Support</SelectItem>
-                <SelectItem value="Engineering">Engineering</SelectItem>
-                <SelectItem value="Backend">Backend</SelectItem>
-                <SelectItem value="DevOps">DevOps</SelectItem>
-                <SelectItem value="Flower">Flower</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="pt-5 flex justify-center gap-x-6">
-          <DialogClose asChild>
-            <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-              Save Changes
-            </Button>
-          </DialogClose>
-          <DialogClose asChild>
-            <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-              Cancel
-            </Button>
-          </DialogClose>
-        </div>
+        </form>
       </div>
     </DialogContent>
   );
