@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { CirclePlus } from 'lucide-react';
+import NewJobPositionForm from './job-position/create-form';
+import JobPosition from './job-position/job-position';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -16,6 +18,15 @@ type TabKey = (typeof navLinks)[number]['href'];
 
 export default function JobPositionPage() {
   const [activeTab, setactiveTab] = useState<TabKey>('Job Positions');
+
+  // Placeholder functions for onCancel and onSave
+  const handleCancel = () => {
+    console.log('Cancelled');
+  };
+
+  const handleSave = () => {
+    console.log('Saved');
+  };
 
   return (
     <div>
@@ -55,17 +66,19 @@ export default function JobPositionPage() {
               </button>
             </DialogTrigger>
             <div>
-              {/* {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={handleSave} />} */}
-              {/* {activeTab === 'Skills' && <NewSkillForm onCancel={handleCancel} onSave={handleSave} />} */}
-              {/* {activeTab === 'Documents' && <NewDocumentForm onCancel={handleCancel} onSave={handleSave} />} */}
+              {activeTab === 'Job Positions' && <NewJobPositionForm onCancel={handleCancel} onSave={handleSave} />}
+              {/* {activeTab === '' && < onCancel={handleCancel} onSave={handleSave} />} */}
+              {/* {activeTab === '' && < onCancel={handleCancel} onSave={handleSave} />} */}
+              {/* {activeTab === '' && < onCancel={handleCancel} onSave={handleSave} />} */}
             </div>
           </Dialog>
         </div>
       </nav>
 
-      {/* {activeTab === 'Roles' && <RolePermission />}
-      {activeTab === 'Skills' && <Skills />}
-      {activeTab === 'Documents' && <Documents />} */}
+      {activeTab === 'Job Positions' && <JobPosition />}
+      {/* {activeTab === '' && < />} */}
+      {/* {activeTab === '' && < />} */}
+      {/* {activeTab === '' && < />} */}
     </div>
   );
 }
