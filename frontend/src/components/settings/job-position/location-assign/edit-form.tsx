@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
-interface NewLocationAssignFormProps {
+interface EditLocationAssignFormProps {
   onCancel: () => void;
   onSave: (roleData: {
     job_positionName: string;
@@ -15,7 +15,7 @@ interface NewLocationAssignFormProps {
   }) => void;
 }
 
-export default function NewLocationAssignForm({ onCancel, onSave }: NewLocationAssignFormProps) {
+export default function EditLocationAssignForm({ onCancel, onSave }: EditLocationAssignFormProps) {
   const [job_positionName, setJob_PositionName] = useState('');
   const [country_assignName, setCountry_AssignName] = useState('');
   const [office_assignName, setOffice_AssignName] = useState('');
