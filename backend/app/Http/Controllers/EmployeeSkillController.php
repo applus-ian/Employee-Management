@@ -10,26 +10,26 @@ use Illuminate\Http\JsonResponse;
 
 class EmployeeSkillController extends Controller
 {
-    protected $employee_skillService;
+    protected $employeeSkillService;
 
-    public function __construct(EmployeeSkillService $employee_skillService)
+    public function __construct(EmployeeSkillService $employeeSkillService)
     {
-        $this->employee_skillService = $employee_skillService;
+        $this->employeeSkillService = $employeeSkillService;
     }
 
     // Create Employee Skill Method
     public function create(CreateEmployeeSkillRequest $request): JsonResponse
     {
-        $this->employee_skillService->createEmployeeSkill($request->validated());
+        $this->employeeSkillService->createEmployeeSkill($request->validated());
 
         return response()->json(['message' => 'The employee skill was created successfully.'], 201);
     }
 
     // Update Employee Skill Method
-    public function update(UpdateEmployeeSkillRequest $request, EmployeeSkill $employee_skill): JsonResponse
+    public function update(UpdateEmployeeSkillRequest $request, EmployeeSkill $employeeSkill): JsonResponse
     {
         // Proceed with updating the employee skill's details
-        $updated_employee_skill = $this->employee_skillService->updateEmployeeSkill($employee_skill, $request->validated());
+        $updated_employee_skill = $this->employeeSkillService->updateEmployeeSkill($employeeSkill, $request->validated());
 
         // Return the updated employee skill as a JSON response
         return response()->json($updated_employee_skill, 200);
@@ -38,21 +38,21 @@ class EmployeeSkillController extends Controller
     // Get All Employee Skills Method
     public function index(): JsonResponse
     {
-        $employee_skills = $this->employee_skillService->getAllEmployeeSkills();
+        $employee_skills = $this->employeeSkillService->getAllEmployeeSkills();
 
         return response()->json($employee_skills, 200);
     }
 
     // Get Single Employee Skilled Method
-    public function show(EmployeeSkill $employee_skill): JsonResponse
+    public function show(EmployeeSkill $employeeSkill): JsonResponse
     {
-        return response()->json($employee_skill, 200);
+        return response()->json($employeeSkill, 200);
     }
 
     // Delete Employee Skilled Method
-    public function destroy(EmployeeSkill $employee_skill): JsonResponse
+    public function destroy(EmployeeSkill $employeeSkill): JsonResponse
     {
-        $this->employee_skillService->deleteEmployeeSkill($employee_skill);
+        $this->employeeSkillService->deleteEmployeeSkill($employeeSkill);
 
         return response()->json(['message' => 'Employee skill has been deleted successfully!'], 200);
     }

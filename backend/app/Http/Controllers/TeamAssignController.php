@@ -10,26 +10,26 @@ use Illuminate\Http\JsonResponse;
 
 class TeamAssignController extends Controller
 {
-    protected $team_assignService;
+    protected $teamAssignService;
 
-    public function __construct(TeamAssignService $team_assignService)
+    public function __construct(TeamAssignService $teamAssignService)
     {
-        $this->team_assignService = $team_assignService;
+        $this->teamAssignService = $teamAssignService;
     }
 
     // Create Team Assign Method
     public function create(CreateTeamAssignRequest $request): JsonResponse
     {
-        $this->team_assignService->createTeamAssign($request->validated());
+        $this->teamAssignService->createTeamAssign($request->validated());
 
         return response()->json(['message' => 'Team created successfully!'], 201);
     }
 
     // Update Team Assign Method
-    public function update(UpdateTeamAssignRequest $request, TeamAssign $team_assign): JsonResponse
+    public function update(UpdateTeamAssignRequest $request, TeamAssign $teamAssign): JsonResponse
     {
         // Proceed with updating the assigned team's details
-        $updated_team_assign = $this->team_assignService->updateTeamAssign($team_assign, $request->validated());
+        $updated_team_assign = $this->teamAssignService->updateTeamAssign($teamAssign, $request->validated());
 
         // Return the updated assigned team as a JSON response
         return response()->json($updated_team_assign, 200);
@@ -38,21 +38,21 @@ class TeamAssignController extends Controller
     // Get All Teams Assigned Method
     public function index(): JsonResponse
     {
-        $team_assigns = $this->team_assignService->getAllTeamAssigns();
+        $team_assigns = $this->teamAssignService->getAllTeamAssigns();
 
         return response()->json($team_assigns, 200);
     }
 
     // Get Single Team Assigned Method
-    public function show(TeamAssign $team_assign): JsonResponse
+    public function show(TeamAssign $teamAssign): JsonResponse
     {
-        return response()->json($team_assign, 200);
+        return response()->json($teamAssign, 200);
     }
 
     // Delete Team Assigned Method
-    public function destroy(TeamAssign $team_assign): JsonResponse
+    public function destroy(TeamAssign $teamAssign): JsonResponse
     {
-        $this->team_assignService->deleteTeamAssign($team_assign);
+        $this->teamAssignService->deleteTeamAssign($teamAssign);
 
         return response()->json(['message' => 'Assigned Team deleted successfully!'], 200);
     }

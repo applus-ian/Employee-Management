@@ -10,26 +10,26 @@ use Illuminate\Http\JsonResponse;
 
 class DepartmentAssignController extends Controller
 {
-    protected $department_assignService;
+    protected $departmentAssignService;
 
-    public function __construct(DepartmentAssignService $department_assignService)
+    public function __construct(DepartmentAssignService $departmentAssignService)
     {
-        $this->department_assignService = $department_assignService;
+        $this->departmentAssignService = $departmentAssignService;
     }
 
     // Create Department Assign Method
     public function create(CreateDepartmentAssignRequest $request): JsonResponse
     {
-        $this->department_assignService->createDepartmentAssign($request->validated());
+        $this->departmentAssignService->createDepartmentAssign($request->validated());
 
         return response()->json(['message' => 'Department assignment created successfully!'], 201);
     }
 
     // Update Department Assign Method
-    public function update(UpdateDepartmentAssignRequest $request, DepartmentAssign $department_assign): JsonResponse
+    public function update(UpdateDepartmentAssignRequest $request, DepartmentAssign $departmentAssign): JsonResponse
     {
         // Proceed with updating the assigned department's details
-        $updated_department_assign = $this->department_assignService->updateDepartmentAssign($department_assign, $request->validated());
+        $updated_department_assign = $this->departmentAssignService->updateDepartmentAssign($departmentAssign, $request->validated());
 
         // Return the updated assigned department as a JSON response
         return response()->json($updated_department_assign, 200);
@@ -38,21 +38,21 @@ class DepartmentAssignController extends Controller
     // Get All Departments Assigned Method
     public function index(): JsonResponse
     {
-        $department_assigns = $this->department_assignService->getAllDepartmentAssigns();
+        $department_assigns = $this->departmentAssignService->getAllDepartmentAssigns();
 
         return response()->json($department_assigns, 200);
     }
 
     // Get Single Department Assigned Method
-    public function show(DepartmentAssign $department_assign): JsonResponse
+    public function show(DepartmentAssign $departmentAssign): JsonResponse
     {
-        return response()->json($department_assign, 200);
+        return response()->json($departmentAssign, 200);
     }
 
     // Delete Department Assigned Method
-    public function destroy(DepartmentAssign $department_assign): JsonResponse
+    public function destroy(DepartmentAssign $departmentAssign): JsonResponse
     {
-        $this->department_assignService->deleteDepartmentAssign($department_assign);
+        $this->departmentAssignService->deleteDepartmentAssign($departmentAssign);
 
         return response()->json(['message' => 'The assigned department was deleted successfully!'], 200);
     }

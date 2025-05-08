@@ -26,10 +26,10 @@ class EmploymentTypeController extends Controller
     }
 
     // Update Employment Type Method
-    public function update(UpdateEmploymentTypeRequest $request, EmploymentType $employment_type): JsonResponse
+    public function update(UpdateEmploymentTypeRequest $request, EmploymentType $employmentType): JsonResponse
     {
         // Proceed with updating the employment type's details
-        $updated_employment_type = $this->employmentTypeService->updateEmploymentType($employment_type, $request->validated());
+        $updated_employment_type = $this->employmentTypeService->updateEmploymentType($employmentType, $request->validated());
 
         // Return the updated employment type as a JSON response
         return response()->json($updated_employment_type, 200);
@@ -44,15 +44,15 @@ class EmploymentTypeController extends Controller
     }
 
     // Get Single Employment Type Method
-    public function show(EmploymentType $employment_type): JsonResponse
+    public function show(EmploymentType $employmentType): JsonResponse
     {
-        return response()->json($employment_type, 200);
+        return response()->json($employmentType, 200);
     }
 
     // Delete Employment Type Method
-    public function destroy(EmploymentType $employment_type): JsonResponse
+    public function destroy(EmploymentType $employmentType): JsonResponse
     {
-        $this->employmentTypeService->deleteEmploymentType($employment_type);
+        $this->employmentTypeService->deleteEmploymentType($employmentType);
 
         return response()->json(['message' => 'Employment Type deleted successfully!'], 200);
     }

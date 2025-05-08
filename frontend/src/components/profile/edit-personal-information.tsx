@@ -1,29 +1,55 @@
-import { FilePenLine } from 'lucide-react';
+import { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { updatePersonalInfoSchema, UpdatePersonalInfoInput } from '@/schemas/personalInformationSchema';
+import { useUpdatePersonalInfo } from '@/hooks/use-update-personal-info';
+import { AuthContext } from '@/context/AuthContext';
+
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { AuthContext } from '@/context/AuthContext';
-import { useContext, useState } from 'react';
+import { FilePenLine } from 'lucide-react';
+
+type Gender = 'male' | 'female' | 'other';
+type CivilStatus = 'single' | 'married' | 'divorced' | 'widowed';
 
 export default function EditPersonalInformation() {
   const authContext = useContext(AuthContext);
-
   const employee = authContext.user?.employee;
 
-  // Set up initial state and prefill it with the data from AuthContext
-  const [firstName, setFirstName] = useState(employee?.first_name || '');
-  const [middleName, setMiddleName] = useState(employee?.middle_name || '');
-  const [lastName, setLastName] = useState(employee?.last_name || '');
-  const [suffix, setSuffix] = useState(employee?.suffix || '');
-  const [email, setEmail] = useState(employee?.email || '');
-  const [phoneNumber, setPhoneNumber] = useState(employee?.phone_number || '');
-  const [emergencyContact1, setEmergencyContact1] = useState(employee?.emergency_contact1 || '');
-  const [emergencyContact2, setEmergencyContact2] = useState(employee?.emergency_contact2 || '');
-  const [gender, setGender] = useState(employee?.gender || '');
-  const [birthDate, setBirthDate] = useState(employee?.birthdate ?? '');
-  const [civilStatus, setCivilStatus] = useState(employee?.civil_status ?? '');
-  const [nationality, setNationality] = useState(employee?.nationality ?? '');
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<UpdatePersonalInfoInput>({
+    resolver: zodResolver(updatePersonalInfoSchema),
+    defaultValues: {
+      first_name: employee?.first_name || '',
+      middle_name: employee?.middle_name || '',
+      last_name: employee?.last_name || '',
+      suffix: employee?.suffix || '',
+      email: employee?.email || '',
+      phone_number: employee?.phone_number || '',
+      emergency_contact1: employee?.emergency_contact1 || '',
+      emergency_contact2: employee?.emergency_contact2 || '',
+      gender: (employee?.gender as Gender) || 'male',
+      birthdate: employee?.birthdate || '',
+      civil_status: (employee?.civil_status as CivilStatus) || 'single',
+      nationality: employee?.nationality || '',
+    },
+  });
+
+  const { mutate, isPending } = useUpdatePersonalInfo();
+
+  const onSubmit = (data: UpdatePersonalInfoInput) => {
+    mutate(data);
+  };
+
+  const genderValue = watch('gender');
+  const civilStatusValue = watch('civil_status');
 
   return (
     <Dialog>
@@ -37,185 +63,156 @@ export default function EditPersonalInformation() {
           <DialogTitle>Edit Personal Information</DialogTitle>
         </DialogHeader>
         <div className="overflow-y-auto lg:flex-0 lg:px-0 md:flex-1 md:px-5 sm:flex-1 sm:px-5">
-          <form action="" method="post">
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
-              {/* First Name */}
-              <div className="flex flex-col p-5">
-                <div>
-                  <label>
-                    <h3 className="text-gray-600">First Name</h3>
-                  </label>
-                </div>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Middle Name */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Middle Name</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={middleName}
-                    onChange={(e) => setMiddleName(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Last Name */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Last Name</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Suffix */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Suffix</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={suffix}
-                    onChange={(e) => setSuffix(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Email */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Email Adress</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Phone Number */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Phone no.</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Emergency Contact 1 */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Emergency Contact 1</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={emergencyContact1}
-                    onChange={(e) => setEmergencyContact1(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Emergency Contact 2 */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Emergency Contact 2</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={emergencyContact2}
-                    onChange={(e) => setEmergencyContact2(e.target.value)}
-                  />
-                </div>
-              </div>
-              {/* Gender */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <span className="text-gray-600 font-medium">Gender</span>
-                </label>
-                <Select value={gender} onValueChange={setGender}>
-                  <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
-                    <SelectValue placeholder="Select Gender" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-100">
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {/* Date of Birth */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <span className="text-gray-600 font-medium">Date of Birth</span>
-                </label>
-                <Input
-                  type="date"
-                  className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                />
-              </div>
-
-              {/* Civil Status */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <span className="text-gray-600 font-medium">Civil Status</span>
-                </label>
-                <Select value={civilStatus} onValueChange={setCivilStatus}>
-                  <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
-                    <SelectValue placeholder="Select Status" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-100">
-                    <SelectItem value="single">Single</SelectItem>
-                    <SelectItem value="married">Married</SelectItem>
-                    <SelectItem value="divorced">Divorced</SelectItem>
-                    <SelectItem value="widowed">Widowed</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {/* Nationality */}
-              <div className="flex flex-col p-5">
-                <label>
-                  <h3 className="text-gray-600">Nationality</h3>
-                </label>
-                <div>
-                  <Input
-                    type="text"
-                    className="mt-1 p-1 pl-3 block w-full rounded-md bg-white border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    value={nationality}
-                    onChange={(e) => setNationality(e.target.value)}
-                  />
-                </div>
-              </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {/* First Name */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">First Name</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('first_name')}
+              />
+              {errors.first_name && <span className="text-red-500 text-sm">{errors.first_name.message}</span>}
             </div>
-            <div className="px-5 pt-5 flex justify-center gap-x-6">
-              <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
+
+            {/* Middle Name */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Middle Name</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('middle_name')}
+              />
+              {errors.middle_name && <span className="text-red-500 text-sm">{errors.middle_name.message}</span>}
+            </div>
+
+            {/* Last Name */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Last Name</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('last_name')}
+              />
+              {errors.last_name && <span className="text-red-500 text-sm">{errors.last_name.message}</span>}
+            </div>
+
+            {/* Suffix */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Suffix</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('suffix')}
+              />
+              {errors.suffix && <span className="text-red-500 text-sm">{errors.suffix.message}</span>}
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Email</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('email')}
+              />
+              {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+            </div>
+
+            {/* Phone Number */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Phone Number</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('phone_number')}
+              />
+              {errors.phone_number && <span className="text-red-500 text-sm">{errors.phone_number.message}</span>}
+            </div>
+
+            {/* Gender Select */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600 font-medium">Gender</label>
+              <Select
+                value={genderValue}
+                onValueChange={(value) => {
+                  setValue('gender', value as Gender);
+                }}
+              >
+                <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                  <SelectValue placeholder="Select Gender" />
+                </SelectTrigger>
+
+                <SelectContent className="bg-gray-100">
+                  <SelectItem value="male">Male</SelectItem>
+                  <SelectItem value="female">Female</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Civil Status Select */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600 font-medium">Civil Status</label>
+              <Select
+                value={civilStatusValue}
+                onValueChange={(value) => setValue('civil_status', value as CivilStatus)}
+              >
+                <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
+                  <SelectValue placeholder="Select Civil Status" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-100">
+                  <SelectItem value="single">Single</SelectItem>
+                  <SelectItem value="married">Married</SelectItem>
+                  <SelectItem value="divorced">Divorced</SelectItem>
+                  <SelectItem value="widowed">Widowed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Emergency Contact 1 */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Emergency Contact 1</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('emergency_contact1')}
+              />
+              {errors.emergency_contact1 && (
+                <span className="text-red-500 text-sm">{errors.emergency_contact1.message}</span>
+              )}
+            </div>
+
+            {/* Emergency Contact 2 */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Emergency Contact 2</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('emergency_contact2')}
+              />
+              {errors.emergency_contact2 && (
+                <span className="text-red-500 text-sm">{errors.emergency_contact2.message}</span>
+              )}
+            </div>
+
+            {/* Birthdate */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Birthdate</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('birthdate')}
+                type="date"
+              />
+              {errors.birthdate && <span className="text-red-500 text-sm">{errors.birthdate.message}</span>}
+            </div>
+
+            {/* Nationality */}
+            <div className="flex flex-col p-5">
+              <label className="text-gray-600">Nationality</label>
+              <Input
+                className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                {...register('nationality')}
+              />
+              {errors.nationality && <span className="text-red-500 text-sm">{errors.nationality.message}</span>}
+            </div>
+
+            <div className="col-span-full px-5 pt-5 flex justify-center gap-x-6">
+              <Button type="submit" disabled={isPending} className="bg-[#EE7A2A] text-white w-[10rem]">
+                {isPending ? 'Saving...' : 'Save Changes'}
+              </Button>
             </div>
           </form>
         </div>

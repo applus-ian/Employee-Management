@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\PasswordChangeRequest;
+use App\Http\Requests\UpdatePersonalInfoRequest;
+use App\Http\Requests\UpdateResidentialInfoRequest;
 use App\Services\AuthService;
 use App\Services\UserService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -60,6 +63,72 @@ class AuthController extends Controller
             return response()->json(['isValid' => $isValid], 200);
         } else {
             return response()->json(['isValid' => $isValid], 401);
+        }
+    }
+
+    // Change Password
+    public function changeOwnPassword(PasswordChangeRequest $request): JsonResponse
+    {
+        try {
+            $user = Auth::user(); // Authenticated user
+            $updatedUser = $this->authService->changeLoggedUserPassword(
+                $user,
+                $request->input('new_password')
+            );
+
+            return response()->json([
+                'message' => 'Password changed successfully.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to change password.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    // Update Own Personal Info
+    public function updateOwnPersonalInfo(UpdatePersonalInfoRequest $request): JsonResponse
+    {
+        try {
+            $user = Auth::user()->load('employee'); // Authenticated user
+            $updatedUser = $this->authService->updateLoggedUserPersonalInfo(
+                $user->employee,
+                $request->validated()
+            );
+
+            return response()->json([
+                'message' => 'Personal Information Updated.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update personal information.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    // Update Own Residential Info
+    public function updateOwnResidentialInfo(UpdateResidentialInfoRequest $request): JsonResponse
+    {
+        try {
+            $user = Auth::user()->load('employee'); // Authenticated user
+            $updatedUser = $this->authService->updateLoggedUserResidentialInfo(
+                $user->employee,
+                $request->validated()
+            );
+
+            return response()->json([
+                'message' => 'Residential Information Updated.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update residential information.',
+                'error' => $e->getMessage(),
+            ], 400);
         }
     }
 }

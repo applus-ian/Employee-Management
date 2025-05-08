@@ -1,12 +1,10 @@
 'use client';
 
 import GeneralSettingsPage from '@/components/settings/general/generalsettings';
-import EmployeeRolePage from '@/components/settings/employee/employeesettings';
-import JobPositionPage from '@/components/settings/jobposition/jobpositionsettings';
+import EmployeeRolePage from '@/components/settings/employee/employee-settings';
+import JobPositionPage from '@/components/settings/job-position/job-position-settings';
 import AuditLogPage from '@/components/settings/auditlog/auditlogsettings';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
 import { useState } from 'react';
 
 const navLinks = [
@@ -27,12 +25,6 @@ export default function Page() {
           <div className="order-1">
             <p className="text-gray-600 pb-8">Setup and edit system settings and preferences</p>
           </div>
-          <div className="order-2 pr-10">
-            <div className="relative w-full bg-white rounded-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
-              <Input type="text" placeholder="Search Settings..." className="pl-10 text-gray-500" />
-            </div>
-          </div>
         </div>
 
         {/* Nav links */}
@@ -43,7 +35,7 @@ export default function Page() {
             return (
               <li key={link.name} className="flex items-center justify-center pr-5">
                 <button
-                  onClick={() => setActivePage(link.href)} // Update active page on click
+                  onClick={() => setActivePage(link.href)}
                   className={cn(
                     'inline-block items-center transition-colors font-medium text-sm pb-2 text-gray-500 hover:text-[#EE7A2A]',
                     isActive && 'text-[#EE7A2A] border-b-2 border-[#EE7A2A]',
@@ -57,7 +49,6 @@ export default function Page() {
         </ul>
       </nav>
 
-      {/* Dynamic Content Rendering */}
       <div className="bg-white rounded-xl w-full p-5">
         {activePage === 'general' && <GeneralSettingsPage />}
         {activePage === 'employee' && <EmployeeRolePage />}

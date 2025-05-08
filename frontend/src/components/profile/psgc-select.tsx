@@ -1,7 +1,5 @@
-// components/PSGCSelect.tsx
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '../ui/input';
 import { usePSGC } from '@/hooks/use-PSGC';
 
 type PSGCSelectProps = {
@@ -9,7 +7,13 @@ type PSGCSelectProps = {
   initialProvince?: string;
   initialCity?: string;
   initialBarangay?: string;
-  initialStreet?: string;
+  onChange?: (field: string, value: string) => void;
+
+  // Lifting state up
+  onRegionChange: (value: string) => void;
+  onProvinceChange: (value: string) => void;
+  onCityChange: (value: string) => void;
+  onBarangayChange: (value: string) => void;
 };
 
 const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
@@ -22,7 +26,6 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
     selectedProvince,
     selectedCity,
     selectedBarangay,
-    street,
     loadingProvinces,
     loadingCities,
     loadingBarangays,
@@ -30,15 +33,43 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
     setSelectedProvince,
     setSelectedCity,
     setSelectedBarangay,
-    setStreet,
-  } = usePSGC(props);
+  } = usePSGC({
+    initialRegion: props.initialRegion,
+    initialProvince: props.initialProvince,
+    initialCity: props.initialCity,
+    initialBarangay: props.initialBarangay,
+  });
+
+  // Watch state changes and lift them up
+  React.useEffect(() => {
+    props.onRegionChange(selectedRegion);
+  }, [selectedRegion]);
+
+  React.useEffect(() => {
+    props.onProvinceChange(selectedProvince);
+  }, [selectedProvince]);
+
+  React.useEffect(() => {
+    props.onCityChange(selectedCity);
+  }, [selectedCity]);
+
+  React.useEffect(() => {
+    props.onBarangayChange(selectedBarangay);
+  }, [selectedBarangay]);
 
   return (
-    <div className="flex flex-col p-5 col-span-1 md:col-span-2 lg:col-span-3">
+    <div className="flex flex-col p-5 col-span-1 md:col-span-2 lg:col-span-3 space-y-4">
       {/* Region */}
       <div>
         <label className="block text-sm font-medium mb-1">Region</label>
-        <Select value={selectedRegion} onValueChange={setSelectedRegion} disabled={loadingProvinces}>
+        <Select
+          value={selectedRegion}
+          onValueChange={(value) => {
+            setSelectedRegion(value);
+            props.onChange?.('region', value);
+          }}
+          disabled={loadingProvinces}
+        >
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select Region" />
           </SelectTrigger>
@@ -55,7 +86,14 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
       {/* Province */}
       <div>
         <label className="block text-sm font-medium mb-1">Province</label>
-        <Select value={selectedProvince} onValueChange={setSelectedProvince} disabled={loadingProvinces}>
+        <Select
+          value={selectedProvince}
+          onValueChange={(value) => {
+            setSelectedProvince(value);
+            props.onChange?.('province', value);
+          }}
+          disabled={loadingProvinces}
+        >
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select Province" />
           </SelectTrigger>
@@ -72,7 +110,14 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
       {/* City */}
       <div>
         <label className="block text-sm font-medium mb-1">City/Municipality</label>
-        <Select value={selectedCity} onValueChange={setSelectedCity} disabled={loadingCities}>
+        <Select
+          value={selectedCity}
+          onValueChange={(value) => {
+            setSelectedCity(value);
+            props.onChange?.('city', value);
+          }}
+          disabled={loadingCities}
+        >
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select City" />
           </SelectTrigger>
@@ -89,7 +134,14 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
       {/* Barangay */}
       <div>
         <label className="block text-sm font-medium mb-1">Barangay</label>
-        <Select value={selectedBarangay} onValueChange={setSelectedBarangay} disabled={loadingBarangays}>
+        <Select
+          value={selectedBarangay}
+          onValueChange={(value) => {
+            setSelectedBarangay(value);
+            props.onChange?.('barangay', value);
+          }}
+          disabled={loadingBarangays}
+        >
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select Barangay" />
           </SelectTrigger>
@@ -101,17 +153,6 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
             ))}
           </SelectContent>
         </Select>
-      </div>
-
-      {/* Street */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Street</label>
-        <Input
-          className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-          value={street}
-          onChange={(e) => setStreet(e.target.value)}
-          placeholder="Enter street"
-        />
       </div>
     </div>
   );

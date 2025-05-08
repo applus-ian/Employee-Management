@@ -27,11 +27,8 @@ class UserService
         ]);
     }
 
-    public function changePassword(int $userId, string $currentPassword, string $newPassword, string $newPasswordConfirmation): User
+    public function changeUserPassword(User $user, string $newPassword): User
     {
-        $user = User::findOrFail($userId);
-
-        // Update the user's password
         $user->password = Hash::make($newPassword);
         $user->save();
 
