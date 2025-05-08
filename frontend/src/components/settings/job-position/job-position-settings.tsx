@@ -7,6 +7,7 @@ import JobPosition from './job-position/job-position';
 import NewLocationAssignForm from './location-assign/create-form';
 import LocationAssign from './location-assign/location-assign';
 import CountryAssign from './country-assign/country-assign';
+import NewCountryAssignForm from './country-assign/create-form';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -73,7 +74,7 @@ export default function JobPositionPage() {
               {activeTab === 'Location Assigns' && (
                 <NewLocationAssignForm onCancel={handleCancel} onSave={handleSave} />
               )}
-              {/* {activeTab === 'Country Assigns' && <NewCountryAssignF onCancel={handleCancel} onSave={handleSave} />} */}
+              {activeTab === 'Country Assigns' && <NewCountryAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
               {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
               {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
@@ -85,6 +86,8 @@ export default function JobPositionPage() {
       {activeTab === 'Job Positions' && <JobPosition />}
       {activeTab === 'Location Assigns' && <LocationAssign />}
       {activeTab === 'Country Assigns' && <CountryAssign />}
+      {/* {activeTab === '' && < />} */}
+      {/* {activeTab === '' && < />} */}
       {/* {activeTab === '' && < />} */}
     </div>
   );
