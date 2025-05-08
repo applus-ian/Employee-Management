@@ -9,6 +9,7 @@ import LocationAssign from './location-assign/location-assign';
 import CountryAssign from './country-assign/country-assign';
 import NewCountryAssignForm from './country-assign/create-form';
 import OfficeAssign from './office-assign/office-assign';
+import NewOfficeAssignForm from './office-assign/create-form';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
@@ -76,9 +77,7 @@ export default function JobPositionPage() {
                 <NewLocationAssignForm onCancel={handleCancel} onSave={handleSave} />
               )}
               {activeTab === 'Country Assigns' && <NewCountryAssignForm onCancel={handleCancel} onSave={handleSave} />}
-              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
-              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
-              {/* {activeTab === '' && <NewForm onCancel={handleCancel} onSave={handleSave} />} */}
+              {activeTab === 'Office Assigns' && <NewOfficeAssignForm onCancel={handleCancel} onSave={handleSave} />}
             </div>
           </Dialog>
         </div>
