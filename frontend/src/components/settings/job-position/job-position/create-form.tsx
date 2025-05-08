@@ -34,7 +34,7 @@ export default function NewJobPositionForm({ onCancel, onSave }: NewJobPositionF
                 <input
                   type="text"
                   className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter job_position name..."
+                  placeholder="Enter job position title name..."
                   value={job_positionName}
                   onChange={(e) => setJob_PositionName(e.target.value)}
                 />
