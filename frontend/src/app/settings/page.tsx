@@ -3,7 +3,7 @@
 import GeneralSettingsPage from '@/components/settings/general/generalsettings';
 import EmployeeRolePage from '@/components/settings/employee/employee-settings';
 import JobPositionPage from '@/components/settings/job-position/job-position-settings';
-import AuditLogPage from '@/components/settings/auditlog/auditlogsettings';
+import AuditLogPage from '@/components/settings/audit-log/audit-log-settings';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
