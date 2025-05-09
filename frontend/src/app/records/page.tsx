@@ -11,6 +11,18 @@ import { NewEmployeeForm } from '@/components/records/create-form';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import '@pathofdev/react-tag-Input/build/index.css';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { XIcon } from 'lucide-react';
+
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { FunnelIcon } from 'lucide-react';
+
+type FilterState = {
+  department?: string;
+  position?: string;
+  status?: string;
+};
+
 const navLinks = [{ name: 'Records', href: 'record' }];
 export default function RecordsPage() {
   const [showForm, setShowForm] = useState(false);
@@ -19,6 +31,22 @@ export default function RecordsPage() {
   const handleEditEmployee = () => {
     setFormType('edit');
     setShowForm(true);
+  };
+  const [filters, setFilters] = useState<FilterState>({});
+
+  const handleFilterChange = (key: keyof FilterState, value: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value.startsWith('all') ? undefined : value,
+    }));
+  };
+
+  const removeFilter = (key: keyof FilterState) => {
+    setFilters((prev) => {
+      const newFilters = { ...prev };
+      delete newFilters[key];
+      return newFilters;
+    });
   };
 
   return (
@@ -68,52 +96,98 @@ export default function RecordsPage() {
           <Card className="w-full rounded-xl border bg-white shadow-sm">
             {!showForm && (
               <CardHeader className="space-y-4">
-                <CardTitle className="text-lg font-semibold text-gray-800">Employee Record</CardTitle>
+                <CardTitle className="text-lg font-semibold text-[#454D5A]">Employee Record</CardTitle>
 
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex gap-2 flex-wrap">
-                    <Select>
-                      <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                        <SelectValue placeholder="All Departments" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-md bg-white shadow-md">
-                        <SelectItem value="all_department">All Departments</SelectItem>
-                        <SelectItem value="it">IT</SelectItem>
-                        <SelectItem value="hr">HR</SelectItem>
-                        <SelectItem value="finance">Finance</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="space-y-3">
+                      {/* Active filter tags */}
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(filters).map(([key, value]) => (
+                          <Badge key={key} className="flex items-center gap-1 px-2 py-1 text-xs" variant="secondary">
+                            {value}
+                            <XIcon
+                              className="w-3 h-3 cursor-pointer"
+                              onClick={() => removeFilter(key as keyof FilterState)}
+                            />
+                          </Badge>
+                        ))}
+                      </div>
 
-                    <Select>
-                      <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                        <SelectValue placeholder="All Positions" />
-                      </SelectTrigger>
+                      {/* Filter button */}
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" className="flex items-center gap-2 text-sm px-3 py-1">
+                            <FunnelIcon className="w-4 h-4" />
+                            Filter
+                          </Button>
+                        </PopoverTrigger>
 
-                      <SelectContent className="rounded-md bg-white shadow-md">
-                        <SelectItem value="allposition">All Positions</SelectItem>
-                        <SelectItem value="manager">Manager</SelectItem>
-                        <SelectItem value="developer">Developer</SelectItem>
-                        <SelectItem value="recruiter">Recruiter</SelectItem>
-                      </SelectContent>
-                    </Select>
+                        <PopoverContent className="w-72 p-4 bg-white rounded-md shadow space-y-4">
+                          {/* Department */}
+                          <div className="space-y-1">
+                            <label className="text-xs font-medium text-gray-600">Department</label>
+                            <Select
+                              value={filters.department ?? 'all_department'}
+                              onValueChange={(val) => handleFilterChange('department', val)}
+                            >
+                              <SelectTrigger className="w-full px-3 py-1 text-sm">
+                                <SelectValue placeholder="Select Department" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                <SelectItem value="all_department">All Departments</SelectItem>
+                                <SelectItem value="IT">IT</SelectItem>
+                                <SelectItem value="HR">HR</SelectItem>
+                                <SelectItem value="Finance">Finance</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
 
-                    <Select>
-                      <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                        <SelectValue placeholder="All Status" />
-                      </SelectTrigger>
+                          {/* Position */}
+                          <div className="space-y-1">
+                            <label className="text-xs font-medium text-gray-600">Position</label>
+                            <Select
+                              value={filters.position ?? 'all_position'}
+                              onValueChange={(val) => handleFilterChange('position', val)}
+                            >
+                              <SelectTrigger className="w-full px-3 py-1 text-sm">
+                                <SelectValue placeholder="Select Position" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                <SelectItem value="all_position">All Positions</SelectItem>
+                                <SelectItem value="Manager">Manager</SelectItem>
+                                <SelectItem value="Developer">Developer</SelectItem>
+                                <SelectItem value="Recruiter">Recruiter</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
 
-                      <SelectContent className="rounded-md bg-white shadow-md">
-                        <SelectItem value="all_status">All Status</SelectItem>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
+                          {/* Status */}
+                          <div className="space-y-1">
+                            <label className="text-xs font-medium text-gray-600">Status</label>
+                            <Select
+                              value={filters.status ?? 'all_status'}
+                              onValueChange={(val) => handleFilterChange('status', val)}
+                            >
+                              <SelectTrigger className="w-full px-3 py-1 text-sm">
+                                <SelectValue placeholder="Select Status" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-white">
+                                <SelectItem value="all_status">All Status</SelectItem>
+                                <SelectItem value="Active">Active</SelectItem>
+                                <SelectItem value="Inactive">Inactive</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
                   <div className="ml-auto">
                     {!showForm && (
                       <Button
                         variant="outline"
-                        className="text-orange-600 border-orange-400 bg-white hover:bg-orange-500 hover:text-white"
+                        className="px-2 py-1 text-[#EE7A2A] font-medium text-xs rounded-md bg-white hover:bg-[#FFA161] hover:text-white border border-[#EE7A2A] flex items-center gap-1"
                         onClick={() => {
                           setShowForm((prev) => !prev);
                           setFormType('new');

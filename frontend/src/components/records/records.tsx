@@ -3,14 +3,22 @@
 import { useState } from 'react';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
 type EmployeeTableProps = {
   onEdit: () => void;
 };
@@ -343,19 +351,32 @@ export default function EmployeeTable({ onEdit }: EmployeeTableProps) {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center pt-4 text-sm text-muted-foreground">
-        <div>Previous</div>
-        <div className="flex items-center gap-1">
-          <Badge className="bg-[#624DE3] text-white px-3 py-1">1</Badge>
-          <Button variant="ghost" size="sm">
-            2
-          </Button>
-          <Button variant="ghost" size="sm">
-            3
-          </Button>
-        </div>
-        <div>Next</div>
-      </div>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" className="bg-[#624DE3]">
+              1
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#" isActive>
+              2
+            </PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">3</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </>
   );
 }

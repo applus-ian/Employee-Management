@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-
+import { Label } from '@/components/ui/label';
 interface NewProjectFormProps {
   onCancel: () => void;
   onSave: (projectData: {
@@ -47,36 +47,35 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
   };
 
   return (
-    <div className="p-4 mb-6 space-y-6">
-      <div>
-        <h2 className="text-xl font-bold">Add New Project</h2>
-        <p className="text-sm text-muted-foreground mt-1">Fill in the basic project information below.</p>
-      </div>
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="p-4 mb-6 space-y-6 bg-white ">
+      <h2 className="text-xl font-bold">Update Project</h2>
+      <p className="text-sm text-muted-foreground mt-1">Fill in the basic project information below.</p>
+
+      <form className="grid grid-cols-1 md:grid-cols-2 gap-4 scroll ">
         <div>
-          <label className="block text-sm font-medium mb-1">Project Name</label>
+          <Label className="block text-sm font-medium mb-1">Project Name</Label>
           <Input
             type="text"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
-            className="border rounded-xl hover:border-orange-400"
+            className="border-gray-300 border rounded-xl hover:border-orange-400"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Start Date</label>
-          <input
+          <Label className="block text-sm font-medium mb-1">Start Date</Label>
+          <Input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="border rounded-xl w-full px-3 py-2 hover:border-orange-400"
+            className="border-gray-300 border rounded-xl w-full px-3 py-2 hover:border-orange-400"
           />
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-sm font-medium mb-1">Description</label>
+          <Label className="block text-sm font-medium mb-1">Description</Label>
           <textarea
-            className="w-full border rounded-xl px-3 py-2 text-sm resize-none hover:border-orange-400 h-[130px]"
+            className="border-gray-300 w-full border rounded-xl px-3 py-2 text-sm resize-none hover:border-orange-400 h-[130px]"
             placeholder="Project Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -84,12 +83,12 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">End Date</label>
-          <input
+          <Label className="block text-sm font-medium mb-1">End Date</Label>
+          <Input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="border rounded-xl w-full px-3 py-2 hover:border-orange-400"
+            className="border-gray-300 border rounded-xl w-full px-3 py-2 hover:border-orange-400"
           />
         </div>
       </form>
@@ -124,7 +123,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             <CardContent className="p-2 border rounded-xl border-gray-350 bg-gray-100 ">
               <div className="max-h-80 overflow-y-auto rounded-md p-2 space-y-2 pt-3">
                 {employees.map((emp) => (
-                  <label
+                  <Label
                     key={emp.id}
                     className="flex items-center gap-3 text-sm cursor-pointer px-2 py-1 hover:bg-muted/50 rounded-md"
                   >
@@ -141,7 +140,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
                       <p className="font-medium">{emp.name}</p>
                       <p className="text-muted-foreground text-xs">{emp.role}</p>
                     </div>
-                  </label>
+                  </Label>
                 ))}
               </div>
             </CardContent>
@@ -207,9 +206,6 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
       <div className="flex gap-2 mt-6 pt-3">
         <Button className="bg-orange-500 text-white hover:bg-orange-600" onClick={handleSave}>
           Create
-        </Button>
-        <Button variant="outline" onClick={onCancel}>
-          Cancel
         </Button>
       </div>
     </div>
