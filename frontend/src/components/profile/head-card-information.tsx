@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Mail, Phone, Briefcase, Users, UserCheck, KeyRound } from 'lucide-react';
 import { AuthContext } from '@/context/AuthContext';
 import { updatePasswordSchema, UpdatePasswordInput } from '@/schemas';
-import { useUpdatePassword } from '@/hooks/use-update-password';
+import { useUpdatePassword } from '@/hooks/profile/use-update-password';
 import axios from 'axios';
 
 export default function HeadCardInformation() {

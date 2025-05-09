@@ -23,8 +23,9 @@ class DocumentTypeService
     // Read (Get all document types - will refactor for filters in the future)
     public function getAllDocumentTypes()
     {
-        return DocumentType::all();
+        return DocumentType::orderBy('created_at', 'desc')->get(); // Order by latest creation
     }
+
 
     // Update Document Type
     public function updateDocumentType(DocumentType $document_type, array $data)

@@ -1,5 +1,5 @@
 // lib/api/psgc.ts
-import { PSGCOption } from '@/types/psgc';
+import { PSGCOption } from '@/types/profile/psgc';
 
 const BASE_URL = 'https://psgc.gitlab.io/api';
 

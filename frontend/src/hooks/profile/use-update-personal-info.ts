@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updatePersonalInfo } from '@/utils/api/personalInformationUpdate';
-import { UpdatePersonalInfoInput } from '@/schemas/personalInformationSchema';
+import { updatePersonalInfo } from '@/utils/api/profile/personalInformationUpdate';
+import { UpdatePersonalInfoInput } from '@/schemas/profile/personalInformationSchema';
 
 export const useUpdatePersonalInfo = () => {
   const queryClient = useQueryClient();

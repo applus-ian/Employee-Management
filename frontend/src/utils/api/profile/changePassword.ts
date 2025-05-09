@@ -1,4 +1,4 @@
-import api from './apiInstance';
+import api from '../apiInstance';
 
 export const updatePassword = async (data: {
   current_password: string;

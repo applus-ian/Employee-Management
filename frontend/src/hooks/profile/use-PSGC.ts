@@ -1,7 +1,7 @@
 // hooks/usePSGC.ts
 import { useEffect, useState } from 'react';
-import { PSGCOption } from '@/types/psgc';
-import { fetchRegions, fetchProvinces, fetchCities, fetchBarangays } from '@/utils/api/psgc';
+import { PSGCOption } from '@/types/profile/psgc';
+import { fetchRegions, fetchProvinces, fetchCities, fetchBarangays } from '@/utils/api/profile/psgc';
 
 type UsePSGCProps = {
   initialRegion?: string;

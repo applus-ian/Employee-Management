@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateResidentialInfo } from '@/utils/api/residentialInformationUpdate';
-import { UpdateResidentialInfoInput } from '@/schemas/residentialInformationSchema';
+import { updateResidentialInfo } from '@/utils/api/profile/residentialInformationUpdate';
+import { UpdateResidentialInfoInput } from '@/schemas/profile/residentialInformationSchema';
 
 export const useUpdateResidentialInfo = () => {
   const queryClient = useQueryClient();

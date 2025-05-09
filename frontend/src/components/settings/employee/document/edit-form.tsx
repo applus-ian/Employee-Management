@@ -1,77 +1,60 @@
-import { useState } from 'react';
-import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+'use client';
 
-interface EditDocumentFormProps {
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { DocumentType } from '@/schemas';
+
+interface EditDocumentTypeFormProps {
+  document_type: DocumentType;
   onCancel: () => void;
-  onSave: (documentData: { documentName: string; description: string }) => void;
+  onSave: (updatedDocumentType: DocumentType) => void;
 }
 
-export default function EditDocumentForm({ onCancel, onSave }: EditDocumentFormProps) {
-  const [documentName, setDocumentName] = useState('');
-  const [description, setDescription] = useState('');
+export function EditDocumentTypeForm({ document_type, onCancel, onSave }: EditDocumentTypeFormProps) {
+  const [name, setName] = useState(document_type.name);
+  const [isLoading, setIsLoading] = useState(false); // State to track loading status
 
-  const handleSave = () => {
-    onSave({ documentName, description });
-    onCancel();
+  useEffect(() => {
+    if (document_type) {
+      setName(document_type.name);
+    }
+  }, [document_type]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true); // Set loading state to true when saving
+    try {
+      await onSave({ ...document_type, name }); // Call onSave with updated data
+      onCancel();
+    } catch (error) {
+      console.error('Error saving document type:', error); // Handle any error
+    } finally {
+      setIsLoading(false); // Set loading state to false after saving
+    }
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
-      <DialogHeader>
-        <DialogTitle>Edit Document Type</DialogTitle>
-      </DialogHeader>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <form>
-          <div className="grid">
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Document Name</h3>
-                </Label>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter skill name..."
-                  value={documentName}
-                  onChange={(e) => setDocumentName(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Description</h3>
-                </Label>
-              </div>
-              <div>
-                <textarea
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter description..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className=" px-5 pt-5 flex justify-center gap-x-6">
-              <DialogClose asChild>
-                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-                  Save Changes
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                  Cancel
-                </Button>
-              </DialogClose>
-            </div>
-          </div>
-        </form>
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          Document Type Name
+        </label>
+        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
       </div>
-    </DialogContent>
+
+      <div className="flex justify-end space-x-2">
+        <Button type="button" variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]"
+          disabled={isLoading} // Disable button when loading
+        >
+          {isLoading ? 'Saving...' : 'Save'} {/* Show loading text when saving */}
+        </Button>
+      </div>
+    </form>
   );
 }

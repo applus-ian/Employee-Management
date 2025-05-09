@@ -1,6 +1,6 @@
 import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { usePSGC } from '@/hooks/use-PSGC';
+import { usePSGC } from '@/hooks/profile/use-PSGC';
 
 type PSGCSelectProps = {
   initialRegion?: string;

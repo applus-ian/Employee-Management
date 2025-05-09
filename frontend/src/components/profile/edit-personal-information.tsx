@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updatePersonalInfoSchema, UpdatePersonalInfoInput } from '@/schemas/personalInformationSchema';
-import { useUpdatePersonalInfo } from '@/hooks/use-update-personal-info';
+import { updatePersonalInfoSchema, UpdatePersonalInfoInput } from '@/schemas/profile/personalInformationSchema';
+import { useUpdatePersonalInfo } from '@/hooks/profile/use-update-personal-info';
 import { AuthContext } from '@/context/AuthContext';
 
 import { Input } from '@/components/ui/input';

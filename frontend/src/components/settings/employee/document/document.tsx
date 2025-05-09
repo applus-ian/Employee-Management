@@ -1,63 +1,29 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Document, columns } from './columns';
+
+import { useDocumentType } from '@/hooks/settings/employee/document/use-fetch-document-types';
 import { DataTable } from './data-table';
+import { columns } from './columns';
 
-export default function Documents() {
-  const [data, setData] = useState<Document[]>([]);
+export interface DocumentRow {
+  id: number;
+  name: string;
+}
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+export default function DocumentTypes() {
+  const { data, isLoading, isError } = useDocumentType();
 
-  async function getData(): Promise<Document[]> {
-    return [
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-      {
-        documentName: 'JavaScript programming',
-        description: 'Used in web development.',
-      },
-    ];
-  }
+  const rows: DocumentRow[] =
+    data?.map((item) => ({
+      id: item.id,
+      name: item.name,
+    })) ?? [];
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading document types.</p>;
 
   return (
     <div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rows} />
     </div>
   );
 }

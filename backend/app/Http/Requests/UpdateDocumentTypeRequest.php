@@ -23,7 +23,12 @@ class UpdateDocumentTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('document_types', 'name')->ignore($this->document_type_id)]
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('document_types', 'name')->ignore($this->route('document_type')->id)
+            ],
         ];
     }
 }

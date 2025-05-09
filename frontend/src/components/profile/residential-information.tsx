@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AuthContext } from '@/context/AuthContext';
 import { useContext, useEffect, useState } from 'react';
 import EditResidentialInformation from './edit-residential-information';
-import { fetchPSGCNameByCode } from '@/utils/api/psgc';
+import { fetchPSGCNameByCode } from '@/utils/api/profile/psgc';
 
 export default function ResidentialInformation() {
   const authContext = useContext(AuthContext);

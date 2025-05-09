@@ -45,7 +45,7 @@ class AuthService
             // Attempt to get the user associated with the token
             $user = Auth::guard('sanctum')->user();
 
-            return ($user ? true : false);
+            return ($user ? true : false); // return (bool) $user;
         } catch (\Exception $e) {
             // Handle exception (if any error occurs)
             return false;

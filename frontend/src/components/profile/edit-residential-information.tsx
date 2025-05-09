@@ -9,8 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 import { AuthContext } from '@/context/AuthContext';
-import { updateResidentialInfoSchema, UpdateResidentialInfoInput } from '@/schemas/residentialInformationSchema';
-import { useUpdateResidentialInfo } from '@/hooks/use-update-residential-info';
+import {
+  updateResidentialInfoSchema,
+  UpdateResidentialInfoInput,
+} from '@/schemas/profile/residentialInformationSchema';
+import { useUpdateResidentialInfo } from '@/hooks/profile/use-update-residential-info';
 import PSGCSelect from './psgc-select';
 
 export default function EditResidentialInformation() {
