@@ -1,103 +1,136 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { Button } from '@/components/ui/button';
+import { CheckCircle } from 'lucide-react';
+import { Workflow, SlidersHorizontal, BarChart3 } from 'lucide-react';
+
+import Link from 'next/link'; // Import the Link component
+
+export default function LandingPage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <main className="relative w-full min-h-screen text-white">
+      <div className="relative w-full h-screen overflow-hidden">
+        {/* Background Image */}
+        <img
+          src="https://readdy.ai/api/search-image?query=Professional%20industrial%20facility%20with%20modern%20piping%20systems%20and%20inspection%20equipment%2C%20advanced%20technical%20inspection%20setup%20with%20blue%20accent%20lighting%2C%20clean%20industrial%20environment%20showing%20quality%20control%20processes&width=1440&height=1024&seq=hero-bg-5&orientation=landscape"
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        {/* Bottom Fade to Black */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black-10 to-transparent" />
+
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center text-white">
+          <h1 className="text-4xl md:text-5xl font-bold max-w-3xl leading-tight text-center">
+            Welcome to{' '}
+            <span className="inline-flex ml-2 text-orange-400">
+              {'Employee Management'.split('').map((char, index) => (
+                <span
+                  key={index}
+                  className="inline-block animate-waveOnce"
+                  style={{
+                    animationDelay: `${index * 0.1}s`,
+                    animationFillMode: 'forwards',
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+            </span>
+          </h1>
+
+          <p className="mt-4 text-lg text-gray-200 max-w-xl">
+            Empower HR with document control, profile tracking, and advanced reporting — all in one intuitive platform.
+          </p>
+          <div className="mt-8">
+            <Link href="/login">
+              <Button
+                size="lg"
+                className="text-base px-6 py-4 bg-white border text-black hover:bg-black hover:text-white hover:border-black transition"
+              >
+                Login
+              </Button>
+            </Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+
+      {/* Key Features Section */}
+      <section className="bg-black w-full py-16 px-6 text-white z-0">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-2xl font-semibold mb-2 text-white">Key Features</h2>
+          <p className="text-gray-400 mb-10 max-w-2xl mx-auto">
+            Our employee management system offers comprehensive tools to streamline your HR operations and improve
+            organizational efficiency.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <Workflow className="h-14 w-14 text-white" />,
+                title: 'Advanced Automation',
+                desc: 'Say goodbye to manual tasks and hello to efficiency! Our robust automation features allow you to automate every aspect of your HR system.',
+                titleColor: 'text-orange-400',
+              },
+              {
+                icon: <SlidersHorizontal className="h-14 w-14 text-white" />,
+                title: 'Dynamic Personalization',
+                desc: 'Engage employees like never before with personalized dashboards tailored to roles, departments, and activities.',
+                titleColor: 'text-orange-400',
+              },
+              {
+                icon: <BarChart3 className="h-14 w-14 text-white" />,
+                title: 'Powerful Analytics',
+                desc: 'Knowledge is power! Gain valuable insights into your workforce using rich analytics and visual reports.',
+                titleColor: 'text-orange-400',
+              },
+            ].map(({ icon, title, desc, titleColor }) => (
+              <div
+                key={title}
+                className="bg-[#1A1A1A] p-8 rounded-xl shadow-lg flex flex-col items-center text-center min-h-[300px] transition-transform duration-300 transform hover:scale-105 hover:ring-2 hover:ring-orange-400 hover:ring-offset-2 hover:ring-offset-black"
+              >
+                <div className="mb-6">{icon}</div>
+                <h3 className={`text-xl font-semibold mb-3 ${titleColor}`}>{title}</h3>
+                <p className="text-base text-gray-300">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className="bg-black text-white py-16 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
+          {/* Image on the left */}
+          <div className="w-full md:w-1/2 mb-6 md:mb-0">
+            <img
+              src="https://readdy.ai/api/search-image?query=Industrial%20piping%20system%20inspection%20with%20technical%20equipment%2C%20detailed%20close-up%20of%20pipeline%20quality%20control%20process%2C%20professional%20inspection%20environment%20with%20modern%20technology&width=600&height=400&seq=piping-1&orientation=landscape"
+              alt="Piping Inspection"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Text content on the right */}
+          <div className="w-full md:w-1/2 md:pl-12 text-center md:text-left">
+            <h2 className="text-2xl font-semibold mb-4">Comprehensive Audit Logging</h2>
+            <p className="text-gray-400 mb-4">
+              Maintain complete transparency with detailed audit trails tracking every change made within the system.
+            </p>
+            <ul className="text-gray-300 space-y-2">
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5 text-green-400" />
+                <span>Track all system activities with user, timestamp, and action details</span>
+              </li>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5 text-green-400" />
+                <span>Searchable logs for compliance and security reviews</span>
+              </li>
+              <li className="flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5 text-green-400" />
+                <span>Data change history for accountability and error resolution</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
