@@ -34,15 +34,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->unsignedBigInteger('job_position_id');
             $table->date('date_hired');
-            $table->enum('employment_type', [
-                'fulltime',
-                'parttime',
-                'contractual',
-                // what other employment type
-            ]);
-            $table->unsignedBigInteger('manager_id');
+            $table->unsignedBigInteger('employment_type_id');
+            $table->unsignedBigInteger('manager_id')->nullable();
             $table->string('profile_pic_url')->nullable();
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
