@@ -29,9 +29,8 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login successful',
             'token' => $authData['token'],
-            'user' => [
-                'name' => $authData['user']->name, // name for now
-            ]
+            'user' => $authData['user'],
+            'employee' => $authData['employee'],
         ]);
     }
 
@@ -40,13 +39,13 @@ class AuthController extends Controller
     {
         $this->authService->logoutUser($request->user());
 
-        return response()->json(['message' => 'Logged out successfully']);
+        return response()->json(['message' => 'Logged out successfully'], 200);
     }
 
     // Fetch User Method
     public function fetchUser(): JsonResponse
     {
-        return response()->json(Auth::user());
+        return response()->json(Auth::user(), 200);
     }
 
     // Method to validate the token
@@ -56,6 +55,6 @@ class AuthController extends Controller
 
         return response()->json([
             'isValid' => $isValid,
-        ]);
+        ], 200);
     }
 }
