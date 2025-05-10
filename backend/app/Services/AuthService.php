@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +17,13 @@ class AuthService
             return null;
         }
 
+        $employee = Employee::findOrFail($user->employee_id);
+
         $token = $user->createToken('LoggedUser')->plainTextToken;
 
         return [
             'user' => $user,
+            'employee' => $employee,
             'token' => $token
         ];
     }
