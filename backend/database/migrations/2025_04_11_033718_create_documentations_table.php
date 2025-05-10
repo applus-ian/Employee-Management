@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id');
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->string('file_url');
             $table->unsignedBigInteger('document_type_id');
             $table->date('upload_date');
             $table->date('expiry_date');
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
