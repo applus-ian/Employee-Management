@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +17,13 @@ class AuthService
             return null;
         }
 
+        $employee = Employee::findOrFail($user->employee_id);
+
         $token = $user->createToken('LoggedUser')->plainTextToken;
 
         return [
             'user' => $user,
+            'employee' => $employee,
             'token' => $token
         ];
     }
@@ -34,19 +38,17 @@ class AuthService
     public function checkToken($token)
     {
         if(!$token){
-            return response()->json(['isValid' => false], 400); // No token provided
+            return false; // No token provided
         }
 
-        try{
-            $user = Auth::guard('api')->user(); // Will return null if token is invalid or expired
+        try {
+            // Attempt to get the user associated with the token
+            $user = Auth::guard('sanctum')->user();
 
-            if ($user) {
-                return response()->json(['isValid' => true]); // Token is valid
-            } else {
-                return response()->json(['isValid' => false]); // Token is invalid
-            }
+            return ($user ? true : false);
         } catch (\Exception $e) {
-            return response()->json(['isValid' => false], 500); // Token validation failed
+            // Handle exception (if any error occurs)
+            return false;
         }
     }
 }

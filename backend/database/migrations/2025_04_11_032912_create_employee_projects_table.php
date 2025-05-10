@@ -15,11 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id');
             $table->unsignedBigInteger('project_id');
-            $table->string('role');
+            $table->unsignedBigInteger('project_role_id');
             $table->date('start_date');
             $table->date('end_date');
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
