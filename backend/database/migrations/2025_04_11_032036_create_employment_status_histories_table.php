@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('status_set');
             $table->string('effective_date');
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
