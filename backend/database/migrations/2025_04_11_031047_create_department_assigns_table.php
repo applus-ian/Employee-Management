@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->unsignedBigInteger('parent_department_id')->nullable();
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
