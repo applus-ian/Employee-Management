@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('skill_id');
             $table->unsignedSmallInteger('years_of_experience');
 
-
+            $table->softDeletes();
             $table->timestamps();
         });
     }
