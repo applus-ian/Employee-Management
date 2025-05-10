@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use App\Enums\Gender;
 use App\Enums\CivilStatus;
@@ -11,7 +12,12 @@ use App\Enums\CivilStatus;
 class Employee extends Model
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use SoftDeletes, HasFactory, Notifiable;
+
+    protected $casts = [
+        'gender' => Gender::class,
+        'civil_status' => CivilStatus::class,
+    ];
 
     protected $casts = [
         'gender' => Gender::class,
@@ -40,10 +46,10 @@ class Employee extends Model
         'phone_number',
         'emergency_contact1',
         'emergency_contact2',
-        'email_address',
+        'email',
         'job_position_id',
         'date_hired',
-        'employment_type',
+        'employment_type_id',
         'manager_id',
         'profile_pic_url',
     ];
