@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('employee_status_histories', function (Blueprint $table) {
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+        Schema::create('user_roles', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('role_id');
+
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('employee_status_histories', function (Blueprint $table) {
-            $table->dropForeign(['employee_id']);
-        });
+        Schema::dropIfExists('user_roles');
     }
 };
