@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('job_position_id');
             $table->unsignedBigInteger('country_assign_id')->nullable();
             $table->unsignedBigInteger('office_assign_id')->nullable();
-            $table->unsignedBigInteger('office_assign_id')->nullable();
-            $table->unsignedBigInteger('office_assign_id')->nullable();
+            $table->unsignedBigInteger('team_assign_id')->nullable();
+            $table->unsignedBigInteger('department_assign_id')->nullable();
 
 
             $table->timestamps();
