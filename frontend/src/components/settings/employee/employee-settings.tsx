@@ -11,11 +11,13 @@ import NewSkillForm from './skills/create-form';
 import Skill_Categories from './skills/skill-category/skill-category';
 import NewDocumentForm from './document/create-form';
 import DocumentTypes from './document/document';
+import ProjectRoles from './project-role/project-role';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
   { name: 'Skills', href: 'Skills' },
   { name: 'Documents', href: 'Documents' },
+  { name: 'Project Roles', href: 'Project Roles' },
 ] as const;
 
 type TabKey = (typeof navLinks)[number]['href'];
@@ -109,6 +111,7 @@ export default function EmployeeRolePage() {
       {activeTab === 'Roles' && <RolePermission />}
       {activeTab === 'Skills' && <Skills />}
       {activeTab === 'Documents' && <DocumentTypes />}
+      {activeTab === 'Project Roles' && <ProjectRoles />}
     </div>
   );
 }
