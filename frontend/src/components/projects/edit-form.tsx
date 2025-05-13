@@ -1,125 +1,127 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '../ui/input';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Trash2 } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Project } from '@/schemas';
+import { useRecords } from '@/hooks/records/use-fetch-records';
 
-export default function EditProjectForm({ onCancel }: { onCancel: () => void }) {
+interface EditProjectFormProps {
+  project: Project;
+  onCancel: () => void;
+  onSave: (updatedProject: Project) => void;
+}
+
+export function EditProjectForm({ project, onCancel, onSave }: EditProjectFormProps) {
   const [openAssignModal, setOpenAssignModal] = useState(false);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [name, setName] = useState(project.name);
+  const [description, setDescription] = useState(project.description);
+  const [start_date, setStartDate] = useState(project.start_date);
+  const [end_date, setEndDate] = useState(project.end_date);
+  const [isLoading, setIsLoading] = useState(false);
+  const { data } = useRecords();
 
-  const employees = [
-    {
-      id: '1234',
-      profileImg: 'https://randomuser.me/api/portraits/men/1.jpg',
-      fullName: 'John Doe',
-      jobPosition: 'Developer',
-      department: 'Engineering',
-    },
-    {
-      id: '2345',
-      profileImg: 'https://randomuser.me/api/portraits/women/2.jpg',
-      fullName: 'Jane Smith',
-      jobPosition: 'Designer',
-      department: 'Design',
-    },
-    {
-      id: '5678',
-      profileImg: 'https://randomuser.me/api/portraits/men/3.jpg',
-      fullName: 'poppy',
-      jobPosition: 'Project Manager',
-      department: 'Management',
-    },
-    {
-      id: '6789',
-      profileImg: 'https://randomuser.me/api/portraits/men/4.jpg',
-      fullName: 'wendy',
-      jobPosition: 'Developer',
-      department: 'Management',
-    },
-    {
-      id: '7890',
-      profileImg: 'https://randomuser.me/api/portraits/men/5.jpg',
-      fullName: 'Bob ',
-      jobPosition: 'Designer',
-      department: 'Management',
-    },
-    {
-      id: '8912',
-      profileImg: 'https://randomuser.me/api/portraits/men/6.jpg',
-      fullName: ' Johnson',
-      jobPosition: 'Developer Manager',
-      department: 'Management',
-    },
-    // Add more employee data as needed
-  ];
+  useEffect(() => {
+    if (project) {
+      setName(project.name);
+      setDescription(project.description);
+      setStartDate(project.start_date);
+      setEndDate(project.end_date);
+    }
+  }, [project]);
+
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setIsLoading(true);
+    try {
+      await onSave({ ...project, name, description, start_date, end_date });
+      onCancel();
+    } catch (error) {
+      console.error('Error saving project:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="mt-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-black">wroject</h2>
+        <h2 className="text-xl font-semibold text-black">Project</h2>
         <div className="flex gap-2">
           <Button
             variant="destructive"
             className="bg-red-500 text-white hover:bg-red-600 shadow-lg"
-            onClick={() => setOpenDeleteDialog(true)} // Open delete confirmation dialog
+            onClick={() => setOpenDeleteDialog(true)}
           >
             Delete
           </Button>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex justify-center items-center">
-              <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Deletion?</span>
+            <DialogTitle className="flex justify-center items-center text-[#EE7A2A] text-3xl font-lg text-center">
+              Confirm Deletion?
             </DialogTitle>
           </DialogHeader>
           <div className="flex justify-center items-center">
-            <p className="text-center">Do you want to delete this Employee?</p>
+            <p className="text-center">Do you want to delete this Project?</p>
           </div>
-          <DialogClose asChild>
-            <div className=" px-5 pt-5 flex justify-center gap-x-6">
-              <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
-              <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
-            </div>
-          </DialogClose>
+          <div className="px-5 pt-5 flex justify-center gap-x-6">
+            <Button className="bg-[#EE7A2A] text-white w-[10rem]">Confirm</Button>
+            <Button
+              className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+              onClick={() => setOpenDeleteDialog(false)}
+            >
+              Cancel
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium mb-1">Project Name</label>
-          <Input defaultValue="Example Project" className="border rounded-xl hover:border-orange-300" />
+          <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Start Date</label>
-          <input type="date" className="border rounded-xl w-full px-3 py-2 hover:border-orange-400" />
+          <Input
+            id="start_date"
+            type="date"
+            value={start_date}
+            onChange={(e) => setStartDate(e.target.value)}
+            required
+          />
         </div>
 
         <div className="md:col-span-1">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
             className="w-full border px-3 py-2 text-sm resize-none h-[130px] rounded-xl hover:border-orange-300"
-            placeholder="Project Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">End Date</label>
-          <input type="date" className="border rounded-xl w-full px-3 py-2 hover:border-orange-400" />
+          <Input id="end_date" type="date" value={end_date} onChange={(e) => setEndDate(e.target.value)} required />
         </div>
       </form>
 
       {/* Table for Assigned Employees */}
       <div className="mt-6">
         <div className="flex justify-between items-center mb-8 border-t pt-8 border-gray-400">
-          <h3 className="text-lg font-semibold">wAssigned Employees</h3>
+          <h3 className="text-lg font-semibold">Assigned Employees</h3>
           <Button
             className="border-2 border-orange-500 text-orange-500 hover:text-white hover:bg-orange-600 shadow-lg"
-            onClick={() => setOpenAssignModal(true)} // Open the assign employee dialog
+            onClick={() => setOpenAssignModal(true)}
           >
             Assign Employee
             <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 -960 960 960" fill="currentColor">
@@ -127,6 +129,7 @@ export default function EditProjectForm({ onCancel }: { onCancel: () => void }) 
             </svg>
           </Button>
         </div>
+
         <Table>
           <TableHeader>
             <TableRow>
@@ -139,14 +142,18 @@ export default function EditProjectForm({ onCancel }: { onCancel: () => void }) 
             </TableRow>
           </TableHeader>
           <TableBody>
-            {employees.map((emp) => (
+            {project.employees?.map((emp) => (
               <TableRow key={emp.id} className="even:bg-[#ebeaf3] hover:bg-[#e3e0f5] cursor-pointer h-12 border-none">
                 <TableCell>{emp.id}</TableCell>
                 <TableCell>
-                  <img src={emp.profileImg} alt={emp.fullName} className="w-8 h-8 rounded-full" />
+                  <img
+                    src={emp.profile ?? '/default-avatar.png'}
+                    alt={emp.full_name}
+                    className="w-8 h-8 rounded-full"
+                  />
                 </TableCell>
-                <TableCell>{emp.fullName}</TableCell>
-                <TableCell>{emp.jobPosition}</TableCell>
+                <TableCell>{emp.full_name}</TableCell>
+                <TableCell>{emp.job_position}</TableCell>
                 <TableCell>{emp.department}</TableCell>
                 <TableCell>
                   <Button
@@ -154,18 +161,26 @@ export default function EditProjectForm({ onCancel }: { onCancel: () => void }) 
                     size="sm"
                     className="text-red-500 border-none bg-transparent hover:bg-red-100"
                   >
-                    <Trash2 className="mr-2" /> {/* Icon with margin to the right */}
+                    <Trash2 className="mr-2" />
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>{/* Optional footer, for example if you want to add a total */}</TableFooter>
+          <TableFooter />
         </Table>
       </div>
 
+      {/* Form Actions */}
       <div className="flex gap-2 mt-6 pt-3">
-        <Button className="bg-orange-500 text-white hover:bg-orange-600 shadow-lg">Save Changes</Button>
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          disabled={isLoading}
+          className="bg-orange-500 text-white hover:bg-orange-600 shadow-lg"
+        >
+          {isLoading ? 'Saving...' : 'Save Changes'}
+        </Button>
         <Button variant="outline" onClick={onCancel} className="shadow-lg">
           Cancel
         </Button>
@@ -180,21 +195,25 @@ export default function EditProjectForm({ onCancel }: { onCancel: () => void }) 
           </DialogHeader>
 
           <div className="p-2 border rounded-xl border-gray-350 bg-gray-100">
-            {employees.map((emp) => (
+            {data?.records.users.map((emp) => (
               <label
-                key={emp.id}
+                key={emp.employee.id}
                 className="flex items-center gap-3 text-sm cursor-pointer px-2 py-1 hover:bg-muted/50 rounded-md"
               >
                 <Checkbox
                   className="w-5 h-5 border border-gray-400 focus:ring-0 focus:ring-offset-0 focus:outline-none data-[state=checked]:bg-orange-500 data-[state=checked]:text-white data-[state=checked]:border-orange-500"
-                  checked={selectedEmployees.includes(emp.id)}
+                  checked={selectedEmployees.includes(emp.employee.id)}
                   onCheckedChange={(checked) => {
-                    setSelectedEmployees((prev) => (checked ? [...prev, emp.id] : prev.filter((id) => id !== emp.id)));
+                    setSelectedEmployees((prev) =>
+                      checked ? [...prev, emp.employee.id] : prev.filter((id) => id !== emp.employee.id),
+                    );
                   }}
                 />
                 <div>
-                  <p className="font-medium">{emp.fullName}</p>
-                  <p className="text-muted-foreground text-xs">{emp.jobPosition}</p>
+                  <p className="font-medium">
+                    {emp.employee.first_name} {emp.employee.last_name}
+                  </p>
+                  <p className="text-muted-foreground text-xs">{emp.employee.job_position.title}</p>
                 </div>
               </label>
             ))}
@@ -205,7 +224,7 @@ export default function EditProjectForm({ onCancel }: { onCancel: () => void }) 
               className="bg-orange-500 text-white hover:bg-orange-600 px-6"
               onClick={() => {
                 console.log('Assigned:', selectedEmployees);
-                setOpenAssignModal(false); // Close dialog after assignment
+                setOpenAssignModal(false);
               }}
             >
               Assign

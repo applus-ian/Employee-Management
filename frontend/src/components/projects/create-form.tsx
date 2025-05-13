@@ -5,49 +5,87 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useRecords } from '@/hooks/records/use-fetch-records';
+import { useCreateProject } from '@/hooks/projects/use-create-project';
+import { createProjectSchema } from '@/schemas/projects/project';
+import { useProjectRole } from '@/hooks/settings/employee/project-role/use-fetch-project-roles';
+import { CreateProject } from '@/types/projects/project';
+import { ProjectRole } from '@/types/settings/employee/project-role/projectRole';
 
 interface NewProjectFormProps {
   onCancel: () => void;
-  onSave: (projectData: {
-    projectName: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-    employees: string[];
-  }) => void;
+  onSave: (projectData: CreateProject) => void;
 }
 
 export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps) {
   const [openAssignModal, setOpenAssignModal] = useState(false);
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [employeeProjectRoles, setEmployeeProjectRoles] = useState<{ [key: string]: number }>({});
   const [projectName, setProjectName] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [description, setDescription] = useState('');
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const { data: employees } = useRecords();
+  const { data: projectRoles } = useProjectRole();
+  const { mutate: createProject, isPending } = useCreateProject();
 
-  const employees = [
-    { id: '1', name: 'Angelo Fernandez', role: 'Software Developer' },
-    { id: '2', name: 'Leon Monte', role: 'Engineer' },
-    { id: '3', name: 'Carteris Cartezan', role: 'IT Manager' },
-    { id: '4', name: 'Pierce Gonzalez', role: 'Software Developer' },
-    { id: '5', name: 'Mac De Guzman', role: 'Software Developer' },
-    { id: '6', name: 'Beau Santiago', role: 'Solutions Architect' },
-    { id: '7', name: 'Shawn Murphy', role: 'Engineer' },
-  ];
+  // Handle form submission with Zod validation
+  const handleCreateProject = () => {
+    const employeeData = selectedEmployees.map((id) => ({
+      id,
+      project_role_id: employeeProjectRoles[id], // don't default to ''
+    }));
 
-  const handleSave = () => {
-    onSave({
-      projectName,
-      startDate,
-      endDate,
+    // Check for missing roles
+    const missingRoles = employeeData.some((emp) => !emp.project_role_id);
+    if (missingRoles) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        employees: 'Each assigned employee must have a project role selected.',
+      }));
+      return;
+    }
+
+    const parsed = createProjectSchema.safeParse({
+      name: projectName,
       description,
-      employees: selectedEmployees,
+      employees: employeeData, // ✅ now matches expected structure
+      start_date: startDate,
+      end_date: endDate,
     });
-    onCancel(); // Close the form after saving
+
+    if (!parsed.success) {
+      console.log(parsed);
+      // Set validation errors
+      const errors: { [key: string]: string } = {};
+      parsed.error.errors.forEach((error) => {
+        errors[error.path[0]] = error.message;
+      });
+      setValidationErrors(errors);
+      console.error(parsed.error.flatten().fieldErrors);
+      return;
+    }
+
+    console.log(parsed.data);
+
+    createProject(parsed.data, {
+      onSuccess: () => {
+        onSave(parsed.data); // ✅ same fix applies here
+      },
+      onError: (err) => {
+        console.error('Error creating project:', err);
+      },
+    });
+  };
+
+  const handleRoleChange = (empId: string, roleId: number) => {
+    setEmployeeProjectRoles((prev) => ({ ...prev, [empId]: roleId }));
   };
 
   return (
     <div className="p-4 mb-6 space-y-6">
+      {/* Project Info Form */}
       <div>
         <h2 className="text-xl font-bold">Add New Project</h2>
         <p className="text-sm text-muted-foreground mt-1">Fill in the basic project information below.</p>
@@ -61,8 +99,8 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             onChange={(e) => setProjectName(e.target.value)}
             className="border rounded-xl hover:border-orange-400"
           />
+          {validationErrors.name && <p className="text-red-500 text-sm">{validationErrors.name}</p>}
         </div>
-
         <div>
           <label className="block text-sm font-medium mb-1">Start Date</label>
           <input
@@ -71,8 +109,8 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             onChange={(e) => setStartDate(e.target.value)}
             className="border rounded-xl w-full px-3 py-2 hover:border-orange-400"
           />
+          {validationErrors.start_date && <p className="text-red-500 text-sm">{validationErrors.start_date}</p>}
         </div>
-
         <div className="md:col-span-1">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
@@ -81,8 +119,8 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
+          {validationErrors.description && <p className="text-red-500 text-sm">{validationErrors.description}</p>}
         </div>
-
         <div>
           <label className="block text-sm font-medium mb-1">End Date</label>
           <input
@@ -91,9 +129,11 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             onChange={(e) => setEndDate(e.target.value)}
             className="border rounded-xl w-full px-3 py-2 hover:border-orange-400"
           />
+          {validationErrors.end_date && <p className="text-red-500 text-sm">{validationErrors.end_date}</p>}
         </div>
       </form>
 
+      {/* Assign Employees */}
       <div className="border-t pt-10 border-gray-400">
         <div className="flex justify-between items-start mb-8">
           <div>
@@ -112,8 +152,9 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
           </Button>
         </div>
 
+        {/* Modal */}
         <Dialog open={openAssignModal} onOpenChange={setOpenAssignModal}>
-          <DialogContent className="sm:max-w-md bg-white rounded-lg">
+          <DialogContent className="w-full lg:w-[25%] bg-white rounded-lg">
             <DialogHeader>
               <DialogTitle className="text-orange-500 text-center text-lg font-bold uppercase">
                 Available Employees
@@ -123,23 +164,27 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
             <CardContent className="p-2 border rounded-xl border-gray-350 bg-gray-100 ">
               <div className="max-h-80 overflow-y-auto rounded-md p-2 space-y-2 pt-3">
-                {employees.map((emp) => (
+                {employees?.records.users.map((user) => (
                   <label
-                    key={emp.id}
+                    key={user.employee.id}
                     className="flex items-center gap-3 text-sm cursor-pointer px-2 py-1 hover:bg-muted/50 rounded-md"
                   >
                     <Checkbox
                       className="w-5 h-5 border border-gray-400 focus:ring-0 focus:ring-offset-0 focus:outline-none data-[state=checked]:bg-orange-500 data-[state=checked]:text-white data-[state=checked]:border-orange-500"
-                      checked={selectedEmployees.includes(emp.id)}
+                      checked={selectedEmployees.includes(user.employee.id)}
                       onCheckedChange={(checked) => {
                         setSelectedEmployees((prev) =>
-                          checked ? [...prev, emp.id] : prev.filter((id) => id !== emp.id),
+                          checked ? [...prev, user.employee.id] : prev.filter((id) => id !== user.employee.id),
                         );
                       }}
                     />
                     <div>
-                      <p className="font-medium">{emp.name}</p>
-                      <p className="text-muted-foreground text-xs">{emp.role}</p>
+                      <p className="font-medium">
+                        {user.employee.first_name} {user.employee.last_name}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        {user.roles.map((role: ProjectRole) => role.name).join(', ')}
+                      </p>
                     </div>
                   </label>
                 ))}
@@ -149,10 +194,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             <div className="mt-4 flex justify-center gap-2">
               <Button
                 className="bg-orange-500 text-white hover:bg-orange-600 px-6"
-                onClick={() => {
-                  console.log('Assigned:', selectedEmployees);
-                  setOpenAssignModal(false);
-                }}
+                onClick={() => setOpenAssignModal(false)}
               >
                 Assign
               </Button>
@@ -167,6 +209,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
           </DialogContent>
         </Dialog>
 
+        {/* Assigned Table */}
         <div className="overflow-x-auto rounded-md border">
           <Table>
             <TableHeader>
@@ -176,25 +219,43 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
                 <TableHead>Full Name</TableHead>
                 <TableHead>Job Position</TableHead>
                 <TableHead>Department</TableHead>
+                <TableHead>Project Role</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {selectedEmployees.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
+                  <TableCell colSpan={6} className="text-center text-muted-foreground">
                     No Employees assigned
                   </TableCell>
                 </TableRow>
               ) : (
                 selectedEmployees.map((empId) => {
-                  const emp = employees.find((e) => e.id === empId);
+                  const userRecord = employees?.records.users.find((user) => user.employee.id === empId);
+                  const emp = userRecord?.employee;
                   return (
                     <TableRow key={emp?.id}>
                       <TableCell>{emp?.id}</TableCell>
                       <TableCell>Profile</TableCell>
-                      <TableCell>{emp?.name}</TableCell>
-                      <TableCell>{emp?.role}</TableCell>
-                      <TableCell>Department</TableCell>
+                      <TableCell>
+                        {emp?.first_name} {emp?.last_name}
+                      </TableCell>
+                      <TableCell>{emp?.job_position.title}</TableCell>
+                      <TableCell>{emp?.location_assignment?.department_assign?.name ?? 'N/A'}</TableCell>
+                      <TableCell>
+                        <select
+                          className="border rounded-md px-2 py-1 text-sm"
+                          value={employeeProjectRoles[empId]}
+                          onChange={(e) => handleRoleChange(empId, Number(e.target.value))}
+                        >
+                          <option value="">Select Role</option>
+                          {projectRoles?.map((role) => (
+                            <option key={role.id} value={role.id}>
+                              {role.name}
+                            </option>
+                          ))}
+                        </select>
+                      </TableCell>
                     </TableRow>
                   );
                 })
@@ -203,9 +264,8 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
           </Table>
         </div>
       </div>
-
-      <div className="flex gap-2 mt-6 pt-3">
-        <Button className="bg-orange-500 text-white hover:bg-orange-600" onClick={handleSave}>
+      <div className="flex gap-3 justify-center">
+        <Button onClick={handleCreateProject} disabled={isPending} className="flex-1">
           Create
         </Button>
         <Button variant="outline" onClick={onCancel}>
