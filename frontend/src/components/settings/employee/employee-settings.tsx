@@ -12,6 +12,7 @@ import Skill_Categories from './skills/skill-category/skill-category';
 import NewDocumentForm from './document/create-form';
 import DocumentTypes from './document/document';
 import ProjectRoles from './project-role/project-role';
+import NewProjectRoleForm from './project-role/create-form';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
@@ -103,6 +104,9 @@ export default function EmployeeRolePage() {
                 <NewSkillForm onCancel={handleCancel} onSave={() => console.log('Save skill')} />
               )}
               {activeTab === 'Documents' && <NewDocumentForm onCancel={handleCancel} onSave={handleDocumentTypeSave} />}
+              {activeTab === 'Project Roles' && (
+                <NewProjectRoleForm onCancel={handleCancel} onSave={() => console.log('Save project role')} />
+              )}
             </DialogContent>
           </Dialog>
         </div>
