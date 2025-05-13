@@ -14,6 +14,7 @@ import DocumentTypes from './document/document';
 import ProjectRoles from './project-role/project-role';
 import NewProjectRoleForm from './project-role/create-form';
 import EmploymentTypes from './employment-type/employment-type';
+import NewEmploymentTypeForm from './employment-type/create-form';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
@@ -109,9 +110,9 @@ export default function EmployeeRolePage() {
               {activeTab === 'Project Roles' && (
                 <NewProjectRoleForm onCancel={handleCancel} onSave={() => console.log('Save project role')} />
               )}
-              {/* {activeTab === 'Employment Types' && (
+              {activeTab === 'Employment Types' && (
                 <NewEmploymentTypeForm onCancel={handleCancel} onSave={() => console.log('Save employment type')} />
-              )} */}
+              )}
             </DialogContent>
           </Dialog>
         </div>
