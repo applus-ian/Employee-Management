@@ -31,6 +31,7 @@ export default function EmployeeRolePage() {
 
   // Dialog control state
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isSkillCatOpen, setSkillCatOpen] = useState(false);
 
   const handleCancel = () => {
     console.log('Cancelled');
@@ -71,7 +72,7 @@ export default function EmployeeRolePage() {
 
         <div className="flex gap-2">
           {activeTab === 'Skills' && (
-            <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog open={isSkillCatOpen} onOpenChange={setSkillCatOpen}>
               <DialogTrigger asChild>
                 <button className="px-2 py-1 bg-[#EE7A2A] hover:bg-[#FFA161] text-white rounded-md text-xs font-medium">
                   <span className="flex items-center gap-1">
