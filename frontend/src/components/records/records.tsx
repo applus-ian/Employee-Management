@@ -10,6 +10,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useRecords } from '@/hooks/records/use-fetch-records';
 
 type EmployeeTableProps = {
   onEdit: () => void;
@@ -18,7 +19,7 @@ type EmployeeTableProps = {
 export default function EmployeeTable({ onEdit }: EmployeeTableProps) {
   const [showProfileDialog, setShowProfileDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null);
+  const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('Personal Info');
   const handleDelete = () => {
     if (employeeToDelete !== null) {
@@ -28,8 +29,12 @@ export default function EmployeeTable({ onEdit }: EmployeeTableProps) {
     }
   };
 
+  const { data, isLoading } = useRecords();
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
-    <>
+    <div>
       {/* Show entries + Search */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -69,55 +74,60 @@ export default function EmployeeTable({ onEdit }: EmployeeTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">Employee ID</TableHead>
+              <TableHead>Employee ID</TableHead>
               <TableHead>Profile</TableHead>
               <TableHead>Fullname</TableHead>
               <TableHead>Job Position</TableHead>
-              <TableHead>Department</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Role</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {data?.records.users.map((user) => (
               <TableRow
-                key={i}
-                className="even:bg-[#F7F6FE] cursor-pointer hover:bg-gray-100"
+                key={user.id}
+                className="hover:bg-gray-100 cursor-pointer"
                 onClick={() => setShowProfileDialog(true)}
               >
-                <TableCell className="font-medium">{i}</TableCell>
+                <TableCell>{user.employee.id}</TableCell>
                 <TableCell>
-                  <img src="/applus-image1.png" alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+                  <Avatar>
+                    <AvatarImage src={user.employee.profile_pic_url || '/applus-image1.png'} alt="Profile" />
+                    <AvatarFallback>{user.employee.first_name[0] + user.employee.last_name[0]}</AvatarFallback>
+                  </Avatar>
                 </TableCell>
-                <TableCell>Jane Doe</TableCell>
-                <TableCell>HR</TableCell>
-                <TableCell>IT</TableCell>
-                <TableCell>jane@gmail.com</TableCell>
-                <TableCell>Active</TableCell>
+                <TableCell>
+                  {user.employee.first_name +
+                    ' ' +
+                    (user.employee.middle_name ? user.employee.middle_name + ' ' : '') +
+                    user.employee.last_name}
+                </TableCell>
+                <TableCell>{user.employee.job_position.title}</TableCell>
+                <TableCell>{user.employee.email}</TableCell>
+                <TableCell>{user.roles.map((r) => r.name).join(', ')}</TableCell>
                 <TableCell className="text-right space-x-2">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-[#624DE3] border-none bg-white"
                     onClick={(e) => {
                       e.stopPropagation();
                       onEdit();
                     }}
                   >
-                    <PencilIcon className="w-8 h-8" />
+                    <PencilIcon className="w-5 h-5" />
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-red-600 border-none bg-white"
+                    className="text-red-600"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setEmployeeToDelete(i);
+                      setEmployeeToDelete(user.employee.id);
                       setShowDeleteDialog(true);
                     }}
                   >
-                    <TrashIcon className="w-8 h-8" />
+                    <TrashIcon className="w-5 h-5" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -128,7 +138,7 @@ export default function EmployeeTable({ onEdit }: EmployeeTableProps) {
         {/* Profile Dialog */}
 
         <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
-          <DialogContent className="max-w-10 px-10 py-12 bg-white  shadow-2xl flex w-[50%] h-[95%] overflow-y-auto ">
+          <DialogContent className="max-w-[75%] px-10 py-12 bg-white  shadow-2xl flex w-[50%] h-[95%] overflow-y-auto ">
             <DialogHeader className="space-y-10 w-full ">
               {/* Profile Header */}
               <div className="flex items-center gap-6">
@@ -356,6 +366,6 @@ export default function EmployeeTable({ onEdit }: EmployeeTableProps) {
         </div>
         <div>Next</div>
       </div>
-    </>
+    </div>
   );
 }

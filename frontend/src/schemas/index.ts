@@ -2,10 +2,16 @@ export { loginSchema } from './loginSchema';
 export { updatePasswordSchema } from './profile/changePasswordSchema';
 export { updatePersonalInfoSchema } from './profile/personalInformationSchema';
 export { updateResidentialInfoSchema } from './profile/residentialInformationSchema';
+export { updateGovBankNumberSchema } from './profile/govBankNumberSchema';
 export { documentTypeSchema } from './settings/employee/document/documentType';
+export { projectSchema, createProjectSchema } from './projects/project';
+export { projectRoleSchema } from './settings/employee/project-role/projectRole';
 
 export type { LoginFormInputs } from './loginSchema';
 export type { UpdatePasswordInput } from './profile/changePasswordSchema';
 export type { UpdatePersonalInfoInput } from './profile/personalInformationSchema';
 export type { UpdateResidentialInfoInput } from './profile/residentialInformationSchema';
+export type { UpdateGovBankNumberInput } from './profile/govBankNumberSchema';
 export type { DocumentType } from './settings/employee/document/documentType';
+export type { Project, CreateProjectSchema } from './projects/project';
+export type { ProjectRole } from './settings/employee/project-role/projectRole';
