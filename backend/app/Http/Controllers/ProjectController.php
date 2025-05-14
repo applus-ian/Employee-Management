@@ -5,24 +5,38 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Services\EmployeeProjectService;
+use App\Services\EmployeeService;
 use App\Services\ProjectService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
-    protected $projectService;
+    protected $projectService, $employeeService, $employeeProjectService;
 
-    public function __construct(ProjectService $projectService)
+    public function __construct(ProjectService $projectService, EmployeeService $employeeService, EmployeeProjectService $employeeProjectService)
     {
         $this->projectService = $projectService;
+        $this->employeeService = $employeeService;
+        $this->employeeProjectService = $employeeProjectService;
     }
 
     // Create Project Method
     public function create(CreateProjectRequest $request): JsonResponse
     {
-        $this->projectService->createProject($request->validated());
+        // Create the project
+        $project = $this->projectService->createProject($request->validated());
 
-        return response()->json(['message' => 'Project created successfully!'], 201);
+        // Assign employees to the project
+        try {
+            $this->employeeProjectService->createEmployeeProject($project, $request->input('employees', []));
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+
+        return response()->json(['message' => 'Project created and employees assigned successfully!'], 201);
     }
 
     // Update Project Method

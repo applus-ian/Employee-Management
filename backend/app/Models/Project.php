@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -23,4 +24,9 @@ class Project extends Model
         'start_date',
         'end_date',
     ];
+
+    public function employeeProject(): HasMany
+    {
+        return $this->hasMany(EmployeeProject::class);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 
 class ProjectService
@@ -26,7 +27,9 @@ class ProjectService
     // Read (Get all projects - will refactor for filters in the future)
     public function getAllProjects()
     {
-        return Project::all();
+        $projects = Project::with(['employeeProject.employee'])->get();
+
+        return ProjectResource::collection($projects);
     }
 
     // Update Project
