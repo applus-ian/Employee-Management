@@ -33,6 +33,7 @@ Route::controller(AuthController::class)
             Route::patch('/change-password', 'changeOwnPassword');
             Route::patch('/update-personal-info', 'updateOwnPersonalInfo');
             Route::patch('/update-residential-info', 'updateOwnResidentialInfo');
+            Route::patch('/update-gov-bank-numbers', 'updateOwnGovBankNumbers');
         });
 });
 
@@ -242,5 +243,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Route::get('/{user}', 'show')->middleware('permission:user_view');
         // Route::put('/update/{user}', 'update')->middleware('permission:user_update');
         // Route::delete('/delete/{user}', 'destroy')->middleware('permission:user_delete');
+    });
+});
+
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::controller(ProjectController::class)->prefix('tests')->group(function () {
+        Route::post('/test', 'test');
     });
 });

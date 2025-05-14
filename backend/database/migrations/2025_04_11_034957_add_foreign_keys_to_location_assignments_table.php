@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('office_assign_id')->references('id')->on('office_assigns')->onDelete('cascade');
             $table->foreign('team_assign_id')->references('id')->on('team_assigns')->onDelete('cascade');
             $table->foreign('department_assign_id')->references('id')->on('department_assigns')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->dropForeign(['office_assign_id']);
             $table->dropForeign(['team_assign_id']);
             $table->dropForeign(['department_assign_id']);
+            $table->dropForeign(['employee_id']);
         });
     }
 };

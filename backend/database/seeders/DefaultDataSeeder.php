@@ -16,9 +16,26 @@ class DefaultDataSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             EmploymentTypeSeeder::class,
+            DocumentTypeSeeder::class,
+            SkillCategorySeeder::class,
+            ProjectRoleSeeder::class,
+            ProjectSeeder::class,
+            SkillSeeder::class,
+
             SuperAdminSeeder::class,
             UserRoleSeeder::class,
             RolePermissionSeeder::class,
+
+            DocumentationSeeder::class,
+            EmployeeProjectSeeder::class,
+            EmployeeSkillSeeder::class,
+            EmploymentStatusHistorySeeder::class,
+
+            DepartmentAssignSeeder::class,
+            TeamAssignSeeder::class,
+            OfficeAssignSeeder::class,
+            CountryAssignSeeder::class,
+            LocationAssignmentSeeder::class,
         ]);
     }
 }

@@ -38,6 +38,11 @@ class SuperAdminSeeder extends Seeder
             'employment_type_id' => 1,
             'manager_id' => null,
             'profile_pic_url' => null,
+            'tin_number' => '123-456-789',
+            'sss_number' => '34-1234567-9',
+            'pagibig_number' => '1234-5678-9012',
+            'philhealth_number' => '1234-56789-00',
+            'bank_number' => '123456789012',
         ]);
 
         User::insert([
