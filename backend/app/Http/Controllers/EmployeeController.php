@@ -24,10 +24,10 @@ class EmployeeController extends Controller
     // Get all employees
     public function index()
     {
-        $employee_list = $this->employeeService->getAllEmployees();
+        $records = $this->employeeService->getAllEmployees();
 
         return response()->json([
-            'employee_list' => $employee_list
+            'records' => $records
         ], 200);
     }
 

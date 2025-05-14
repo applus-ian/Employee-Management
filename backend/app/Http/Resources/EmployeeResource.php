@@ -40,10 +40,16 @@ class EmployeeResource extends JsonResource
             'emergency_contact2' => $this->emergency_contact2,
             'email' => $this->email,
             'job_position' => new JobPositionResource($this->whenLoaded('jobPosition')),
+            'location_assignment' => new LocationAssignmentResource($this->whenLoaded('locationAssignment')),
             'date_hired' => $this->date_hired,
             'employment_type' => new EmploymentTypeResource($this->whenLoaded('employmentType')),
             'manager' => $this->manager_id,
             'profile_pic_url' => new ManagerResource($this->whenLoaded('manager')),
+            'tin_number' => $this->tin_number,
+            'sss_number' => $this->sss_number,
+            'pagibig_number' => $this->pagibig_number,
+            'philhealth_number' => $this->philhealth_number,
+            'bank_number' => $this->bank_number,
         ];
     }
 }

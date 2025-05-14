@@ -44,6 +44,11 @@ class CreateEmployeeRequest extends FormRequest
             'employment_type_id' => ['required', 'exists:employment_types,id'],
             'manager_id' => ['nullable', 'exists:employees,id'],
             'profile_pic_url' => ['nullable', 'string', 'url'],
+            'tin_number' => ['nullable', 'string'],
+            'sss_number' => ['nullable', 'string'],
+            'pagibig_number' => ['nullable', 'string'],
+            'philhealth_number' => ['nullable', 'string'],
+            'bank_number' => ['nullable', 'string'],
         ];
     }
 }

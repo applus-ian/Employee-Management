@@ -73,4 +73,11 @@ class AuthService
         $employee->update($data);
         return $employee;
     }
+
+    // Update Employee Government and Bank Numbers
+    public function updateLoggedUserGovBankNumbers(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
 }

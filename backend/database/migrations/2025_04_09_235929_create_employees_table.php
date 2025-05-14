@@ -37,6 +37,11 @@ return new class extends Migration
             $table->unsignedBigInteger('employment_type_id');
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->string('profile_pic_url')->nullable();
+            $table->string('tin_number')->nullable();
+            $table->string('sss_number')->nullable();
+            $table->string('pagibig_number')->nullable();
+            $table->string('philhealth_number')->nullable();
+            $table->string('bank_number')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

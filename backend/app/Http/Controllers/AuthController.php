@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PasswordChangeRequest;
+use App\Http\Requests\UpdateGovBankNumbersRequest;
 use App\Http\Requests\UpdatePersonalInfoRequest;
 use App\Http\Requests\UpdateResidentialInfoRequest;
 use App\Services\AuthService;
@@ -127,6 +128,28 @@ class AuthController extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Failed to update residential information.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    // Update Own Government and Bank Numbers
+    public function updateOwnGovBankNumbers(UpdateGovBankNumbersRequest $request): JsonResponse
+    {
+        try {
+            $user = Auth::user()->load('employee'); // Authenticated user
+            $updatedUser = $this->authService->updateLoggedUserGovBankNumbers(
+                $user->employee,
+                $request->validated()
+            );
+
+            return response()->json([
+                'message' => 'Government and Bank Numbers Updated.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update government and bank numbers.',
                 'error' => $e->getMessage(),
             ], 400);
         }

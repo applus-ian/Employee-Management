@@ -2,8 +2,14 @@
 
 namespace App\Services;
 
+use App\Http\Resources\UserResource;
+use App\Models\Documentation;
 use App\Models\Employee;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Models\EmployeeProject;
+use App\Models\EmployeeSkill;
+use App\Models\EmploymentStatusHistory;
+use App\Models\User;
+use Hashids\Hashids;
 
 class EmployeeService
 {
@@ -33,6 +39,11 @@ class EmployeeService
             'employment_type_id' => $data['employment_type_id'],
             'manager_id' => $data['manager_id'] ?? null,
             'profile_pic_url' => $data['profile_pic_url'] ?? null,
+            'tin_number' => $data['tin_number'],
+            'sss_number' => $data['sss_number'],
+            'pagibig_number' => $data['pagibig_number'],
+            'philhealth_number' => $data['philhealth_number'],
+            'bank_number' => $data['bank_number'],
         ]);
     }
 
@@ -53,19 +64,47 @@ class EmployeeService
     // Get all employees
     public function getAllEmployees()
     {
-        return Employee::all();
+        $users = User::with([
+            'employee',
+            'employee.jobPosition',
+            'employee.employmentType',
+            'employee.manager',
+            'employee.locationAssignment' => [
+                'countryAssign',
+                'officeAssign',
+                'teamAssign',
+                'departmentAssign.parentDepartment',
+            ],
+            'roles',
+        ])->get();
+
+        $projects = EmployeeProject::all();
+        $skills = EmployeeSkill::all();
+        $documentations = Documentation::all();
+        $employeeStatus = EmploymentStatusHistory::all();
+
+        return [
+            'users' => UserResource::collection($users),
+            'projects' => $projects,
+            'skills' => $skills,
+            'documentations' => $documentations,
+            'employee_status' => $employeeStatus,
+        ];
     }
 
     // Encode Employee ID
     public function encodeEmployeeId(string $employeeId): string
     {
-        return Hashids::encode($employeeId);
+        $hashids = new Hashids('', 7);
+
+        return $hashids->encode($employeeId);
     }
 
     // Decode Employee ID
     public function decodeEmployeeId(string $encodedId): ?int // This function will return either an int or null.
     {
-        return Hashids::decode($encodedId)[0] ?? null; // output of decoding is always array
+        $hashids = new Hashids('', 7);
+        return $hashids->decode($encodedId)[0] ?? null; // output of decoding is always array
     }
 
     // Delete Employee
