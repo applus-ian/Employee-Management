@@ -11,11 +11,17 @@ import NewSkillForm from './skills/create-form';
 import Skill_Categories from './skills/skill-category/skill-category';
 import NewDocumentForm from './document/create-form';
 import DocumentTypes from './document/document';
+import ProjectRoles from './project-role/project-role';
+import NewProjectRoleForm from './project-role/create-form';
+import EmploymentTypes from './employment-type/employment-type';
+import NewEmploymentTypeForm from './employment-type/create-form';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
   { name: 'Skills', href: 'Skills' },
   { name: 'Documents', href: 'Documents' },
+  { name: 'Project Roles', href: 'Project Roles' },
+  { name: 'Employment Types', href: 'Employment Types' },
 ] as const;
 
 type TabKey = (typeof navLinks)[number]['href'];
@@ -101,6 +107,12 @@ export default function EmployeeRolePage() {
                 <NewSkillForm onCancel={handleCancel} onSave={() => console.log('Save skill')} />
               )}
               {activeTab === 'Documents' && <NewDocumentForm onCancel={handleCancel} onSave={handleDocumentTypeSave} />}
+              {activeTab === 'Project Roles' && (
+                <NewProjectRoleForm onCancel={handleCancel} onSave={() => console.log('Save project role')} />
+              )}
+              {activeTab === 'Employment Types' && (
+                <NewEmploymentTypeForm onCancel={handleCancel} onSave={() => console.log('Save employment type')} />
+              )}
             </DialogContent>
           </Dialog>
         </div>
@@ -109,6 +121,8 @@ export default function EmployeeRolePage() {
       {activeTab === 'Roles' && <RolePermission />}
       {activeTab === 'Skills' && <Skills />}
       {activeTab === 'Documents' && <DocumentTypes />}
+      {activeTab === 'Project Roles' && <ProjectRoles />}
+      {activeTab === 'Employment Types' && <EmploymentTypes />}
     </div>
   );
 }
