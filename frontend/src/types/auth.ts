@@ -6,7 +6,7 @@ export interface Role {
 
 // Interface for user data
 export interface User {
-  id: number;
+  id: string;
   email: string;
   employee: {
     id: string;
@@ -31,11 +31,41 @@ export interface User {
     email: string;
     date_hired: string; // Date format
     profile_pic_url: string | null; // Nullable
+    tin_number: string | null; // Nullable
+    sss_number: string | null; // Nullable
+    pagibig_number: string | null; // Nullable
+    philhealth_number: string | null; // Nullable
+    bank_number: string | null; // Nullable
 
     // Nested data
     job_position: {
       id: number;
       title: string;
+    };
+    location_assignment: {
+      id: number;
+      job_position_id: number;
+      employee_id: string;
+      country_assign?: {
+        id: number;
+        name: string;
+      };
+      office_assign?: {
+        id: number;
+        name: string;
+      };
+      team_assign?: {
+        id: number;
+        name: string;
+      };
+      department_assign?: {
+        id: number;
+        name: string;
+        parent_department?: {
+          id: number;
+          name: string;
+        };
+      };
     };
     employment_type: {
       id: number;

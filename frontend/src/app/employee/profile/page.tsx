@@ -3,6 +3,7 @@
 import PersonalInformation from '@/components/profile/personal-information';
 import ResidentialInformation from '@/components/profile/residential-information';
 import HeadCardInformation from '@/components/profile/head-card-information';
+import GovBankNumbers from '@/components/profile/gov-bank-numbers';
 
 export default function Page() {
   return (
@@ -17,6 +18,9 @@ export default function Page() {
 
       {/* Residential Information */}
       <ResidentialInformation />
+
+      {/* Government and Bank Numbers */}
+      <GovBankNumbers />
     </div>
   );
 }

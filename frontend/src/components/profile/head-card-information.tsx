@@ -52,7 +52,7 @@ export default function HeadCardInformation() {
 
   return (
     <>
-      <Card className="h-fit m-5 mb-2 bg-white shadow-md">
+      <Card className="h-fit m-5 bg-white shadow-md">
         <CardHeader>
           <div className="flex flex-row items-start w-full">
             <div className="hidden sm:inline">

@@ -24,7 +24,7 @@ export const columns: ColumnDef<DocumentType>[] = [
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {
-      const item = row.original; // Ensure item is of type DocumentType
+      const item = row.original;
       const [editOpen, setEditOpen] = useState(false);
       const [deleteOpen, setDeleteOpen] = useState(false);
       const { mutate: updateDocumentType } = useUpdateDocumentType();
@@ -63,7 +63,7 @@ export const columns: ColumnDef<DocumentType>[] = [
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-white w-[50%]">
               <DialogHeader>
                 <DialogTitle>Edit Document</DialogTitle>
               </DialogHeader>

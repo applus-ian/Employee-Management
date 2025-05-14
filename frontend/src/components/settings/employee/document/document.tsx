@@ -3,16 +3,12 @@
 import { useDocumentType } from '@/hooks/settings/employee/document/use-fetch-document-types';
 import { DataTable } from './data-table';
 import { columns } from './columns';
-
-export interface DocumentRow {
-  id: number;
-  name: string;
-}
+import { DocumentType } from '@/types/settings/employee/document/documentType';
 
 export default function DocumentTypes() {
   const { data, isLoading, isError } = useDocumentType();
 
-  const rows: DocumentRow[] =
+  const rows: DocumentType[] =
     data?.map((item) => ({
       id: item.id,
       name: item.name,
