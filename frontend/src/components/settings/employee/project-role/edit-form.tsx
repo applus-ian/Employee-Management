@@ -1,28 +1,47 @@
-import { useState } from 'react';
-import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-
+import { ProjectRole } from '@/schemas';
+import { Input } from '@/components/ui/input';
 interface EditProjectRoleFormProps {
+  project_role: ProjectRole;
   onCancel: () => void;
-  onSave: (project_roleData: { project_roleName: string }) => void;
+  onSave: (updatedProjectRole: ProjectRole) => void;
 }
 
-export default function EditProjectRoleForm({ onCancel, onSave }: EditProjectRoleFormProps) {
-  const [project_roleName, setProjectRoleName] = useState('');
+export function EditProjectRoleForm({ project_role, onCancel, onSave }: EditProjectRoleFormProps) {
+  const [name, setName] = useState(project_role.name);
+  const [isLoading, setIsLoading] = useState(false); // State to track loading status
 
-  const handleSave = () => {
-    onSave({ project_roleName });
-    onCancel();
+  useEffect(() => {
+    if (project_role) {
+      setName(project_role.name);
+    }
+  }, [project_role]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true); // Set loading state to true when saving
+    try {
+      await onSave({ ...project_role, name }); // Call onSave with updated data
+      onCancel();
+    } catch (error) {
+      console.error('Error saving project role:', error); // Handle any error
+    } finally {
+      setIsLoading(false); // Set loading state to false after saving
+    }
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col">
+    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
       <DialogHeader>
-        <DialogTitle>Update Project Role</DialogTitle>
+        <DialogTitle>Edit Project Role</DialogTitle>
       </DialogHeader>
       <div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="grid">
             <div className="flex flex-col p-5">
               <div>
@@ -31,27 +50,22 @@ export default function EditProjectRoleForm({ onCancel, onSave }: EditProjectRol
                 </Label>
               </div>
               <div>
-                <input
-                  type="text"
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter project role name..."
-                  value={project_roleName}
-                  onChange={(e) => setProjectRoleName(e.target.value)}
-                />
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
               </div>
             </div>
 
             <div className=" px-5 pt-5 flex justify-center gap-x-6">
-              <DialogClose asChild>
-                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-                  Save Changes
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                  Cancel
-                </Button>
-              </DialogClose>
+              <Button
+                type="submit"
+                className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]"
+                disabled={isLoading} // Disable button when loading
+              >
+                {isLoading ? 'Saving...' : 'Save'} {/* Show loading text when saving */}
+              </Button>
+
+              <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
+                Cancel
+              </Button>
             </div>
           </div>
         </form>
