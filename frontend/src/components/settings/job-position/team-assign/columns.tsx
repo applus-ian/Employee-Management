@@ -1,17 +1,18 @@
+'use client';
+
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import EditTeamAssignForm from './edit-form';
+import { useState } from 'react';
+import { TeamAssign } from '@/schemas';
+import { useUpdateTeamAssign } from '@/hooks/settings/job-position/team-assign/use-update-team-assign';
+import { useDeleteTeamAssign } from '@/hooks/settings/job-position/team-assign/use-delete-team-assign';
 
-// This type defines each row's data
-export type Team_Assign = {
-  team_assignName: string;
-};
-
-export const columns: ColumnDef<Team_Assign>[] = [
+export const columns: ColumnDef<TeamAssign>[] = [
   {
-    accessorKey: 'team_assignName',
+    accessorKey: 'name',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Team Name
@@ -24,28 +25,49 @@ export const columns: ColumnDef<Team_Assign>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       const item = row.original;
+      const [editOpen, setEditOpen] = useState(false);
+      const [deleteOpen, setDeleteOpen] = useState(false);
+      const { mutate: updateTeamAssign } = useUpdateTeamAssign();
+      const { mutate: deleteTeamAssign, isPending: isDeleting } = useDeleteTeamAssign();
 
       const handleCancel = () => {
         console.log('Cancelled');
       };
 
-      const handleSave = () => {
-        console.log('Saved', item);
+      const handleSave = async (updatedData: TeamAssign) => {
+        try {
+          await updateTeamAssign(updatedData);
+          alert(`Employment type changed to "${updatedData.name}"!`);
+          setEditOpen(false);
+        } catch (error) {
+          console.error('Failed to update employment type:', error);
+        }
+      };
+
+      const handleDelete = async () => {
+        try {
+          await deleteTeamAssign(item.id);
+          alert('Employment type deleted successfully!');
+          setDeleteOpen(false);
+        } catch (error) {
+          console.error('Failed to delete employment type:', error);
+        }
       };
 
       return (
         <div className="flex gap-2">
           {/* Edit Dialog */}
-          <Dialog>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
             <DialogTrigger asChild>
               <button className="text-blue-500 hover:text-blue-700">
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            <EditTeamAssignForm onCancel={handleCancel} onSave={handleSave} />
+            <EditTeamAssignForm team_assign={item} onCancel={handleCancel} onSave={handleSave} />
           </Dialog>
 
-          <Dialog>
+          {/* Delete Dialog */}
+          <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
             <DialogTrigger asChild>
               <button className="text-red-500 hover:text-red-700">
                 <Trash2 size={18} />
@@ -60,12 +82,14 @@ export const columns: ColumnDef<Team_Assign>[] = [
               <div className="flex justify-center items-center">
                 <p className="text-center">Do you want to delete this Assigned Team?</p>
               </div>
-              <DialogClose asChild>
-                <div className=" px-5 pt-5 flex justify-center gap-x-6">
-                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Confirm</Button>
+              <div className=" px-5 pt-5 flex justify-center gap-x-6">
+                <Button onClick={handleDelete} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isDeleting}>
+                  {isDeleting ? 'Deleting...' : 'Delete'}
+                </Button>
+                <DialogClose asChild>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
-                </div>
-              </DialogClose>
+                </DialogClose>
+              </div>
             </DialogContent>
           </Dialog>
         </div>

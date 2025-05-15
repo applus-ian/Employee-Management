@@ -7,6 +7,7 @@ export { documentTypeSchema } from './settings/employee/document/documentType';
 export { projectSchema, createProjectSchema } from './projects/project';
 export { projectRoleSchema } from './settings/employee/project-role/projectRole';
 export { employmentTypeSchema } from './settings/employee/employment-type/employmentType';
+export { teamAssignSchema } from './settings/job-position/team-assign/teamAssign';
 
 export type { LoginFormInputs } from './loginSchema';
 export type { UpdatePasswordInput } from './profile/changePasswordSchema';
@@ -17,3 +18,4 @@ export type { DocumentType } from './settings/employee/document/documentType';
 export type { Project, CreateProjectSchema } from './projects/project';
 export type { ProjectRole } from './settings/employee/project-role/projectRole';
 export type { EmploymentType } from './settings/employee/employment-type/employmentType';
+export type { TeamAssign } from './settings/job-position/team-assign/teamAssign';

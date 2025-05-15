@@ -10,7 +10,7 @@ import CountryAssign from './country-assign/country-assign';
 import NewCountryAssignForm from './country-assign/create-form';
 import OfficeAssign from './office-assign/office-assign';
 import NewOfficeAssignForm from './office-assign/create-form';
-import TeamAssign from './team-assign/team-assign';
+import TeamAssigns from './team-assign/team-assign';
 import NewTeamAssignForm from './team-assign/create-form';
 import DepartmentAssign from './department-assign/department-assign';
 import NewDepartmentAssignForm from './department-assign/create-form';
@@ -95,7 +95,7 @@ export default function JobPositionPage() {
       {activeTab === 'Location Assigns' && <LocationAssign />}
       {activeTab === 'Country Assigns' && <CountryAssign />}
       {activeTab === 'Office Assigns' && <OfficeAssign />}
-      {activeTab === 'Team Assigns' && <TeamAssign />}
+      {activeTab === 'Team Assigns' && <TeamAssigns />}
       {activeTab === 'Department Assigns' && <DepartmentAssign />}
     </div>
   );

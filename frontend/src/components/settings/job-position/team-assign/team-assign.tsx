@@ -1,48 +1,41 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Team_Assign, columns } from './columns';
+
+import { useFetchTeamAssign } from '@/hooks/settings/job-position/team-assign/use-fetch-team-assigns';
+import { columns } from './columns';
 import { DataTable } from './data-table';
+import { TeamAssign } from '@/types/settings/job-position/team-assign/teamAssign';
+import { Loader2, AlertTriangle } from 'lucide-react';
 
-export default function TeamAssign() {
-  const [data, setData] = useState<Team_Assign[]>([]);
+export default function TeamAssigns() {
+  const { data, isLoading, isError } = useFetchTeamAssign();
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+  const rows: TeamAssign[] =
+    data?.map((item) => ({
+      id: item.id,
+      name: item.name,
+    })) ?? [];
 
-  async function getData(): Promise<Team_Assign[]> {
-    return [
-      {
-        team_assignName: 'Employee Management Team',
-      },
-      {
-        team_assignName: 'Attendance Team',
-      },
-      {
-        team_assignName: 'Recruitment Team',
-      },
-      {
-        team_assignName: 'Onboarding Team',
-      },
-      {
-        team_assignName: 'HR Team',
-      },
-      {
-        team_assignName: 'Admin Team',
-      },
-      {
-        team_assignName: 'Joshua Team',
-      },
-    ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <span className="ml-2 text-sm text-gray-500">Loading team assignments...</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-40 text-red-500">
+        <AlertTriangle className="h-6 w-6 mr-2" />
+        <span className="text-sm">Failed to load team assignments.</span>
+      </div>
+    );
   }
 
   return (
     <div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rows} />
     </div>
   );
 }
