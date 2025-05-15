@@ -1,19 +1,50 @@
-import { useState } from 'react';
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useCreateEmploymentType } from '@/hooks/settings/employee/employment-type/use-create-employment-type';
+
+// Zod Schema
+const employmentTypeSchema = z.object({
+  name: z.string().min(1, 'Employment type name is required'),
+});
+
+// Infer the form type
+type EmploymentTypeInput = z.infer<typeof employmentTypeSchema>;
 
 interface NewEmploymentTypeFormProps {
   onCancel: () => void;
-  onSave: (employment_typeData: { employment_typeName: string }) => void;
+  onSave: (data: EmploymentTypeInput) => void;
 }
 
 export default function NewEmploymentTypeForm({ onCancel, onSave }: NewEmploymentTypeFormProps) {
-  const [employment_typeName, setEmploymentTypeName] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<EmploymentTypeInput>({
+    resolver: zodResolver(employmentTypeSchema),
+  });
 
-  const handleSave = () => {
-    onSave({ employment_typeName });
-    onCancel();
+  const { mutate: createEmploymentType, isPending, isError, error } = useCreateEmploymentType();
+
+  const onSubmit = (data: EmploymentTypeInput) => {
+    createEmploymentType(data, {
+      onSuccess: () => {
+        onSave(data);
+        reset();
+        onCancel();
+      },
+      onError: (error: { message: string }) => {
+        console.error('Error creating employment type:', error.message);
+      },
+    });
   };
 
   return (
@@ -22,33 +53,36 @@ export default function NewEmploymentTypeForm({ onCancel, onSave }: NewEmploymen
         <DialogTitle>Create New Employment Type</DialogTitle>
       </DialogHeader>
       <div>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid">
             <div className="flex flex-col p-5">
               <div>
-                <Label>
+                <Label htmlFor="name">
                   <h3 className="text-black font-base">Employment Type Name</h3>
                 </Label>
               </div>
               <div>
-                <input
-                  type="text"
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter employment type name..."
-                  value={employment_typeName}
-                  onChange={(e) => setEmploymentTypeName(e.target.value)}
-                />
+                <Input id="name" {...register('name')} placeholder="Enter employment type name..." className="mt-2" />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
               </div>
             </div>
 
+            {isError && (
+              <div className="text-red-600">
+                <p>Error creating employment type: {error?.message}</p>
+              </div>
+            )}
+
             <div className=" px-5 pt-5 flex justify-center gap-x-6">
+              <Button type="submit" className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isPending}>
+                {isPending ? 'Creating...' : 'Create'}
+              </Button>
               <DialogClose asChild>
-                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-                  Create
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
+                <Button
+                  type="button"
+                  className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+                  onClick={onCancel}
+                >
                   Cancel
                 </Button>
               </DialogClose>
