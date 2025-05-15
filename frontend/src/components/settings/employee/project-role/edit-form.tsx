@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { DialogHeader, DialogContent, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { ProjectRole } from '@/schemas';
@@ -41,7 +41,7 @@ export function EditProjectRoleForm({ project_role, onCancel, onSave }: EditProj
         <DialogTitle>Edit Project Role</DialogTitle>
       </DialogHeader>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-5 px-5 py-3">
           <div className="grid">
             <div className="flex flex-col p-5">
               <div>
@@ -50,22 +50,28 @@ export function EditProjectRoleForm({ project_role, onCancel, onSave }: EditProj
                 </Label>
               </div>
               <div>
-                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+                <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required className="mt-2" />
               </div>
             </div>
 
             <div className=" px-5 pt-5 flex justify-center gap-x-6">
               <Button
                 type="submit"
-                className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]"
+                className="bg-[#EE7A2A] text-white w-[10rem]"
                 disabled={isLoading} // Disable button when loading
               >
                 {isLoading ? 'Saving...' : 'Save'} {/* Show loading text when saving */}
               </Button>
 
-              <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                Cancel
-              </Button>
+              <DialogClose asChild>
+                <Button
+                  type="button"
+                  className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+                  onClick={onCancel}
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
             </div>
           </div>
         </form>
