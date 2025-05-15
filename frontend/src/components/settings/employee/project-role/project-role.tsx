@@ -1,48 +1,25 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { ProjectRole, columns } from './columns';
+
+import { columns } from './columns';
 import { DataTable } from './data-table';
+import { ProjectRole } from '@/types/settings/employee/project-role/projectRole';
+import { useProjectRole } from '@/hooks/settings/employee/project-role/use-fetch-project-roles';
 
 export default function ProjectRoles() {
-  const [data, setData] = useState<ProjectRole[]>([]);
+  const { data, isLoading, isError } = useProjectRole();
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+  const rows: ProjectRole[] =
+    data?.map((item) => ({
+      id: item.id,
+      name: item.name,
+    })) ?? [];
 
-  async function getData(): Promise<ProjectRole[]> {
-    return [
-      {
-        project_roleName: 'JavaScript programming',
-      },
-      {
-        project_roleName: 'Database management',
-      },
-      {
-        project_roleName: 'Time management',
-      },
-      {
-        project_roleName: 'Documentation and reporting',
-      },
-      {
-        project_roleName: 'Customer service',
-      },
-      {
-        project_roleName: 'Strategic thinking',
-      },
-      {
-        project_roleName: 'Team motivation',
-      },
-    ];
-  }
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading project roles.</p>;
 
   return (
     <div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rows} />
     </div>
   );
 }
