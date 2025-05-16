@@ -57,7 +57,7 @@ export const columns: ColumnDef<ProjectRole>[] = [
       };
 
       return (
-        <div className="flex justify-end gap-2">
+        <div className="flex gap-2">
           {/* Edit Dialog */}
           <Dialog open={editOpen} onOpenChange={setEditOpen}>
             <DialogTrigger asChild>
