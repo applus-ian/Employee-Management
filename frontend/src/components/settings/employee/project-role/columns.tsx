@@ -57,11 +57,11 @@ export const columns: ColumnDef<ProjectRole>[] = [
       };
 
       return (
-        <div className="flex gap-2">
+        <div className="flex justify-end gap-2">
           {/* Edit Dialog */}
           <Dialog open={editOpen} onOpenChange={setEditOpen}>
             <DialogTrigger asChild>
-              <button className="text-blue-500 hover:text-blue-700">
+              <button className="text-[#624DE3] hover:text-[#624DE3]">
                 <Edit size={18} />
               </button>
             </DialogTrigger>

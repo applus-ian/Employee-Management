@@ -13,7 +13,6 @@ import {
 } from '@tanstack/react-table';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -25,6 +24,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+
   const table = useReactTable({
     data,
     columns,
@@ -71,18 +71,17 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           className="w-full"
         />
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -105,49 +104,52 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
       <div className="flex items-center justify-center space-x-2 py-3">
         {/* Previous Button */}
-        <Button
-          variant="outline"
-          size="sm"
+        <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="bg-transparent border-none"
+          className={`px-3 py-1 rounded-md font-medium text-sm ${
+            table.getCanPreviousPage()
+              ? 'text-gray-400 hover:text-black cursor-pointer'
+              : 'text-gray-300 cursor-not-allowed'
+          }`}
         >
           Previous
-        </Button>
+        </button>
 
-        {/* Page Numbers */}
-        <div className="flex items-center space-x-1">
-          {table.getPageCount() > 1 && (
-            <>
-              {/* Render current page with clickable numbers */}
-              {table.getPageCount() > 1 &&
-                Array.from({ length: table.getPageCount() }).map((_, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.setPageIndex(0)}
-                    className={`${table.getState().pagination.pageIndex === index ? 'bg-[#624DE3] text-white' : ''}`}
-                  >
-                    {index + 1}
-                  </Button>
-                ))}
-            </>
-          )}
-        </div>
+        {/* Page Number Buttons */}
+        {Array.from({ length: table.getPageCount() }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => table.setPageIndex(index)}
+            className={`w-8 h-8 flex items-center justify-center rounded-md font-semibold text-sm
+              ${
+                table.getState().pagination.pageIndex === index
+                  ? 'bg-[#624DE3] text-white'
+                  : 'bg-gray-200 text-black hover:bg-gray-300'
+              }`}
+            aria-current={table.getState().pagination.pageIndex === index ? 'page' : undefined}
+            aria-label={`Page ${index + 1}`}
+          >
+            {index + 1}
+          </button>
+        ))}
 
         {/* Next Button */}
-        <Button
-          variant="outline"
-          size="sm"
+        <button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="bg-transparent border-none"
+          className={`px-3 py-1 rounded-md font-medium text-sm ${
+            table.getCanNextPage()
+              ? 'text-gray-400 hover:text-black cursor-pointer'
+              : 'text-gray-300 cursor-not-allowed'
+          }`}
         >
           Next
-        </Button>
+        </button>
       </div>
     </div>
   );
