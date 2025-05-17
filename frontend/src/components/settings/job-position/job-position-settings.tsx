@@ -6,10 +6,10 @@ import NewJobPositionForm from './job-position/create-form';
 import JobPosition from './job-position/job-position';
 import NewLocationAssignForm from './location-assign/create-form';
 import LocationAssign from './location-assign/location-assign';
-import CountryAssign from './country-assign/country-assign';
-import NewCountryAssignForm from './country-assign/create-form';
-import OfficeAssign from './office-assign/office-assign';
-import NewOfficeAssignForm from './office-assign/create-form';
+import CountryAssigns from './country-assigns/country-assigns';
+import NewCountryAssignForm from './country-assigns/create-form';
+import OfficeAssigns from './office-assigns/office-assigns';
+import NewOfficeAssignForm from './office-assigns/create-form';
 import TeamAssigns from './team-assign/team-assign';
 import NewTeamAssignForm from './team-assign/create-form';
 import DepartmentAssign from './department-assign/department-assign';
@@ -28,14 +28,25 @@ type TabKey = (typeof navLinks)[number]['href'];
 
 export default function JobPositionPage() {
   const [activeTab, setactiveTab] = useState<TabKey>('Job Positions');
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   // Placeholder functions for onCancel and onSave
   const handleCancel = () => {
-    console.log('Cancelled');
+    setDialogOpen(false); // Close the dialog
   };
 
   const handleSave = () => {
     console.log('Saved');
+  };
+
+  const handleCountryAssignSave = (data: { name: string }) => {
+    alert(`Country Assign "${data.name}" created!`);
+    setDialogOpen(false); // Close dialog after save
+  };
+
+  const handleOfficeAssignSave = (data: { name: string }) => {
+    alert(`Office Assign "${data.name}" created!`);
+    setDialogOpen(false); // Close dialog after save
   };
 
   return (
@@ -66,7 +77,7 @@ export default function JobPositionPage() {
         </ul>
 
         <div className="flex gap-2">
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <button className="px-2 py-1 text-[#EE7A2A] font-medium text-xs rounded-md hover:bg-[#FFA161] hover:text-white border border-[#EE7A2A] size-fit">
                 <span className="flex items-center gap-1">
@@ -80,8 +91,12 @@ export default function JobPositionPage() {
               {activeTab === 'Location Assigns' && (
                 <NewLocationAssignForm onCancel={handleCancel} onSave={handleSave} />
               )}
-              {activeTab === 'Country Assigns' && <NewCountryAssignForm onCancel={handleCancel} onSave={handleSave} />}
-              {activeTab === 'Office Assigns' && <NewOfficeAssignForm onCancel={handleCancel} onSave={handleSave} />}
+              {activeTab === 'Country Assigns' && (
+                <NewCountryAssignForm onCancel={handleCancel} onSave={handleCountryAssignSave} />
+              )}
+              {activeTab === 'Office Assigns' && (
+                <NewOfficeAssignForm onCancel={handleCancel} onSave={handleOfficeAssignSave} />
+              )}
               {activeTab === 'Team Assigns' && <NewTeamAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Department Assigns' && (
                 <NewDepartmentAssignForm onCancel={handleCancel} onSave={handleSave} />
@@ -93,8 +108,8 @@ export default function JobPositionPage() {
 
       {activeTab === 'Job Positions' && <JobPosition />}
       {activeTab === 'Location Assigns' && <LocationAssign />}
-      {activeTab === 'Country Assigns' && <CountryAssign />}
-      {activeTab === 'Office Assigns' && <OfficeAssign />}
+      {activeTab === 'Country Assigns' && <CountryAssigns />}
+      {activeTab === 'Office Assigns' && <OfficeAssigns />}
       {activeTab === 'Team Assigns' && <TeamAssigns />}
       {activeTab === 'Department Assigns' && <DepartmentAssign />}
     </div>
