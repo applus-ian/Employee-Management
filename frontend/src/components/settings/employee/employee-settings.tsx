@@ -1,20 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import RolePermission from './role-permission/role-permission';
+import RolePermission from './role-permissions/role-permission';
 import Skills from './skills/skills';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import NewRoleForm from './role-permission/create-form';
+import NewRoleForm from './role-permissions/create-form';
 import { CirclePlus, TextSearch } from 'lucide-react';
 import NewSkillForm from './skills/create-form';
-import Skill_Categories from './skills/skill-category/skill-category';
-import NewDocumentForm from './document/create-form';
-import DocumentTypes from './document/document';
-import ProjectRoles from './project-role/project-role';
-import NewProjectRoleForm from './project-role/create-form';
+import Skill_Categories from './skills/skill-categories/skill-categories';
+import NewDocumentForm from './document-types/create-form';
+import DocumentTypes from './document-types/document-types';
+import ProjectRoles from './project-roles/project-roles';
+import NewProjectRoleForm from './project-roles/create-form';
 import EmploymentTypes from './employment-type/employment-type';
 import NewEmploymentTypeForm from './employment-type/create-form';
+import NewSkillCategoryForm from './skills/skill-categories/create-form';
 
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
@@ -32,9 +33,9 @@ export default function EmployeeRolePage() {
   // Dialog control state
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isSkillCatOpen, setSkillCatOpen] = useState(false);
+  const [isSkillCatNewOpen, setSkillCatNewOpen] = useState(false);
 
   const handleCancel = () => {
-    console.log('Cancelled');
     setDialogOpen(false); // Close the dialog
   };
 
@@ -42,6 +43,11 @@ export default function EmployeeRolePage() {
     alert(`Document Type "${data.name}" created!`);
     setDialogOpen(false); // Close dialog after save
   };
+
+  function handleSkillCategorySave(data: { name: string }): void {
+    alert(`Skill Category "${data.name}" created!`);
+    setSkillCatNewOpen(false); // Close dialog after save
+  }
 
   return (
     <div>
@@ -72,22 +78,46 @@ export default function EmployeeRolePage() {
 
         <div className="flex gap-2">
           {activeTab === 'Skills' && (
-            <Dialog open={isSkillCatOpen} onOpenChange={setSkillCatOpen}>
-              <DialogTrigger asChild>
-                <button className="px-2 py-1 bg-[#EE7A2A] hover:bg-[#FFA161] text-white rounded-md text-xs font-medium">
-                  <span className="flex items-center gap-1">
-                    View Skill Category
-                    <TextSearch size={18} strokeWidth={2} />
-                  </span>
-                </button>
-              </DialogTrigger>
-              <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
-                <DialogHeader>
-                  <DialogTitle>Skill Categories</DialogTitle>
-                </DialogHeader>
-                <Skill_Categories />
-              </DialogContent>
-            </Dialog>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              {/* Title - Left Side */}
+              <div className="flex gap-2 flex-wrap">
+                <Dialog open={isSkillCatOpen} onOpenChange={setSkillCatOpen}>
+                  <DialogTrigger asChild>
+                    <button className="px-2 py-1 bg-[#EE7A2A] hover:bg-[#FFA161] text-white rounded-md text-xs font-medium">
+                      <span className="flex items-center gap-1">
+                        View Skill Category
+                        <TextSearch size={18} strokeWidth={2} />
+                      </span>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
+                    <DialogHeader>
+                      <div className="flex justify-between items-center w-full">
+                        <DialogTitle>Skill Categories</DialogTitle>
+                        {/* Add Skill Category Button - Right Side */}
+                        <Dialog open={isSkillCatNewOpen} onOpenChange={setSkillCatNewOpen}>
+                          <DialogTrigger asChild>
+                            <button className="mt-5 px-2 py-1 text-[#EE7A2A] font-medium text-xs rounded-md hover:bg-[#FFA161] hover:text-white border border-[#EE7A2A]">
+                              <span className="flex items-center gap-1">
+                                Add New Skill Category
+                                <CirclePlus size={18} strokeWidth={2} />
+                              </span>
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent className="w-full lg:!max-w-[30%] h-fit flex flex-col bg-white">
+                            <DialogHeader>
+                              <DialogTitle>Create New Skill Category</DialogTitle>
+                            </DialogHeader>
+                            <NewSkillCategoryForm onCancel={handleCancel} onSave={handleSkillCategorySave} />
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </DialogHeader>
+                    <Skill_Categories />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
           )}
 
           <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
@@ -99,10 +129,7 @@ export default function EmployeeRolePage() {
                 </span>
               </button>
             </DialogTrigger>
-            <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
-              <DialogHeader>
-                <DialogTitle>Create New {activeTab.slice(0, -1)}</DialogTitle>
-              </DialogHeader>
+            <div>
               {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={() => console.log('Save role')} />}
               {activeTab === 'Skills' && (
                 <NewSkillForm onCancel={handleCancel} onSave={() => console.log('Save skill')} />
@@ -114,7 +141,7 @@ export default function EmployeeRolePage() {
               {activeTab === 'Employment Types' && (
                 <NewEmploymentTypeForm onCancel={handleCancel} onSave={() => console.log('Save employment type')} />
               )}
-            </DialogContent>
+            </div>
           </Dialog>
         </div>
       </nav>
