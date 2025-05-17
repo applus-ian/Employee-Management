@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteDocumentType } from '@/utils/api/settings/employee/document/deleteDocumentType';
+import { createDocumentType } from '@/utils/api/settings/employee/document-type/createDocumentType';
 
-export const useDeleteDocumentType = () => {
+export const useCreateDocumentType = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: deleteDocumentType,
+    mutationFn: createDocumentType,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['document-types'] });
     },

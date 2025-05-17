@@ -7,8 +7,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, Dialog
 import { EditDocumentTypeForm } from './edit-form';
 import { useState } from 'react';
 import { DocumentType } from '@/schemas';
-import { useUpdateDocumentType } from '@/hooks/settings/employee/document/use-update-document-type';
-import { useDeleteDocumentType } from '@/hooks/settings/employee/document/use-delete-document-type';
+import { useUpdateDocumentType } from '@/hooks/settings/employee/document-type/use-update-document-type';
+import { useDeleteDocumentType } from '@/hooks/settings/employee/document-type/use-delete-document-type';
 
 export const columns: ColumnDef<DocumentType>[] = [
   {
