@@ -22,7 +22,7 @@ class CreateOfficeAssignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:office_assigns, name'],
+            'name' => ['required', 'string', 'max:255', 'unique:office_assigns,name'],
         ];
     }
 }
