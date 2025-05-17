@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateDocumentType } from '@/utils/api/settings/employee/document/updateDocumentType';
+import { updateDocumentType } from '@/utils/api/settings/employee/document-type/updateDocumentType';
 
 export const useUpdateDocumentType = () => {
   const queryClient = useQueryClient();

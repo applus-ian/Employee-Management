@@ -7,7 +7,7 @@ import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useCreateDocumentType } from '@/hooks/settings/employee/document/use-create-document-type';
+import { useCreateDocumentType } from '@/hooks/settings/employee/document-type/use-create-document-type';
 
 // Zod Schema
 const documentTypeSchema = z.object({
