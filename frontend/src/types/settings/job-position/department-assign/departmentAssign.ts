@@ -1,7 +1,7 @@
 export interface DepartmentAssign {
   id: number;
   name: string;
-  parent_department?: ParentDepartment[];
+  parent_department: ParentDepartment | null;
 }
 
 export interface ParentDepartment {
@@ -10,7 +10,6 @@ export interface ParentDepartment {
 }
 
 export interface CreateDepartmentAssign {
-  id: number;
   name: string;
-  parent_department?: ParentDepartment[];
+  parent_department: ParentDepartment | null;
 }

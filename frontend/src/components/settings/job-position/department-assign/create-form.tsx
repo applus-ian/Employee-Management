@@ -1,21 +1,23 @@
 'use client';
 
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
 import { useCreateDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-create-department-assign';
-import { useFetchDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
 
 const departmentAssignSchema = z.object({
-  name: z.string().min(1, 'Team name is required'),
-  parent_id: z.number().nullable(),
-  parent_name: z.string().optional(),
+  name: z.string().min(1, 'Department name is required'),
+  parent_department_id: z
+    .string()
+    .transform((val) => (val === '' ? null : Number(val)))
+    .refine((val) => val === null || !isNaN(val), {
+      message: 'Invalid department',
+    }),
 });
 
 type DepartmentAssignInput = z.infer<typeof departmentAssignSchema>;
@@ -30,126 +32,84 @@ export default function NewDepartmentAssignForm({ onCancel, onSave }: NewDepartm
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm<DepartmentAssignInput>({
     resolver: zodResolver(departmentAssignSchema),
+    defaultValues: {
+      name: '',
+      parent_department_id: undefined as unknown as number, // satisfy TS
+    },
   });
 
-  const [selectedParentId, setSelectedParentId] = useState<number | null>(null);
-
+  const { data: departments = [], isLoading: deptLoading } = useDepartmentAssign();
   const { mutate: createDepartmentAssign, isPending, isError, error } = useCreateDepartmentAssign();
 
-  const { data: parentOptions = [], isLoading: isLoadingDepartments } = useFetchDepartmentAssign();
-
   const onSubmit = (data: DepartmentAssignInput) => {
-    // const parent = parentOptions.find((p) => p.id === selectedParentId);
-
-    const payload = {
-      name: data.name,
-      parent_id: selectedParentId,
-    };
-
-    console.log('Payload:', payload); // helpful debug
-
-    createDepartmentAssign(payload, {
+    createDepartmentAssign(data, {
       onSuccess: () => {
-        onSave(payload);
+        onSave(data);
         reset();
-        setSelectedParentId(null);
         onCancel();
       },
-      // onError: (/* error: any */) => {
-      //   console.error('Error creating department assignment:', error.response?.data || error.message);
-      // },
     });
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[35rem] h-fit flex flex-col bg-white">
+    <DialogContent className="flex h-fit w-full flex-col bg-white lg:!max-w-[45rem]">
       <DialogHeader>
-        <DialogTitle>Create New Department Assignment</DialogTitle>
+        <DialogTitle>Create New Department Assign</DialogTitle>
       </DialogHeader>
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="grid">
-            {/* Department Name */}
-            <div className="flex flex-col p-5">
-              <Label>
-                <h3 className="text-black font-base">Department Name</h3>
-              </Label>
-              <Input id="name" {...register('name')} placeholder="Enter team name..." className="mt-2" />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
-            </div>
 
-            {/* Parent Department Dropdown */}
-            <div className="flex flex-col p-5 pt-2">
-              <Label>
-                <h3 className="text-black font-base">Parent Department</h3>
-              </Label>
-              {isLoadingDepartments ? (
-                <p className="text-gray-500 mt-2">Loading departments...</p>
-              ) : (
-                <Select
-                  onValueChange={(value) => {
-                    if (value === '- ') {
-                      setSelectedParentId(null);
-                      setValue('parent_id', null);
-                      return;
-                    }
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 px-5 py-3">
+        <div>
+          <Label htmlFor="name" className="text-black">
+            Department Name
+          </Label>
+          <Input id="name" {...register('name')} placeholder="Enter department name..." className="mt-2" />
+          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+        </div>
 
-                    const selected = parentOptions.find((p) => p.name === value);
-                    setSelectedParentId(selected?.id ?? null);
-                    setValue('parent_id', selected?.id ?? null);
-                    setValue('parent_name', selected?.name ?? '');
-                  }}
-                >
-                  <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
-                    <SelectValue placeholder="Choose parent department" className="text-gray-500" />
-                  </SelectTrigger>
-                  <SelectContent className="border rounded-xl border-gray-500 bg-white">
-                    <SelectItem value="none" className="hover:bg-gray-300 text-black">
-                      No Parent
-                    </SelectItem>
-                    {/* {parentOptions.map((option) => (
-                      <SelectItem
-                        key={option.id}
-                        value={option.id}
-                        className="hover:bg-gray-300 text-black"
-                      >
-                        {option.name}
-                      </SelectItem>
-                    ))} */}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
+        <div>
+          <Label htmlFor="parent_department_id" className="text-black">
+            Parent Department
+          </Label>
+          <select
+            id="parent_department_id"
+            className="mt-2 w-full rounded-md border px-2 py-1 text-sm"
+            {...register('parent_department_id')}
+            disabled={deptLoading}
+          >
+            <option value="">Select Parent Department</option>
+            {departments.map((dept) => (
+              <option key={dept.id} value={dept.id}>
+                {dept.name}
+              </option>
+            ))}
+          </select>
+          {errors.parent_department_id && <p className="text-sm text-red-500">{errors.parent_department_id.message}</p>}
+        </div>
 
-            {/* Error Display */}
-            {isError && (
-              <div className="text-red-600 px-5">
-                <p>Error creating Department Assignment: {error?.message}</p>
-              </div>
-            )}
-
-            {/* Form Actions */}
-            <div className="px-5 pt-5 flex justify-center gap-x-6">
-              <Button type="submit" className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isPending}>
-                {isPending ? 'Creating...' : 'Create'}
-              </Button>
-              <DialogClose asChild>
-                <Button
-                  type="button"
-                  className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
-                  onClick={onCancel}
-                >
-                  Cancel
-                </Button>
-              </DialogClose>
-            </div>
+        {isError && (
+          <div className="text-red-600">
+            <p>Error creating department assign: {error?.message}</p>
           </div>
-        </form>
-      </div>
+        )}
+
+        {/* Actions ---------------------------------------------------------*/}
+        <div className="flex justify-center gap-x-6 pt-3">
+          <Button type="submit" className="w-[10rem] bg-[#EE7A2A] text-white" disabled={isPending}>
+            {isPending ? 'Creating...' : 'Create'}
+          </Button>
+          <Button
+            type="button"
+            className="w-[10rem] border-2 border-[#EE7A2A] bg-white text-[#EE7A2A]"
+            onClick={onCancel}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
     </DialogContent>
   );
 }

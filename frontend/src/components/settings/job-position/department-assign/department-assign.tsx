@@ -1,20 +1,24 @@
 'use client';
 
-import { useFetchDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
+import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
 import { columns } from './columns';
 import { DataTable } from './data-table';
 import { DepartmentAssign } from '@/types/settings/job-position/department-assign/departmentAssign';
 import { Loader2, AlertTriangle } from 'lucide-react';
 
 export default function DepartmentAssigns() {
-  const { data, isLoading, isError } = useFetchDepartmentAssign();
+  const { data, isLoading, isError } = useDepartmentAssign();
 
   const rows: DepartmentAssign[] =
     data?.map((item) => ({
       id: item.id,
       name: item.name,
-      parent_id: item.id,
-      parent_name: item.parent_name,
+      parent_department: item.parent_department
+        ? {
+            id: item.parent_department.id,
+            name: item.parent_department.name,
+          }
+        : null,
     })) ?? [];
 
   if (isLoading) {
