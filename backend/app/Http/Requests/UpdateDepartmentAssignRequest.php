@@ -23,7 +23,7 @@ class UpdateDepartmentAssignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('department_assigns', 'name')->ignore($this->department_assign_id)],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('department_assigns','name')->ignore($this->department_assign_id)],
             'parent_department_id' => ['required', 'exists:department_assigns, parent_department_id']
         ];
     }
