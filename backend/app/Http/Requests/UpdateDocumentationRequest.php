@@ -24,7 +24,7 @@ class UpdateDocumentationRequest extends FormRequest
     {
         return [
             'employee_id' => ['required', 'exists:documentations,employee_id'],
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('documentations', 'name')->ignore($this->documentation_id)],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('documentations', 'name')->ignore($this->route('documentation'))],
             'description' => ['nullable', 'string'],
             'file_url' => ['required', 'url'],
             'document_type_id' => ['required', 'exists:documentations,document_type_id'],

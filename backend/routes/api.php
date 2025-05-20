@@ -13,6 +13,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectRoleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SkillCategoryController;
+use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TeamAssignController;
 use App\Http\Controllers\EmployeeSkillController;
 use App\Http\Controllers\UserController;
@@ -64,7 +65,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
         Route::get('/list', 'index')->middleware('permission:employee_list');
         Route::post('/new', 'create')->middleware('permission:employee_create');
-        Route::get('/{employee}', 'show')->middleware('permission:employee_view');
+        Route::get('/{employee_id}', 'show')->middleware('permission:employee_view');
         Route::put('/update/{employee}', 'update')->middleware('permission:employee_update');
         Route::delete('/delete/{employee}', 'destroy')->middleware('permission:employee_delete');
     });
@@ -86,7 +87,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmployeeSkillController::class)->prefix('employee-skills')->group(function () {
         Route::get('/list', 'index')->middleware('permission:employee_skill_list');
         Route::post('/new', 'create')->middleware('permission:employee_skill_create');
-        Route::get('/{employee_skill}', 'show')->middleware('permission:employee_skill_view');
+        Route::get('/{employee_id}', 'show')->middleware('permission:employee_skill_view');
         Route::put('/update/{employee_skill}', 'update')->middleware('permission:employee_skill_update');
         Route::delete('/delete/{employee_skill}', 'destroy')->middleware('permission:employee_skill_delete');
     });
@@ -204,7 +205,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 // Routes for Skill
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::controller(SkillCategoryController::class)->prefix('skills')->group(function () {
+    Route::controller(SkillController::class)->prefix('skills')->group(function () {
         Route::get('/list', 'index')->middleware('permission:skill_list');
         Route::post('/new', 'create')->middleware('permission:skill_create');
         Route::get('/{skill}', 'show')->middleware('permission:skill_view');

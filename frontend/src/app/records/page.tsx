@@ -5,8 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import EmployeeTable from '@/components/records/records';
-import { EditEmployeeForm } from '@/components/records/edit-form';
+import Records from '@/components/records/records';
 import { NewEmployeeForm } from '@/components/records/create-form';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import '@pathofdev/react-tag-Input/build/index.css';
@@ -16,10 +15,6 @@ export default function RecordsPage() {
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState<null | 'new' | 'edit'>(null);
   const [activePage, setActivePage] = useState('record');
-  const handleEditEmployee = () => {
-    setFormType('edit');
-    setShowForm(true);
-  };
 
   return (
     <SidebarProvider
@@ -138,9 +133,8 @@ export default function RecordsPage() {
 
             <CardContent className="space-y-6">
               {/* Toggleable Form */}
-              {(showForm && formType === 'new' && <NewEmployeeForm onCancel={() => setShowForm(false)} />) ||
-                (showForm && formType === 'edit' && <EditEmployeeForm onCancel={() => setShowForm(false)} />)}
-              {!showForm && <EmployeeTable onEdit={handleEditEmployee} />}
+              {showForm && formType === 'new' && <NewEmployeeForm onCancel={() => setShowForm(false)} />}
+              {!showForm && <Records />}
             </CardContent>
           </Card>
         </div>

@@ -27,7 +27,7 @@ class UpdateDocumentTypeRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('document_types', 'name')->ignore($this->route('document_type')->id)
+                Rule::unique('document_types', 'name')->ignore($this->route('document_type'))
             ],
         ];
     }

@@ -1,20 +1,21 @@
+'use client';
+
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-import EditJobPositionForm from './edit-form';
+import { EditJobPositionForm } from './edit-form';
+import { useState } from 'react';
+import { JobPosition } from '@/schemas';
+import { useUpdateJobPosition } from '@/hooks/settings/job-position/job-position/use-update-job-position';
+import { useDeleteJobPosition } from '@/hooks/settings/job-position/job-position/use-delete-job-position';
 
-// This type defines each row's data
-export type Job_Position = {
-  job_positionName: string;
-};
-
-export const columns: ColumnDef<Job_Position>[] = [
+export const columns: ColumnDef<JobPosition>[] = [
   {
-    accessorKey: 'job_positionName',
+    accessorKey: 'title',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Job Title
+        Job Position Title
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -24,28 +25,58 @@ export const columns: ColumnDef<Job_Position>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       const item = row.original;
+      const [editOpen, setEditOpen] = useState(false);
+      const [deleteOpen, setDeleteOpen] = useState(false);
+      const { mutate: updateJobPosition } = useUpdateJobPosition();
+      const { mutate: deleteJobPosition, isPending: isDeleting } = useDeleteJobPosition();
 
       const handleCancel = () => {
-        console.log('Cancelled');
+        setEditOpen(false); // Close the edit dialog when cancel is clicked
       };
 
-      const handleSave = () => {
-        console.log('Saved', item);
+      const handleSave = async (updatedData: JobPosition) => {
+        try {
+          await updateJobPosition(updatedData);
+          alert(`Job position title changed to "${updatedData.title}"!`);
+          setEditOpen(false);
+        } catch (error) {
+          console.error('Failed to update job position:', error);
+        }
+      };
+
+      const handleDelete = async () => {
+        try {
+          await deleteJobPosition(item.id);
+          alert('Job position deleted successfully!');
+          setDeleteOpen(false);
+        } catch (error) {
+          console.error('Failed to delete job position:', error);
+        }
       };
 
       return (
         <div className="flex gap-2">
           {/* Edit Dialog */}
-          <Dialog>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
             <DialogTrigger asChild>
               <button className="text-blue-500 hover:text-blue-700">
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            <EditJobPositionForm onCancel={handleCancel} onSave={handleSave} />
+            <DialogContent className="bg-white w-[50%]">
+              <DialogHeader>
+                <DialogTitle>Edit Job Position</DialogTitle>
+              </DialogHeader>
+              <EditJobPositionForm
+                job_position={item} // Pass the job position data to the edit form
+                onCancel={handleCancel}
+                onSave={handleSave} // Handle the save action here
+              />
+            </DialogContent>
           </Dialog>
 
-          <Dialog>
+          {/* Delete Dialog */}
+          <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
             <DialogTrigger asChild>
               <button className="text-red-500 hover:text-red-700">
                 <Trash2 size={18} />
@@ -58,14 +89,22 @@ export const columns: ColumnDef<Job_Position>[] = [
                 </DialogTitle>
               </DialogHeader>
               <div className="flex justify-center items-center">
-                <p className="text-center">Do you want to delete this Job Position Title?</p>
+                <p className="text-center">Do you want to delete this Country Assign?</p>
               </div>
-              <DialogClose asChild>
-                <div className=" px-5 pt-5 flex justify-center gap-x-6">
-                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Confirm</Button>
-                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
-                </div>
-              </DialogClose>
+              <div className="px-5 pt-5 flex justify-center gap-x-6">
+                <Button
+                  onClick={handleDelete} // Call handleDelete to delete the job position
+                  className="bg-[#EE7A2A] text-white w-[10rem]"
+                  disabled={isDeleting} // Disable button while deleting
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                </Button>
+                <DialogClose asChild>
+                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </div>
             </DialogContent>
           </Dialog>
         </div>

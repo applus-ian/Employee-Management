@@ -16,13 +16,12 @@ class LocationAssignmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'job_position_id' => $this->job_position_id,
-            'employee_id' => $this->employee_id,
+            'job_position_id' => new JobPositionResource($this->whenLoaded('jobPosition')),
+            'employee_id' => new EmployeeResource($this->whenLoaded('employee')),
             'country_assign' => new CountryAssignResource($this->whenLoaded('countryAssign')),
             'office_assign' => new OfficeAssignResource($this->whenLoaded('officeAssign')),
             'team_assign' => new TeamAssignResource($this->whenLoaded('teamAssign')),
             'department_assign' => new DepartmentAssignResource($this->whenLoaded('departmentAssign')),
-
         ];
     }
 }

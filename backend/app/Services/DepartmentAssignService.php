@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\DepartmentAssignResource;
 use App\Models\DepartmentAssign;
 
 class DepartmentAssignService
@@ -24,7 +25,8 @@ class DepartmentAssignService
     // Read (Get all Departments assign - will refactor for filters in the future)
     public function getAllDepartmentAssigns()
     {
-        return DepartmentAssign::all();
+        $departments = DepartmentAssign::all();
+        return DepartmentAssignResource::collection($departments->load('parentDepartment'));
     }
 
     // Update Department Assign

@@ -22,8 +22,8 @@ class UpdateUserRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:user_role, user_id'],
-            'role_id' => ['required', 'exists:user_role, role_id']
+            'user_id' => ['required', 'exists:user_role,user_id'],
+            'role_id' => ['required', 'exists:user_role,role_id']
         ];
     }
 }

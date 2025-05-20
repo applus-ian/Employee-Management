@@ -9,7 +9,7 @@ import NewProjectForm from './create-form';
 
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { CirclePlus } from 'lucide-react';
+import { AlertTriangle, CirclePlus, Loader2 } from 'lucide-react';
 import '@pathofdev/react-tag-Input/build/index.css';
 import { CreateProject } from '@/types/projects/project';
 
@@ -47,8 +47,23 @@ export default function Projects() {
         })) ?? [],
     })) ?? [];
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error loading projects.</p>;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <span className="ml-2 text-sm text-gray-500">Loading projects...</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-40 text-red-500">
+        <AlertTriangle className="h-6 w-6 mr-2" />
+        <span className="text-sm">Failed to load projects.</span>
+      </div>
+    );
+  }
   // if (isError && error) {
   //   const err = error as Error;
   //   return <p>Error loading projects: {err.message}</p>;

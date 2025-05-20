@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\EmployeeSkillResource;
 use App\Models\EmployeeSkill;
 
 class EmployeeSkillService
@@ -16,10 +17,11 @@ class EmployeeSkillService
         ]);
     }
 
-    // Read (Get a single employee skill by ID)
-    public function getEmployeeSkillById(int $id): ?EmployeeSkill
+    // Read (Get a single employee's skills by ID)
+    public function getEmployeeSkillsById(int $id)
     {
-        return EmployeeSkill::findOrFail($id);
+        $employee_skills = EmployeeSkill::where('employee_id', $id)->with('skill','skill.skillCategory')->get();
+        return EmployeeSkillResource::collection($employee_skills);
     }
 
     // Read (Get all employee skills - will refactor for filters in the future)

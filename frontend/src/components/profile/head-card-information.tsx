@@ -1,54 +1,50 @@
 'use client';
 
 import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+// import { useForm } from 'react-hook-form';
+// import { zodResolver } from '@hookform/resolvers/zod';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Mail, Phone, Briefcase, Users, UserCheck, KeyRound } from 'lucide-react';
+import { Mail, Phone, Briefcase, Users, UserCheck } from 'lucide-react';
 import { AuthContext } from '@/context/AuthContext';
-import { updatePasswordSchema, UpdatePasswordInput } from '@/schemas';
-import { useUpdatePassword } from '@/hooks/profile/use-update-password';
-import axios from 'axios';
+// import { updatePasswordSchema, UpdatePasswordInput } from '@/schemas';
+// import { useUpdatePassword } from '@/hooks/profile/use-update-password';
 
 export default function HeadCardInformation() {
   const { user } = useContext(AuthContext);
   const roleNames = user?.roles.map((role) => role.name).join(', ') || 'No roles assigned';
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<UpdatePasswordInput>({
-    resolver: zodResolver(updatePasswordSchema),
-  });
+  // const {
+  //   // register,
+  //   // handleSubmit,
+  //   // reset,
+  //   formState: { errors },
+  // } = useForm<UpdatePasswordInput>({
+  //   resolver: zodResolver(updatePasswordSchema),
+  // });
 
-  const updatePassword = useUpdatePassword();
+  // const updatePassword = useUpdatePassword();
 
-  const onSubmit = (data: UpdatePasswordInput) => {
-    updatePassword.mutate(data, {
-      onSuccess: () => {
-        reset();
-        alert('Password updated successfully!');
-      },
-      onError: (error: unknown) => {
-        if (axios.isAxiosError(error)) {
-          // Handle AxiosError
-          alert(error.response?.data?.message || 'Password update failed');
-        } else if (error instanceof Error) {
-          // Handle general JavaScript Error
-          alert(error.message || 'Password update failed');
-        } else {
-          // Handle unknown error types
-          alert('Password update failed');
-        }
-      },
-    });
-  };
+  // const onSubmit = (data: UpdatePasswordInput) => {
+  //   updatePassword.mutate(data, {
+  //     onSuccess: () => {
+  //       reset();
+  //       alert('Password updated successfully!');
+  //     },
+  //     onError: (error: unknown) => {
+  //       if (axios.isAxiosError(error)) {
+  //         // Handle AxiosError
+  //         alert(error.response?.data?.message || 'Password update failed');
+  //       } else if (error instanceof Error) {
+  //         // Handle general JavaScript Error
+  //         alert(error.message || 'Password update failed');
+  //       } else {
+  //         // Handle unknown error types
+  //         alert('Password update failed');
+  //       }
+  //     },
+  //   });
+  // };
 
   return (
     <>
@@ -93,81 +89,6 @@ export default function HeadCardInformation() {
                   {user?.employee?.employment_type?.name || 'No employment type'}
                 </div>
               </CardDescription>
-            </div>
-
-            <div className="ml-auto">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="bg-white text-[#EE7A2A] border-[#EE7A2A] border-2 w-fit flex items-center">
-                    <span className="hidden sm:inline">Update Password</span>
-                    <KeyRound className="ml-2" />
-                  </Button>
-                </DialogTrigger>
-
-                <DialogContent>
-                  <DialogHeader className="pb-5">
-                    <DialogTitle>Update Password</DialogTitle>
-                  </DialogHeader>
-
-                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <div>
-                      <label className="text-gray-600" htmlFor="current_password">
-                        Current Password
-                      </label>
-                      <Input
-                        type="password"
-                        id="current_password"
-                        className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        {...register('current_password')}
-                        placeholder="Enter current password"
-                      />
-                      {errors.current_password && (
-                        <p className="text-red-500 text-sm">{errors.current_password.message}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="text-gray-600" htmlFor="new_password">
-                        New Password
-                      </label>
-                      <Input
-                        type="password"
-                        id="new_password"
-                        className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        {...register('new_password')}
-                        placeholder="Enter new password"
-                      />
-                      {errors.new_password && <p className="text-red-500 text-sm">{errors.new_password.message}</p>}
-                    </div>
-
-                    <div>
-                      <label className="text-gray-600" htmlFor="new_password_confirmation">
-                        Confirm Password
-                      </label>
-                      <Input
-                        type="password"
-                        id="new_password_confirmation"
-                        className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        {...register('new_password_confirmation')}
-                        placeholder="Confirm password"
-                      />
-                      {errors.new_password_confirmation && (
-                        <p className="text-red-500 text-sm">{errors.new_password_confirmation.message}</p>
-                      )}
-                    </div>
-
-                    <div className="flex justify-center pt-4">
-                      <Button
-                        type="submit"
-                        className="bg-[#EE7A2A] text-white w-[10rem]"
-                        disabled={updatePassword.isPending}
-                      >
-                        {updatePassword.isPending ? 'Updating...' : 'Change Password'}
-                      </Button>
-                    </div>
-                  </form>
-                </DialogContent>
-              </Dialog>
             </div>
           </div>
         </CardHeader>

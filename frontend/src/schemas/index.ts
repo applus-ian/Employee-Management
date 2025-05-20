@@ -14,10 +14,12 @@ export {
 } from './settings/job-position/department-assign/departmentAssign';
 export { recordSchema, recordColSchema } from './records/record';
 export { userSchema } from './userSchema';
-//export { skillCategorySchema } from './settings/employee/skill/skill-category/skillCategory';
-//export { countryAssignSchema } from './settings/job-position/country-assign/countryAssign';
-//export { officeAssignSchema } from './settings/job-position/office-assign/officeAssign';
+export { skillCategorySchema } from './settings/employee/skill/skill-category/skillCategory';
+export { countryAssignSchema } from './settings/job-position/country-assign/countryAssign';
+export { officeAssignSchema } from './settings/job-position/office-assign/officeAssign';
 export { skillSchema, employeeSkillSchema } from './settings/employee/skill/skill';
+export { jobPositionSchema } from './settings/job-position/job-position/jobPosition';
+export { locationAssignmentSchema } from './settings/job-position/location-assignment/locationAssignment';
 
 export type { LoginFormInputs } from './loginSchema';
 export type { UpdatePasswordInput } from './profile/changePasswordSchema';
@@ -35,7 +37,9 @@ export type {
 } from './settings/job-position/department-assign/departmentAssign';
 export type { Record, RecordCol } from './records/record';
 export type { UserSchema } from './userSchema';
-//export type { SkillCategory } from './settings/employee/skill/skill-category/skillCategory';
-//export type { CountryAssign } from './settings/job-position/country-assign/countryAssign';
-//export type { OfficeAssign } from './settings/job-position/office-assign/officeAssign';
+export type { SkillCategory } from './settings/employee/skill/skill-category/skillCategory';
+export type { CountryAssign } from './settings/job-position/country-assign/countryAssign';
+export type { OfficeAssign } from './settings/job-position/office-assign/officeAssign';
 export type { Skill, EmployeeSkill } from './settings/employee/skill/skill';
+export type { JobPosition } from './settings/job-position/job-position/jobPosition';
+export type { LocationAssignment } from './settings/job-position/location-assignment/locationAssignment';
