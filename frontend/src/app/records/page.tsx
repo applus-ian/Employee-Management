@@ -10,25 +10,58 @@ import { NewEmployeeForm } from '@/components/records/create-form';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import '@pathofdev/react-tag-Input/build/index.css';
 import { cn } from '@/lib/utils';
+import AdvancedFilterModal from '@/components/records/advance-filter';
+import type { FilterValues } from '@/components/records/advance-filter';
+
 const navLinks = [{ name: 'Records', href: 'record' }];
+
 export default function RecordsPage() {
   const [showForm, setShowForm] = useState(false);
   const [formType, setFormType] = useState<null | 'new' | 'edit'>(null);
   const [activePage, setActivePage] = useState('record');
+  const [filters, setFilters] = useState<FilterValues | null>(null);
+
+  // Clean, immutable filter apply handler
+  const handleApplyFilter = (newFilters: FilterValues) => {
+    setFilters({
+      ...newFilters,
+      department:
+        newFilters.department && !Array.isArray(newFilters.department)
+          ? [newFilters.department]
+          : newFilters.department,
+    });
+  };
+
+  // Removes a filter value or entire filter key
+  const removeFilter = (key: keyof FilterValues, value: string) => {
+    setFilters((prev) => {
+      if (!prev) return prev;
+
+      const currentValues = prev[key];
+
+      if (Array.isArray(currentValues)) {
+        const updatedArray = currentValues.filter((item) => item !== value);
+        if (updatedArray.length === 0) {
+          // Remove the entire filter key if no values left
+          const temp = { ...prev };
+          delete temp[key];
+          return Object.keys(temp).length === 0 ? null : temp;
+        }
+        return { ...prev, [key]: updatedArray };
+      }
+
+      // If not an array, remove the key entirely
+      const temp = { ...prev };
+      delete temp[key];
+      return Object.keys(temp).length === 0 ? null : temp;
+    });
+  };
 
   return (
-    <SidebarProvider
-      style={
-        {
-          '--sidebar-width': '19rem',
-        } as React.CSSProperties
-      }
-    >
+    <SidebarProvider style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
       <AppSidebar />
       <SidebarInset>
         <div className="flex flex-col w-full p-5">
-          {/* Header */}
-
           <nav className="bg-[#E8E8E8]">
             <h1 className="pb-2 text-3xl font-semibold tracking-tight first:mt-0">Records</h1>
             <div className="flex justify-between">
@@ -38,7 +71,6 @@ export default function RecordsPage() {
               <div className="order-2 pr-10"></div>
             </div>
 
-            {/* Nav links */}
             <ul className="flex gap-3 border-b border-gray-300 pb-0 w-full mb-4">
               {navLinks.map((link) => {
                 const isActive = activePage === link.href;
@@ -46,7 +78,7 @@ export default function RecordsPage() {
                 return (
                   <li key={link.name} className="flex items-center justify-center pr-5">
                     <button
-                      onClick={() => setActivePage(link.href)} // Update active page on click
+                      onClick={() => setActivePage(link.href)}
                       className={cn(
                         'inline-block items-center transition-colors font-medium text-sm pb-2 text-gray-500 hover:text-[#EE7A2A]',
                         isActive && 'text-orange-600 border-b-2 border-orange-500',
@@ -59,13 +91,13 @@ export default function RecordsPage() {
               })}
             </ul>
           </nav>
-          {/* Table Card */}
+
           <Card className="w-full rounded-xl border bg-white shadow-sm">
             {!showForm && (
               <CardHeader className="space-y-4">
                 <CardTitle className="text-lg font-semibold text-gray-800">Employee Record</CardTitle>
 
-                <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center justify-between">
                   <div className="flex gap-2 flex-wrap">
                     <Select>
                       <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
@@ -80,10 +112,9 @@ export default function RecordsPage() {
                     </Select>
 
                     <Select>
-                      <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
+                      <SelectTrigger className="ml-2 px-2 py-1 rounded-md bg-white text-sm flex items-center gap-2">
                         <SelectValue placeholder="All Positions" />
                       </SelectTrigger>
-
                       <SelectContent className="rounded-md bg-white shadow-md">
                         <SelectItem value="allposition">All Positions</SelectItem>
                         <SelectItem value="manager">Manager</SelectItem>
@@ -93,46 +124,91 @@ export default function RecordsPage() {
                     </Select>
 
                     <Select>
-                      <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
+                      <SelectTrigger className="ml-2 px-2 py-1 rounded-md bg-white text-sm flex items-center gap-2">
                         <SelectValue placeholder="All Status" />
                       </SelectTrigger>
-
                       <SelectContent className="rounded-md bg-white shadow-md">
                         <SelectItem value="all_status">All Status</SelectItem>
                         <SelectItem value="active">Active</SelectItem>
                         <SelectItem value="inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
+
+                    <AdvancedFilterModal onApplyFilter={handleApplyFilter} />
                   </div>
+
                   <div className="ml-auto">
                     {!showForm && (
                       <Button
                         variant="outline"
                         className="text-orange-600 border-orange-400 bg-white hover:bg-orange-500 hover:text-white"
                         onClick={() => {
-                          setShowForm((prev) => !prev);
+                          setShowForm(true);
                           setFormType('new');
                         }}
                       >
-                        {showForm ? 'Cancel' : 'New Employee'}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="16"
-                          width="16"
-                          viewBox="0 -960 960 960"
-                          fill="currentColor"
-                        >
-                          <path d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Z" />
-                        </svg>
+                        New Employee
                       </Button>
                     )}
                   </div>
                 </div>
+
+                {/* Filter chips + Clear Filters */}
+                <div className="mt-4 flex flex-wrap gap-2 items-center">
+                  {filters &&
+                    Object.entries(filters).map(([key, value]) => {
+                      if (!value) return null;
+
+                      if (Array.isArray(value)) {
+                        return value.map((v) => (
+                          <div key={`${key}-${v}`} className="flex items-center border rounded px-2 py-1 bg-gray-100">
+                            <input
+                              type="text"
+                              readOnly
+                              className="border-none bg-transparent focus:outline-none text-sm"
+                              value={`${key}: ${v}`}
+                            />
+                            <button
+                              onClick={() => removeFilter(key as keyof FilterValues, v)}
+                              className="ml-1 text-red-500 hover:text-red-700"
+                              type="button"
+                              aria-label={`Remove filter ${key}: ${v}`}
+                            >
+                              &times;
+                            </button>
+                          </div>
+                        ));
+                      }
+
+                      return (
+                        <div key={key} className="flex items-center border rounded px-2 py-1 bg-gray-100">
+                          <input
+                            type="text"
+                            readOnly
+                            className="border-none bg-transparent focus:outline-none text-sm"
+                            value={`${key}: ${value}`}
+                          />
+                          <button
+                            onClick={() => removeFilter(key as keyof FilterValues, value as string)}
+                            className="ml-1 text-red-500 hover:text-red-700"
+                            type="button"
+                            aria-label={`Remove filter ${key}`}
+                          >
+                            &times;
+                          </button>
+                        </div>
+                      );
+                    })}
+                  {filters && (
+                    <Button variant="ghost" className="ml-4 text-sm text-red-600" onClick={() => setFilters(null)}>
+                      Clear Filters
+                    </Button>
+                  )}
+                </div>
               </CardHeader>
             )}
 
-            <CardContent className="space-y-6">
-              {/* Toggleable Form */}
+            <CardContent>
               {showForm && formType === 'new' && <NewEmployeeForm onCancel={() => setShowForm(false)} />}
               {!showForm && <Records />}
             </CardContent>
