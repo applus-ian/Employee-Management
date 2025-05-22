@@ -3,7 +3,7 @@
 import { useDocumentType } from '@/hooks/settings/employee/document-type/use-fetch-document-types';
 import { DataTable } from './data-table';
 import { columns } from './columns';
-import { DocumentType } from '@/types/settings/employee/document/documentType';
+import { DocumentType } from '@/types/settings/employee/document-type/documentType';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 
 export default function DocumentTypes() {

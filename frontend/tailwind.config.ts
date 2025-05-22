@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       maxWidth: {
-        dialog: '80rem', // adjust as needed (e.g., 1280px)
+        dialog: '80rem',
       },
       colors: {
         background: "var(--background)",
@@ -17,7 +17,7 @@ export default {
         ring: 'hsl(var(--ring))',
       },
       fontFamily: {
-        roboto: ['Roboto', 'sans-serif'],  // Adding the custom font family
+        roboto: ['Roboto', 'sans-serif'],
       },
       keyframes: {
         wave: {
@@ -31,7 +31,6 @@ export default {
         waveOnce: 'wave 1s ease-in-out',
       },
     },
-    
   },
   plugins: [],
 } satisfies Config;

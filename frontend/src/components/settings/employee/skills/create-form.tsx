@@ -1,107 +1,125 @@
-import { useState } from 'react';
-import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useCreateSkill } from '@/hooks/settings/employee/skill/use-create-skill';
+import { useSkillCategory } from '@/hooks/settings/employee/skill/skill-category/use-fetch-skill-categories';
+
+const skillSchema = z.object({
+  name: z.string().min(1, 'Skill name is required'),
+  description: z.string().nullable(),
+  skill_category_id: z.number({ required_error: 'Please select a skill category' }),
+});
+
+type SkillInput = z.infer<typeof skillSchema>;
 
 interface NewSkillFormProps {
   onCancel: () => void;
-  onSave: (roleData: { skillName: string; description: string; category: string }) => void;
+  onSave: (data: SkillInput) => void;
 }
 
 export default function NewSkillForm({ onCancel, onSave }: NewSkillFormProps) {
-  const [skillName, setSkillName] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<SkillInput>({
+    resolver: zodResolver(skillSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      skill_category_id: undefined as unknown as number, // satisfy TS
+    },
+  });
 
-  const handleSave = () => {
-    onSave({ skillName, description, category });
-    onCancel();
+  const { data: categories = [], isLoading: catLoading } = useSkillCategory();
+  const { mutate: createSkill, isPending, isError, error } = useCreateSkill();
+
+  const onSubmit = (data: SkillInput) => {
+    createSkill(data, {
+      onSuccess: () => {
+        onSave(data);
+        reset();
+        onCancel();
+      },
+    });
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
+    <DialogContent className="flex h-fit w-full flex-col bg-white lg:!max-w-[45rem]">
       <DialogHeader>
-        <DialogTitle>Create New Employee Skill</DialogTitle>
+        <DialogTitle>Create New Skill</DialogTitle>
       </DialogHeader>
-      <div>
-        <form>
-          <div className="grid">
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">User Role</h3>
-                </Label>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter skill name..."
-                  value={skillName}
-                  onChange={(e) => setSkillName(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Description</h3>
-                </Label>
-              </div>
-              <div>
-                <textarea
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter description..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Skill Category</h3>
-                </Label>
-              </div>
-              <div>
-                <Select value={category} onValueChange={(value) => setCategory(value)}>
-                  <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
-                    <SelectValue placeholder="Choose Category" className="text-gray-500" />
-                  </SelectTrigger>
-                  <SelectContent className="border rounded-xl border-gray-500 bg-white">
-                    <SelectItem value="Beginner" className="hover:bg-gray-300 text-black">
-                      Beginner
-                    </SelectItem>{' '}
-                    {/* Updated text color */}
-                    <SelectItem value="Intermediate" className="hover:bg-gray-300 text-black">
-                      Intermediate
-                    </SelectItem>{' '}
-                    {/* Updated text color */}
-                    <SelectItem value="Expert" className="hover:bg-gray-300 text-black">
-                      Expert
-                    </SelectItem>{' '}
-                    {/* Updated text color */}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
 
-            <div className=" px-5 pt-5 flex justify-center gap-x-6">
-              <DialogClose asChild>
-                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-                  Save Changes
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                  Cancel
-                </Button>
-              </DialogClose>
-            </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 px-5 py-3">
+        <div>
+          <Label htmlFor="name" className="text-black">
+            Skill Name
+          </Label>
+          <Input id="name" {...register('name')} placeholder="Enter skill name..." className="mt-2" />
+          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="description" className="text-black">
+            Description
+          </Label>
+          <textarea
+            id="description"
+            {...register('description')}
+            placeholder="Enter description..."
+            className="mt-2 h-[130px] w-full resize-none rounded-xl border px-3 py-2 text-sm hover:border-orange-400"
+          />
+          {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="skill_category_id" className="text-black">
+            Skill Category
+          </Label>
+          <select
+            id="skill_category_id"
+            className="mt-2 w-full rounded-md border px-2 py-1 text-sm"
+            {...register('skill_category_id', { valueAsNumber: true })}
+            disabled={catLoading}
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+          {errors.skill_category_id && <p className="text-sm text-red-500">{errors.skill_category_id.message}</p>}
+        </div>
+
+        {isError && (
+          <div className="text-red-600">
+            <p>Error creating skill: {error?.message}</p>
           </div>
-        </form>
-      </div>
+        )}
+
+        {/* Actions ---------------------------------------------------------*/}
+        <div className="flex justify-center gap-x-6 pt-3">
+          <Button type="submit" className="w-[10rem] bg-[#EE7A2A] text-white" disabled={isPending}>
+            {isPending ? 'Creating...' : 'Create'}
+          </Button>
+          <Button
+            type="button"
+            className="w-[10rem] border-2 border-[#EE7A2A] bg-white text-[#EE7A2A]"
+            onClick={onCancel}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
     </DialogContent>
   );
 }

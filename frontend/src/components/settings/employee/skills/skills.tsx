@@ -1,62 +1,46 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Skill, columns } from './columns';
+
+import { AlertTriangle, Loader2 } from 'lucide-react';
+import { columns } from './columns';
 import { DataTable } from './data-table';
+import { useSkill } from '@/hooks/settings/employee/skill/use-fetch-skill';
+import { Skill } from '@/types/settings/employee/skill/skill';
 
 export default function Skills() {
-  const [data, setData] = useState<Skill[]>([]);
+  const { data, isLoading, isError } = useSkill();
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+  const rows: Skill[] =
+    data?.map((item) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description ?? '',
+      skill_category: {
+        id: item.skill_category.id,
+        name: item.skill_category.name,
+      },
+    })) ?? [];
 
-  async function getData(): Promise<Skill[]> {
-    return [
-      {
-        skillName: 'JavaScript programming',
-        description: 'Used in web development.',
-        category: 'Technical',
-      },
-      {
-        skillName: 'Database management',
-        description: 'Organizing and querying data.',
-        category: 'Technical',
-      },
-      {
-        skillName: 'Time management',
-        description: 'Prioritizing and completing tasks efficiently.',
-        category: 'Functional',
-      },
-      {
-        skillName: 'Documentation and reporting',
-        description: 'Writing clear, concise records or reports.',
-        category: 'Functional',
-      },
-      {
-        skillName: 'Customer service',
-        description: 'Handling client inquiries and providing solutions.',
-        category: 'Functional',
-      },
-      {
-        skillName: 'Strategic thinking',
-        description: 'Planning long-term goals and direction.',
-        category: 'Leadership',
-      },
-      {
-        skillName: 'Team motivation',
-        description: 'Inspiring productivity and collaboration.',
-        category: 'Leadership',
-      },
-    ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <span className="ml-2 text-sm text-gray-500">Loading skills...</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-40 text-red-500">
+        <AlertTriangle className="h-6 w-6 mr-2" />
+        <span className="text-sm">Failed to load skills.</span>
+      </div>
+    );
   }
 
   return (
     <div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rows} />
     </div>
   );
 }

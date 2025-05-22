@@ -23,7 +23,7 @@ class UpdateTeamAssignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('team_assigns', 'name')->ignore($this->team_assign_id)]
+            'name' => ['required', 'string', 'max:255', Rule::unique('team_assigns', 'name')->ignore($this->route('team_assign'))]
         ];
     }
 }

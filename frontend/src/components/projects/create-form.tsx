@@ -11,6 +11,7 @@ import { createProjectSchema } from '@/schemas/projects/project';
 import { useProjectRole } from '@/hooks/settings/employee/project-role/use-fetch-project-roles';
 import { CreateProject } from '@/types/projects/project';
 import { ProjectRole } from '@/types/settings/employee/project-role/projectRole';
+import toast from 'react-hot-toast';
 
 interface NewProjectFormProps {
   onCancel: () => void;
@@ -71,9 +72,11 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
     createProject(parsed.data, {
       onSuccess: () => {
-        onSave(parsed.data); // ✅ same fix applies here
+        toast.success('Project created successfully!');
+        onSave(parsed.data);
       },
       onError: (err) => {
+        toast.error('Project creation failed!');
         console.error('Error creating project:', err);
       },
     });

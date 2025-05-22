@@ -3,31 +3,48 @@ import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import EditRoleForm from './edit-form';
+import { RoleWithPermissions } from '@/types/settings/employee/roles-and-permission/roleAndPermission';
 
-// This type defines each row's data
-export type Role_Permission = {
-  role: string;
-  permission: number;
-};
-
-export const columns: ColumnDef<Role_Permission>[] = [
+export const columns: ColumnDef<RoleWithPermissions>[] = [
   {
-    accessorKey: 'role',
+    accessorKey: 'name',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         User Role
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => <span className="capitalize">{row.original.name}</span>,
   },
   {
-    accessorKey: 'permission',
+    accessorKey: 'permissions',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Permissions
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      const permissionsText = row.original.permissions.map((perm) => perm.name).join(', ');
+
+      return (
+        <div
+          className="text-sm text-gray-700"
+          style={{
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'normal', // allow wrapping to multiple lines
+            maxWidth: '90%', // adjust this width to your column width
+          }}
+          title={permissionsText}
+        >
+          {permissionsText}
+        </div>
+      );
+    },
   },
   {
     id: 'actions',
@@ -35,27 +52,27 @@ export const columns: ColumnDef<Role_Permission>[] = [
     cell: ({ row }) => {
       const item = row.original;
 
-      // These functions live inside the cell function and are available to your dialog
       const handleCancel = () => {
         console.log('Cancelled');
       };
 
       const handleSave = () => {
-        console.log('Saved', item); // You can access the current item here too
+        console.log('Saved', item);
       };
 
       return (
         <div className="flex gap-2">
-          {/* Edit Dialog */}
+          {/* Edit */}
           <Dialog>
             <DialogTrigger asChild>
               <button className="text-blue-500 hover:text-blue-700">
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            <EditRoleForm onCancel={handleCancel} onSave={handleSave} />
+            <EditRoleForm onCancel={handleCancel} onSave={handleSave} role={item} />
           </Dialog>
 
+          {/* Delete */}
           <Dialog>
             <DialogTrigger asChild>
               <button className="text-red-500 hover:text-red-700">
@@ -64,16 +81,12 @@ export const columns: ColumnDef<Role_Permission>[] = [
             </DialogTrigger>
             <DialogContent className="bg-white">
               <DialogHeader>
-                <DialogTitle className="flex justify-center items-center">
-                  <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Deletion?</span>
-                </DialogTitle>
+                <DialogTitle className="text-center text-[#EE7A2A] text-2xl font-bold">Confirm Deletion?</DialogTitle>
               </DialogHeader>
-              <div className="flex justify-center items-center">
-                <p className="text-center">Do you want to delete this Employee Role?</p>
-              </div>
+              <p className="text-center">Do you want to delete this role?</p>
               <DialogClose asChild>
-                <div className=" px-5 pt-5 flex justify-center gap-x-6">
-                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
+                <div className="px-5 pt-5 flex justify-center gap-x-6">
+                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Delete</Button>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
                 </div>
               </DialogClose>

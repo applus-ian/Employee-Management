@@ -12,7 +12,7 @@ import { Mail, Phone, Briefcase, Users, UserCheck, KeyRound } from 'lucide-react
 import { AuthContext } from '@/context/AuthContext';
 import { updatePasswordSchema, UpdatePasswordInput } from '@/schemas';
 import { useUpdatePassword } from '@/hooks/profile/use-update-password';
-import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export default function HeadCardInformation() {
   const { user } = useContext(AuthContext);
@@ -33,19 +33,10 @@ export default function HeadCardInformation() {
     updatePassword.mutate(data, {
       onSuccess: () => {
         reset();
-        alert('Password updated successfully!');
+        toast.success('Password updated successfully!');
       },
-      onError: (error: unknown) => {
-        if (axios.isAxiosError(error)) {
-          // Handle AxiosError
-          alert(error.response?.data?.message || 'Password update failed');
-        } else if (error instanceof Error) {
-          // Handle general JavaScript Error
-          alert(error.message || 'Password update failed');
-        } else {
-          // Handle unknown error types
-          alert('Password update failed');
-        }
+      onError: () => {
+        toast.error('Password update failed');
       },
     });
   };

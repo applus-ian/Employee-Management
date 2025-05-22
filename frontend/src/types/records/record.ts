@@ -40,3 +40,12 @@ export interface EmployeeStatusHistory {
   status_set: string;
   effective_date: string;
 }
+
+export interface RecordCol {
+  employee_id: string;
+  profile: string;
+  full_name: string;
+  title: string;
+  email: string;
+  user_role: string;
+}

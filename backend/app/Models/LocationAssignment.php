@@ -27,6 +27,16 @@ class LocationAssignment extends Model
         'department_assign_id',
     ];
 
+    public function jobPosition(): BelongsTo
+    {
+        return $this->belongsTo(JobPosition::class);
+    }
+
+    public function employee(): BelongsTo
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
     public function countryAssign(): BelongsTo
     {
         return $this->belongsTo(CountryAssign::class);

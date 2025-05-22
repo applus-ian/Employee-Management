@@ -1,6 +1,5 @@
 'use client';
 
-import GeneralSettingsPage from '@/components/settings/general/generalsettings';
 import EmployeeRolePage from '@/components/settings/employee/employee-settings';
 import JobPositionPage from '@/components/settings/job-position/job-position-settings';
 import AuditLogPage from '@/components/settings/audit-log/audit-log-settings';
@@ -8,14 +7,13 @@ import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
 const navLinks = [
-  { name: 'General Settings', href: 'general' },
   { name: 'Employee Settings', href: 'employee' },
   { name: 'Job Position Settings', href: 'job-position' },
   { name: 'Audit Logs', href: 'audit-logs' },
 ];
 
 export default function Page() {
-  const [activePage, setActivePage] = useState('general');
+  const [activePage, setActivePage] = useState('employee');
 
   return (
     <div className="flex flex-col w-full p-5">
@@ -50,7 +48,6 @@ export default function Page() {
       </nav>
 
       <div className="bg-white rounded-xl w-full p-5">
-        {activePage === 'general' && <GeneralSettingsPage />}
         {activePage === 'employee' && <EmployeeRolePage />}
         {activePage === 'job-position' && <JobPositionPage />}
         {activePage === 'audit-logs' && <AuditLogPage />}

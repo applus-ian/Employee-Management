@@ -1,13 +1,13 @@
 'use client';
 
-import { useFetchTeamAssign } from '@/hooks/settings/job-position/team-assign/use-fetch-team-assigns';
+import { useTeamAssign } from '@/hooks/settings/job-position/team-assign/use-fetch-team-assigns';
 import { columns } from './columns';
 import { DataTable } from './data-table';
 import { TeamAssign } from '@/types/settings/job-position/team-assign/teamAssign';
 import { Loader2, AlertTriangle } from 'lucide-react';
 
 export default function TeamAssigns() {
-  const { data, isLoading, isError } = useFetchTeamAssign();
+  const { data, isLoading, isError } = useTeamAssign();
 
   const rows: TeamAssign[] =
     data?.map((item) => ({
