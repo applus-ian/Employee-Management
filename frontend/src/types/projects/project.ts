@@ -3,7 +3,7 @@ export interface Project {
   name: string;
   description: string;
   start_date: string;
-  end_date: string;
+  end_date?: string;
   employees?: AssignedEmployee[];
 }
 
@@ -21,5 +21,5 @@ export interface CreateProject {
   description: string;
   employees: { id: string; project_role_id: number }[];
   start_date: string;
-  end_date: string;
+  end_date?: string;
 }

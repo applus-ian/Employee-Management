@@ -27,7 +27,7 @@ class UpdateCountryAssignRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('country_assigns', 'name')->ignore($this->country_assign),
+                Rule::unique('country_assigns', 'name')->ignore($this->route('country_assign')),
             ],
         ];
     }

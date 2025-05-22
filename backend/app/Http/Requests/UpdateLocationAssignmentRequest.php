@@ -22,11 +22,12 @@ class UpdateLocationAssignmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'job_position_id' => ['required', 'exists:location_assignments, job_position_id'],
-            'country_assign_id' => ['required', 'exists:location_assignments, country_assign_id'],
-            'office_assign_id' => ['required', 'exists:location_assignments, office_assign_id'],
-            'team_assign_id' => ['required', 'exists:location_assignments, team_assign_id'],
-            'department_assign_id' => ['required', 'exists:location_assignments, department_assign_id']
+            'job_position_id' => ['required', 'exists:job_positions,id'],
+            'country_assign_id' => ['required', 'exists:country_assigns,id'],
+            'office_assign_id' => ['required', 'exists:office_assigns,id'],
+            'team_assign_id' => ['required', 'exists:team_assigns,id'],
+            'department_assign_id' => ['required', 'exists:department_assigns,id'],
+            'employee_id' => ['required', 'exists: employees,id'],
         ];
     }
 }

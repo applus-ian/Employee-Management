@@ -13,6 +13,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectRoleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SkillCategoryController;
+use App\Http\Controllers\SkillController;
 use App\Http\Controllers\TeamAssignController;
 use App\Http\Controllers\EmployeeSkillController;
 use App\Http\Controllers\UserController;
@@ -20,6 +21,8 @@ use App\Http\Controllers\UserRoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DocumentationController;
+use App\Http\Controllers\EmploymentStatusHistoryController;
+use App\Http\Controllers\DocumentController;
 
 // Routes for Authentication
 Route::controller(AuthController::class)
@@ -64,9 +67,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
         Route::get('/list', 'index')->middleware('permission:employee_list');
         Route::post('/new', 'create')->middleware('permission:employee_create');
-        Route::get('/{employee}', 'show')->middleware('permission:employee_view');
+        Route::get('/{employee_id}', 'show')->middleware('permission:employee_view');
         Route::put('/update/{employee}', 'update')->middleware('permission:employee_update');
         Route::delete('/delete/{employee}', 'destroy')->middleware('permission:employee_delete');
+    });
+});
+
+// Employment Status History
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::controller(EmploymentStatusHistoryController::class)->prefix('employees')->group(function () {
+        Route::get('/{employee}/employment-status-history', 'index');
     });
 });
 
@@ -86,7 +96,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmployeeSkillController::class)->prefix('employee-skills')->group(function () {
         Route::get('/list', 'index')->middleware('permission:employee_skill_list');
         Route::post('/new', 'create')->middleware('permission:employee_skill_create');
-        Route::get('/{employee_skill}', 'show')->middleware('permission:employee_skill_view');
+        Route::get('/{employee_id}', 'show')->middleware('permission:employee_skill_view');
         Route::put('/update/{employee_skill}', 'update')->middleware('permission:employee_skill_update');
         Route::delete('/delete/{employee_skill}', 'destroy')->middleware('permission:employee_skill_delete');
     });
@@ -196,6 +206,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(RoleController::class)->prefix('roles')->group(function () {
         Route::get('/list', 'index')->middleware('permission:role_list');
         Route::post('/new', 'create')->middleware('permission:role_create');
+        Route::get('/all-roles-with-permissions', 'getAllRolesWithPermissions');
+        Route::get('all-permissions', 'getAllPermissions');
         Route::get('/{role}', 'show')->middleware('permission:role_view');
         Route::put('/update/{role}', 'update')->middleware('permission:role_update');
         Route::delete('/delete/{role}', 'destroy')->middleware('permission:role_delete');
@@ -204,7 +216,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 // Routes for Skill
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::controller(SkillCategoryController::class)->prefix('skills')->group(function () {
+    Route::controller(SkillController::class)->prefix('skills')->group(function () {
         Route::get('/list', 'index')->middleware('permission:skill_list');
         Route::post('/new', 'create')->middleware('permission:skill_create');
         Route::get('/{skill}', 'show')->middleware('permission:skill_view');
@@ -252,3 +264,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/test', 'test');
     });
 });
+
+Route::get('/records/documents/{employeeId}', [DocumentController::class, 'index']);
+Route::post('/records/documents/upload', [DocumentController::class, 'upload']);
+Route::delete('/records/documents/{id}', [DocumentController::class, 'delete']);

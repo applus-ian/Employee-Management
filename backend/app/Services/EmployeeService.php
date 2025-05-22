@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\EmployeeResource;
 use App\Http\Resources\UserResource;
 use App\Models\Documentation;
 use App\Models\Employee;
@@ -56,9 +57,24 @@ class EmployeeService
 
 
     // Find employee
-    public function getEmployeeById(int $id): ?Employee
+    public function getEmployeeById(string $id)
     {
-        return Employee::findOrFail($id);
+        $decoded_id = $this->decodeEmployeeId($id);
+        $employee = User::findOrFail($decoded_id);
+        return new UserResource(
+            $employee->load([
+                'employee',
+                'employee.jobPosition',
+                'employee.employmentType',
+                'employee.manager',
+                'employee.locationAssignment.countryAssign',
+                'employee.locationAssignment.officeAssign',
+                'employee.locationAssignment.teamAssign',
+                'employee.locationAssignment.departmentAssign.parentDepartment',
+                'roles',
+            ])
+        );
+
     }
 
     // Get all employees

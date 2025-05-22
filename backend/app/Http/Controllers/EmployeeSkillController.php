@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateEmployeeSkillRequest;
 use App\Http\Requests\UpdateEmployeeSkillRequest;
 use App\Models\EmployeeSkill;
+use App\Services\EmployeeService;
 use App\Services\EmployeeSkillService;
 use Illuminate\Http\JsonResponse;
 
 class EmployeeSkillController extends Controller
 {
-    protected $employeeSkillService;
+    protected $employeeSkillService, $employeeService;
 
-    public function __construct(EmployeeSkillService $employeeSkillService)
+    public function __construct(EmployeeSkillService $employeeSkillService, EmployeeService $employeeService)
     {
         $this->employeeSkillService = $employeeSkillService;
+        $this->employeeService = $employeeService;
     }
 
     // Create Employee Skill Method
@@ -43,10 +45,14 @@ class EmployeeSkillController extends Controller
         return response()->json($employee_skills, 200);
     }
 
-    // Get Single Employee Skilled Method
-    public function show(EmployeeSkill $employeeSkill): JsonResponse
+    // Get Single Employee Skills Method
+    public function show($employee_id): JsonResponse
     {
-        return response()->json($employeeSkill, 200);
+        $decoded_id = $this->employeeService->decodeEmployeeId($employee_id);
+
+        $employee_skills = $this->employeeSkillService->getEmployeeSkillsById($decoded_id);
+
+        return response()->json($employee_skills, 200);
     }
 
     // Delete Employee Skilled Method

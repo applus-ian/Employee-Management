@@ -54,4 +54,28 @@ class RoleController extends Controller
 
         return response()->json(['message' => 'Role deleted successfully!'], 200);
     }
+
+    // fetch role with permissions
+    public function getRoleWithPermissions(Role $role): JsonResponse
+    {
+        $roleWithPermissions = $this->roleService->roleWithPermissions($role->id);
+
+        return response()->json($roleWithPermissions, 200);
+    }
+
+    // fetch all roles with permissions
+    public function getAllRolesWithPermissions(): JsonResponse
+    {
+        $allRolesWithPermissions = $this->roleService->allRolesWithPermissions();
+
+        return response()->json($allRolesWithPermissions, 200);
+    }
+
+    // fetch all permissions
+    public function getAllPermissions(): JsonResponse
+    {
+        $allPermissions = $this->roleService->allPermissions();
+
+        return response()->json($allPermissions, 200);
+    }
 }

@@ -6,6 +6,7 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { usePathname } from 'next/navigation';
 import ClientProviders from '@/context/ClientProviders';
+import { Toaster } from 'react-hot-toast';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,21 +18,24 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+const routesWithSidebar = ['/dashboard', '/employee/profile', '/projects', '/records', '/settings'];
+
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isAuthPage = pathname === '/' || pathname === '/landingpage' || pathname === '/login';
+  const showSidebar = routesWithSidebar.includes(pathname);
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
         <ClientProviders>
-          {isAuthPage ? (
-            <div className="flex flex-col w-full">{children}</div>
-          ) : (
+          <Toaster position="top-right" /> {/* ✅ Add this here */}
+          {showSidebar ? (
             <SidebarProvider style={{ '--sidebar-width': '19rem' } as React.CSSProperties}>
               <AppSidebar />
               <div className="flex flex-col w-full lg:pl-[16rem]">{children}</div>
             </SidebarProvider>
+          ) : (
+            <div className="flex flex-col w-full">{children}</div>
           )}
         </ClientProviders>
       </body>

@@ -23,7 +23,7 @@ class UpdateSkillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('skills', 'name')->ignore($this->skill_id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('skills', 'name')->ignore($this->route('skill'))],
             'description' => ['nullable', 'string'],
             'skill_categories_id' => ['required', 'exists: skill_categories,id']
         ];

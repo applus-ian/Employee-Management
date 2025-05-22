@@ -32,7 +32,7 @@ class EmployeeController extends Controller
     }
 
     // Get single employee
-    public function getEmployeeData($employee_id)
+    public function show($employee_id)
     {
         $employee_data = $this->employeeService->getEmployeeById($employee_id);
 

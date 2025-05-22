@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\SkillResource;
 use App\Models\Skill;
 
 class SkillService
@@ -25,7 +26,8 @@ class SkillService
     // Read (Get all skills - will refactor for filters in the future)
     public function getAllSkills()
     {
-        return Skill::all();
+        $skill = Skill::all();
+        return SkillResource::collection($skill->load('skillCategory'));
     }
 
     // Update Skill

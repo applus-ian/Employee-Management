@@ -23,7 +23,7 @@ class UpdateOfficeAssignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('office_assigns', 'name')->ignore($this->office_assign_id)]
+            'name' => ['required', 'string', 'max:255', Rule::unique('office_assigns', 'name')->ignore($this->route('office_assign'))]
         ];
     }
 }

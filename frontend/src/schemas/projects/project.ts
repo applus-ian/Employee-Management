@@ -5,7 +5,7 @@ export const projectSchema = z.object({
   name: z.string(),
   description: z.string(),
   start_date: z.string(),
-  end_date: z.string(),
+  end_date: z.string().optional(),
   employees: z
     .array(
       z.object({
@@ -36,7 +36,7 @@ export const createProjectSchema = z.object({
     )
     .min(1, 'At least one employee must be assigned'),
   start_date: z.string().min(1, 'Start date is required'),
-  end_date: z.string().min(1, 'End date is required'),
+  end_date: z.string().optional(),
 });
 
 export type CreateProjectSchema = z.infer<typeof createProjectSchema>;

@@ -13,6 +13,7 @@ import {
 } from '@tanstack/react-table';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,11 +47,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 
   return (
     <div>
-      <div className="flex items-center py-4">
-        <div className="flex items-center space-x-4 pr-5">
-          <span className="text-sm">Show</span>
+      <div className="flex flex-wrap items-center justify-between py-4 gap-4">
+        <div className="flex items-center space-x-2">
+          <span className="text-sm text-gray-700">Show</span>
           <select
-            className="border rounded-md px-2 py-1 text-sm"
+            className="border rounded-md px-2 py-1 text-sm border-gray-300 focus:border-[#EE7A2A]"
             value={table.getState().pagination.pageSize}
             onChange={(e) => {
               table.setPageSize(Number(e.target.value));
@@ -62,13 +63,13 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               </option>
             ))}
           </select>
-          <span className="text-sm">entries</span>
+          <span className="text-sm text-gray-700">entries</span>
         </div>
         <Input
           placeholder="Search project role..."
           value={globalFilter}
           onChange={(event) => setGlobalFilter(event.target.value)}
-          className="w-full"
+          className="max-w-xl"
         />
       </div>
 
@@ -96,7 +97,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
                   No results.
                 </TableCell>
               </TableRow>
@@ -105,51 +106,44 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         </Table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-center space-x-2 py-3">
+      <div className="flex items-center justify-center space-x-2 py-5">
         {/* Previous Button */}
-        <button
+        <Button
+          size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className={`px-3 py-1 rounded-md font-medium text-sm ${
-            table.getCanPreviousPage()
-              ? 'text-gray-400 hover:text-black cursor-pointer'
-              : 'text-gray-300 cursor-not-allowed'
-          }`}
+          className="border-2 border-[#EE7A2A] text-[#EE7A2A] bg-white hover:bg-[#EE7A2A] hover:text-white"
         >
           Previous
-        </button>
+        </Button>
 
-        {/* Page Number Buttons */}
-        {Array.from({ length: table.getPageCount() }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => table.setPageIndex(index)}
-            className={`w-8 h-8 flex items-center justify-center rounded-md font-semibold text-sm
-              ${
+        {/* Page Numbers */}
+        <div className="flex items-center space-x-1">
+          {Array.from({ length: table.getPageCount() }).map((_, index) => (
+            <Button
+              key={index}
+              size="sm"
+              onClick={() => table.setPageIndex(index)}
+              className={`border-2 ${
                 table.getState().pagination.pageIndex === index
-                  ? 'bg-[#624DE3] text-white'
-                  : 'bg-gray-200 text-black hover:bg-gray-300'
+                  ? 'bg-[#EE7A2A] text-white'
+                  : 'border-[#EE7A2A] text-[#EE7A2A] bg-white hover:bg-[#EE7A2A] hover:text-white'
               }`}
-            aria-current={table.getState().pagination.pageIndex === index ? 'page' : undefined}
-            aria-label={`Page ${index + 1}`}
-          >
-            {index + 1}
-          </button>
-        ))}
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </div>
 
         {/* Next Button */}
-        <button
+        <Button
+          size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className={`px-3 py-1 rounded-md font-medium text-sm ${
-            table.getCanNextPage()
-              ? 'text-gray-400 hover:text-black cursor-pointer'
-              : 'text-gray-300 cursor-not-allowed'
-          }`}
+          className="border-2 border-[#EE7A2A] text-[#EE7A2A] bg-white hover:bg-[#EE7A2A] hover:text-white"
         >
           Next
-        </button>
+        </Button>
       </div>
     </div>
   );

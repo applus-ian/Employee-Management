@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // Constants for protected routes and login route
-const PROTECTED_ROUTES = ['/dashboard', '/employee', '/records', '/projects'];
+const PROTECTED_ROUTES = ['/dashboard', '/employee/profile', '/projects', '/records', '/settings'];
 const LOGIN_ROUTE = '/login';
 
 // Helper function to validate the token
@@ -38,8 +38,6 @@ export async function middleware(req: NextRequest) {
   // Validate token if it exists
   const isValidToken = token ? await validateToken(token) : false;
 
-  console.log(isValidToken);
-
   // Redirect authenticated users away from the login page
   if (req.nextUrl.pathname === LOGIN_ROUTE && isValidToken) {
     return NextResponse.redirect(new URL('/dashboard', req.url)); // Redirect to dashboard if authenticated
@@ -61,5 +59,5 @@ export async function middleware(req: NextRequest) {
 
 // Config to apply the middleware only to the specified routes
 export const config = {
-  matcher: ['/dashboard', '/login', '/employee', '/records', '/projects'], // Define which routes to apply middleware to
+  matcher: ['/dashboard', '/login', '/employee/profile', '/projects', '/records', '/settings'], // Define which routes to apply middleware to
 };

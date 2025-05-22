@@ -23,7 +23,7 @@ class UpdateJobPositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('job_positions', 'name')->ignore($this->job_position_id)]
+            'name' => ['required', 'string', 'max:255', Rule::unique('job_positions', 'title')->ignore($this->route('job_position'))]
         ];
     }
 }

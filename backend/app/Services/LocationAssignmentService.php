@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\LocationAssignmentResource;
 use App\Models\LocationAssignment;
 
 class LocationAssignmentService
@@ -27,7 +28,9 @@ class LocationAssignmentService
     // Read (Get all location assignments - will refactor for filters in the future)
     public function getAllLocationAssignments()
     {
-        return LocationAssignment::all();
+        $location_assignments = LocationAssignment::all();
+
+        return LocationAssignmentResource::collection($location_assignments->load('employee', 'jobPosition', 'countryAssign', 'officeAssign', 'teamAssign', 'departmentAssign'));
     }
 
     // Update Location Assignment
