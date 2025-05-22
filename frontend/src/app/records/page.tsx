@@ -7,7 +7,6 @@ import { AppSidebar } from '@/components/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import Records from '@/components/records/records';
 import { NewEmployeeForm } from '@/components/records/create-form';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import '@pathofdev/react-tag-Input/build/index.css';
 import { cn } from '@/lib/utils';
 import AdvancedFilterModal from '@/components/records/advance-filter';
@@ -94,48 +93,11 @@ export default function RecordsPage() {
 
           <Card className="w-full rounded-xl border bg-white shadow-sm">
             {!showForm && (
-              <CardHeader className="space-y-4">
+              <CardHeader>
                 <CardTitle className="text-lg font-semibold text-gray-800">Employee Record</CardTitle>
 
                 <div className="flex flex-wrap items-center justify-between">
-                  <div className="flex gap-2 flex-wrap">
-                    <Select>
-                      <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                        <SelectValue placeholder="All Departments" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-md bg-white shadow-md">
-                        <SelectItem value="all_department">All Departments</SelectItem>
-                        <SelectItem value="it">IT</SelectItem>
-                        <SelectItem value="hr">HR</SelectItem>
-                        <SelectItem value="finance">Finance</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <Select>
-                      <SelectTrigger className="ml-2 px-2 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                        <SelectValue placeholder="All Positions" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-md bg-white shadow-md">
-                        <SelectItem value="allposition">All Positions</SelectItem>
-                        <SelectItem value="manager">Manager</SelectItem>
-                        <SelectItem value="developer">Developer</SelectItem>
-                        <SelectItem value="recruiter">Recruiter</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <Select>
-                      <SelectTrigger className="ml-2 px-2 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                        <SelectValue placeholder="All Status" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-md bg-white shadow-md">
-                        <SelectItem value="all_status">All Status</SelectItem>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-
-                    <AdvancedFilterModal onApplyFilter={handleApplyFilter} />
-                  </div>
+                  <AdvancedFilterModal onApplyFilter={handleApplyFilter} />
 
                   <div className="ml-auto">
                     {!showForm && (
@@ -154,7 +116,7 @@ export default function RecordsPage() {
                 </div>
 
                 {/* Filter chips + Clear Filters */}
-                <div className="mt-4 flex flex-wrap gap-2 items-center">
+                <div className="flex flex-wrap gap-2 items-center">
                   {filters &&
                     Object.entries(filters).map(([key, value]) => {
                       if (!value) return null;
@@ -166,7 +128,7 @@ export default function RecordsPage() {
                               type="text"
                               readOnly
                               className="border-none bg-transparent focus:outline-none text-sm"
-                              value={`${key}: ${v}`}
+                              value={`${v}`}
                             />
                             <button
                               onClick={() => removeFilter(key as keyof FilterValues, v)}
@@ -193,9 +155,7 @@ export default function RecordsPage() {
                             className="ml-1 text-red-500 hover:text-red-700"
                             type="button"
                             aria-label={`Remove filter ${key}`}
-                          >
-                            &times;
-                          </button>
+                          ></button>
                         </div>
                       );
                     })}
