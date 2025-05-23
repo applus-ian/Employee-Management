@@ -11,6 +11,7 @@ use App\Models\EmployeeSkill;
 use App\Models\EmploymentStatusHistory;
 use App\Models\User;
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeService
 {
@@ -128,5 +129,35 @@ class EmployeeService
     {
         return $employee->delete();
     }
+
+    // Change Employee Password
+    public function changeEmployeePassword(User $user, string $newPassword): User
+    {
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        return $user;
+    }
+
+    // Update Employee Personal Info
+    public function updateEmployeePersonalInfo(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
+    // Update Employee Residential Info
+    public function updateEmployeeResidentialInfo(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
+
+    // Update Employee Government and Bank Numbers
+    public function updateEmployeeGovBankNumbers(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
+
 
 }
