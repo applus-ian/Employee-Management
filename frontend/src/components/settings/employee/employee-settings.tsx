@@ -39,13 +39,11 @@ export default function EmployeeRolePage() {
     setDialogOpen(false); // Close the dialog
   };
 
-  const handleDocumentTypeSave = (data: { name: string }) => {
-    alert(`Document Type "${data.name}" created!`);
+  const handleDocumentTypeSave = () => {
     setDialogOpen(false); // Close dialog after save
   };
 
-  function handleSkillCategorySave(data: { name: string }): void {
-    alert(`Skill Category "${data.name}" created!`);
+  function handleSkillCategorySave(): void {
     setSkillCatNewOpen(false); // Close dialog after save
   }
 

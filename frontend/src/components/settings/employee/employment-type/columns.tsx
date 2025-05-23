@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { EmploymentType } from '@/schemas';
 import { useUpdateEmploymentType } from '@/hooks/settings/employee/employment-type/use-update-employment-type';
 import { useDeleteEmploymentType } from '@/hooks/settings/employee/employment-type/use-delete-employment-type';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<EmploymentType>[] = [
   {
@@ -38,7 +39,7 @@ export const columns: ColumnDef<EmploymentType>[] = [
       const handleSave = async (updatedData: EmploymentType) => {
         try {
           await updateEmploymentType(updatedData);
-          alert(`Employment type changed to "${updatedData.name}"!`);
+          toast.success(`Employment type changed to "${updatedData.name}"!`);
           setEditOpen(false);
         } catch (error) {
           console.error('Failed to update employment type:', error);
@@ -48,7 +49,7 @@ export const columns: ColumnDef<EmploymentType>[] = [
       const handleDelete = async () => {
         try {
           await deleteEmploymentType(item.id);
-          alert('Employment type deleted successfully!');
+          toast.success('Employment type deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
           console.error('Failed to delete employment type:', error);
