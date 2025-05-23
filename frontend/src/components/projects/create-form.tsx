@@ -50,10 +50,10 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
     const parsed = createProjectSchema.safeParse({
       name: projectName,
-      description,
-      employees: employeeData,
+      description: description || undefined || null,
+      employees: employeeData || undefined || null,
       start_date: startDate,
-      end_date: endDate || undefined,
+      end_date: endDate || undefined || null,
     });
 
     if (!parsed.success) {
@@ -267,11 +267,15 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
           </Table>
         </div>
       </div>
-      <div className="flex gap-3 justify-center">
-        <Button onClick={handleCreateProject} disabled={isPending} className="flex-1">
+      <div className="px-5 pt-5 flex justify-center gap-x-6">
+        <Button onClick={handleCreateProject} disabled={isPending} className="bg-[#EE7A2A] text-white w-[10rem]">
           Create
         </Button>
-        <Button variant="outline" onClick={onCancel}>
+        <Button
+          variant="outline"
+          onClick={onCancel}
+          className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+        >
           Cancel
         </Button>
       </div>

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { DocumentType } from '@/schemas';
 import { useUpdateDocumentType } from '@/hooks/settings/employee/document-type/use-update-document-type';
 import { useDeleteDocumentType } from '@/hooks/settings/employee/document-type/use-delete-document-type';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<DocumentType>[] = [
   {
@@ -37,7 +38,7 @@ export const columns: ColumnDef<DocumentType>[] = [
       const handleSave = async (updatedData: DocumentType) => {
         try {
           await updateDocumentType(updatedData);
-          alert(`Document type changed to "${updatedData.name}"!`);
+          toast.success(`Document type changed to "${updatedData.name}"!`);
           setEditOpen(false);
         } catch (error) {
           console.error('Failed to update document:', error);
@@ -47,7 +48,7 @@ export const columns: ColumnDef<DocumentType>[] = [
       const handleDelete = async () => {
         try {
           await deleteDocumentType(item.id);
-          alert('Document type deleted successfully!');
+          toast.success('Document type deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
           console.error('Failed to delete document:', error);

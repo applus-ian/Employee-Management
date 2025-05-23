@@ -9,7 +9,7 @@ import { ProjectRole } from '@/schemas';
 import { useState } from 'react';
 import { useUpdateProjectRole } from '@/hooks/settings/employee/project-role/use-update-project-role';
 import { useDeleteProjectRole } from '@/hooks/settings/employee/project-role/use-delete-project-role';
-
+import toast from 'react-hot-toast';
 // This type defines each row's data
 
 export const columns: ColumnDef<ProjectRole>[] = [
@@ -39,7 +39,7 @@ export const columns: ColumnDef<ProjectRole>[] = [
       const handleSave = async (updatedData: ProjectRole) => {
         try {
           await updateProjectRole(updatedData);
-          alert(`Project role changed to "${updatedData.name}"!`);
+          toast.success(`Project role changed to "${updatedData.name}"!`);
           setEditOpen(false);
         } catch (error) {
           console.error('Failed to update project role:', error);
@@ -49,7 +49,7 @@ export const columns: ColumnDef<ProjectRole>[] = [
       const handleDelete = async () => {
         try {
           await deleteProjectRole(item.id);
-          alert('Project role deleted successfully!');
+          toast.success('Project role deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
           console.error('Failed to delete project role:', error);

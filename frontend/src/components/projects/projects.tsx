@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertTriangle, CirclePlus, Loader2 } from 'lucide-react';
 import '@pathofdev/react-tag-Input/build/index.css';
 import { CreateProject } from '@/types/projects/project';
+import toast from 'react-hot-toast';
 
 export default function Projects() {
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function Projects() {
 
   const handleProjectSave = (data: CreateProject) => {
     console.log(data);
-    alert(`Project successfully created!`);
+    toast.success(`Project successfully created!`);
     setDialogOpen(false);
   };
 
