@@ -9,11 +9,12 @@ import { useState } from 'react';
 import { LocationAssignment, UpdateLocationAssignment } from '@/schemas';
 import { useUpdateLocationAssignment } from '@/hooks/settings/job-position/location-assignment/use-update-location-assignment';
 import { useDeleteLocationAssignment } from '@/hooks/settings/job-position/location-assignment/use-delete-location-assignment';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<LocationAssignment>[] = [
   {
     accessorFn: (row) => `${row.employee.first_name} ${row.employee.last_name}`,
-    id: 'employee', // Required when using accessorFn
+    id: 'employee',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Employee
@@ -77,16 +78,17 @@ export const columns: ColumnDef<LocationAssignment>[] = [
       const { mutate: deleteLocationAssignment, isPending: isDeleting } = useDeleteLocationAssignment();
 
       const handleCancel = () => {
-        setEditOpen(false); // Close the edit dialog when cancel is clicked
+        setEditOpen(false);
       };
 
       const handleSave = async (updatedData: UpdateLocationAssignment) => {
         try {
           await updateLocationAssignment(updatedData);
           console.log(updatedData);
-          alert(`Location Assignment successfully updated!`);
+          toast.success(`Location Assignment updated successfully!`);
           setEditOpen(false);
         } catch (error) {
+          toast.error('Failed to update location assignment!');
           console.error('Failed to update location assignment:', error);
         }
       };
@@ -94,9 +96,10 @@ export const columns: ColumnDef<LocationAssignment>[] = [
       const handleDelete = async () => {
         try {
           await deleteLocationAssignment(item.id);
-          alert('Location Assignment successfully deleted!');
+          toast.success('Location Assignment deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete location assignment!');
           console.error('Failed to delete location assignment:', error);
         }
       };
@@ -114,11 +117,7 @@ export const columns: ColumnDef<LocationAssignment>[] = [
               <DialogHeader>
                 <DialogTitle>Edit Location Assignment</DialogTitle>
               </DialogHeader>
-              <EditLocationAssignmentForm
-                location_assignment={item} // Pass the location assignment data to the edit form
-                onCancel={handleCancel}
-                onSave={handleSave} // Handle the save action here
-              />
+              <EditLocationAssignmentForm location_assignment={item} onCancel={handleCancel} onSave={handleSave} />
             </DialogContent>
           </Dialog>
 
@@ -139,12 +138,8 @@ export const columns: ColumnDef<LocationAssignment>[] = [
                 <p className="text-center">Do you want to delete this Location Assignment?</p>
               </div>
               <div className="px-5 pt-5 flex justify-center gap-x-6">
-                <Button
-                  onClick={handleDelete} // Call handleDelete to delete the location assignment
-                  className="bg-[#EE7A2A] text-white w-[10rem]"
-                  disabled={isDeleting} // Disable button while deleting
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                <Button onClick={handleDelete} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isDeleting}>
+                  {isDeleting ? 'Deleting...' : 'Delete'}
                 </Button>
                 <DialogClose asChild>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>

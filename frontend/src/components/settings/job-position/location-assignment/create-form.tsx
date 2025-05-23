@@ -12,6 +12,8 @@ import { useDepartmentAssign } from '@/hooks/settings/job-position/department-as
 import { useCreateLocationAssignment } from '@/hooks/settings/job-position/location-assignment/use-create-location-assignment';
 import { useRecords } from '@/hooks/records/use-fetch-records';
 import { createLocationAssignmentInput, CreateLocationAssignment } from '@/schemas';
+import toast from 'react-hot-toast';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 interface NewLocationAssignmentFormProps {
   onCancel: () => void;
@@ -27,11 +29,11 @@ export default function NewLocationAssignmentForm({ onCancel, onSave }: NewLocat
   } = useForm<CreateLocationAssignment>({
     resolver: zodResolver(createLocationAssignmentInput),
     defaultValues: {
-      job_position_id: undefined as unknown as number, // satisfy TS
-      country_assign_id: undefined as unknown as number, // satisfy TS
-      office_assign_id: undefined as unknown as number, // satisfy TS
-      team_assign_id: undefined as unknown as number, // satisfy TS
-      department_assign_id: undefined as unknown as number, // satisfy TS
+      job_position_id: undefined as unknown as number,
+      country_assign_id: undefined as unknown as number,
+      office_assign_id: undefined as unknown as number,
+      team_assign_id: undefined as unknown as number,
+      department_assign_id: undefined as unknown as number,
       employee_id: '',
     },
   });
@@ -47,8 +49,12 @@ export default function NewLocationAssignmentForm({ onCancel, onSave }: NewLocat
     createLocationAssignment(data, {
       onSuccess: () => {
         onSave(data);
+        toast.success('Location Assignment created successfully!');
         reset();
         onCancel();
+      },
+      onError: () => {
+        toast.error('Error creating location assignment!');
       },
     });
   };
@@ -171,14 +177,16 @@ export default function NewLocationAssignmentForm({ onCancel, onSave }: NewLocat
           <Button type="submit" className="w-[10rem] bg-[#EE7A2A] text-white" disabled={isPending}>
             {isPending ? 'Creating...' : 'Create'}
           </Button>
-          <Button
-            type="button"
-            className="w-[10rem] border-2 border-[#EE7A2A] bg-white text-[#EE7A2A]"
-            onClick={onCancel}
-            disabled={isPending}
-          >
-            Cancel
-          </Button>
+          <DialogClose asChild>
+            <Button
+              type="button"
+              className="w-[10rem] border-2 border-[#EE7A2A] bg-white text-[#EE7A2A]"
+              onClick={onCancel}
+              disabled={isPending}
+            >
+              Cancel
+            </Button>
+          </DialogClose>
         </div>
       </form>
     </DialogContent>

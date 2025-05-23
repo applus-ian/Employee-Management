@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateTeamAssign } from '@/hooks/settings/job-position/team-assign/use-create-team-assign';
+import toast from 'react-hot-toast';
 
 // Zod Schema
 const teamAssignSchema = z.object({
@@ -38,10 +39,12 @@ export default function NewTeamAssignForm({ onCancel, onSave }: NewTeamAssignFor
     createTeamAssign(data, {
       onSuccess: () => {
         onSave(data);
+        toast.success('Team assignment created successfully!');
         reset();
         onCancel();
       },
       onError: (error: { message: string }) => {
+        toast.error('Error creating team assignment!');
         console.error('Error creating team assignment:', error.message);
       },
     });

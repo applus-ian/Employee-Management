@@ -30,23 +30,12 @@ export default function JobPositionPage() {
   const [activeTab, setactiveTab] = useState<TabKey>('Job Positions');
   const [isDialogOpen, setDialogOpen] = useState(false);
 
-  // Placeholder functions for onCancel and onSave
   const handleCancel = () => {
-    setDialogOpen(false); // Close the dialog
+    setDialogOpen(false);
   };
 
   const handleSave = () => {
     console.log('Saved');
-  };
-
-  const handleCountryAssignSave = (data: { name: string }) => {
-    alert(`Country Assign "${data.name}" created!`);
-    setDialogOpen(false); // Close dialog after save
-  };
-
-  const handleOfficeAssignSave = (data: { name: string }) => {
-    alert(`Office Assign "${data.name}" created!`);
-    setDialogOpen(false); // Close dialog after save
   };
 
   return (
@@ -91,12 +80,8 @@ export default function JobPositionPage() {
               {activeTab === 'Location Assignments' && (
                 <NewLocationAssignForm onCancel={handleCancel} onSave={handleSave} />
               )}
-              {activeTab === 'Country Assigns' && (
-                <NewCountryAssignForm onCancel={handleCancel} onSave={handleCountryAssignSave} />
-              )}
-              {activeTab === 'Office Assigns' && (
-                <NewOfficeAssignForm onCancel={handleCancel} onSave={handleOfficeAssignSave} />
-              )}
+              {activeTab === 'Country Assigns' && <NewCountryAssignForm onCancel={handleCancel} onSave={handleSave} />}
+              {activeTab === 'Office Assigns' && <NewOfficeAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Team Assigns' && <NewTeamAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Department Assigns' && (
                 <NewDepartmentAssignForm onCancel={handleCancel} onSave={handleSave} />

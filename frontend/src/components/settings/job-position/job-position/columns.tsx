@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { JobPosition } from '@/schemas';
 import { useUpdateJobPosition } from '@/hooks/settings/job-position/job-position/use-update-job-position';
 import { useDeleteJobPosition } from '@/hooks/settings/job-position/job-position/use-delete-job-position';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<JobPosition>[] = [
   {
@@ -31,15 +32,16 @@ export const columns: ColumnDef<JobPosition>[] = [
       const { mutate: deleteJobPosition, isPending: isDeleting } = useDeleteJobPosition();
 
       const handleCancel = () => {
-        setEditOpen(false); // Close the edit dialog when cancel is clicked
+        setEditOpen(false);
       };
 
       const handleSave = async (updatedData: JobPosition) => {
         try {
           await updateJobPosition(updatedData);
-          alert(`Job position title changed to "${updatedData.title}"!`);
+          toast.success(`Job position title changed to "${updatedData.title}"!`);
           setEditOpen(false);
         } catch (error) {
+          toast.error('Failed to update job position!');
           console.error('Failed to update job position:', error);
         }
       };
@@ -47,9 +49,10 @@ export const columns: ColumnDef<JobPosition>[] = [
       const handleDelete = async () => {
         try {
           await deleteJobPosition(item.id);
-          alert('Job position deleted successfully!');
+          toast.success('Job position deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete job position!');
           console.error('Failed to delete job position:', error);
         }
       };
@@ -67,11 +70,7 @@ export const columns: ColumnDef<JobPosition>[] = [
               <DialogHeader>
                 <DialogTitle>Edit Job Position</DialogTitle>
               </DialogHeader>
-              <EditJobPositionForm
-                job_position={item} // Pass the job position data to the edit form
-                onCancel={handleCancel}
-                onSave={handleSave} // Handle the save action here
-              />
+              <EditJobPositionForm job_position={item} onCancel={handleCancel} onSave={handleSave} />
             </DialogContent>
           </Dialog>
 
@@ -92,12 +91,8 @@ export const columns: ColumnDef<JobPosition>[] = [
                 <p className="text-center">Do you want to delete this Country Assign?</p>
               </div>
               <div className="px-5 pt-5 flex justify-center gap-x-6">
-                <Button
-                  onClick={handleDelete} // Call handleDelete to delete the job position
-                  className="bg-[#EE7A2A] text-white w-[10rem]"
-                  disabled={isDeleting} // Disable button while deleting
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                <Button onClick={handleDelete} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isDeleting}>
+                  {isDeleting ? 'Deleting...' : 'Delete'}
                 </Button>
                 <DialogClose asChild>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>

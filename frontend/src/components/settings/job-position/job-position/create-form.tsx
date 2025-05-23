@@ -3,11 +3,12 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { DialogHeader, DialogContent, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateJobPosition } from '@/hooks/settings/job-position/job-position/use-create-job-position';
+import toast from 'react-hot-toast';
 
 // Zod Schema
 const jobPositionSchema = z.object({
@@ -38,10 +39,12 @@ export default function NewJobPositionForm({ onCancel, onSave }: NewJobPositionF
     createJobPosition(data, {
       onSuccess: () => {
         onSave(data);
-        reset(); // Reset form
-        onCancel(); // Close dialog
+        toast.success('Job Position created succesfully!');
+        reset();
+        onCancel();
       },
       onError: (error: { message: string }) => {
+        toast.error('Error creating job position!');
         console.error('Error creating job position:', error.message);
       },
     });
@@ -72,13 +75,11 @@ export default function NewJobPositionForm({ onCancel, onSave }: NewJobPositionF
           <Button type="submit" className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isPending}>
             {isPending ? 'Creating...' : 'Create'}
           </Button>
-          <Button
-            type="button"
-            className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
-            onClick={onCancel}
-          >
-            Cancel
-          </Button>
+          <DialogClose asChild>
+            <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
+              Cancel
+            </Button>
+          </DialogClose>
         </div>
       </form>
     </DialogContent>

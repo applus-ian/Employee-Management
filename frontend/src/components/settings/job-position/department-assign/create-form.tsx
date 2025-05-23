@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
 import { useCreateDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-create-department-assign';
+import toast from 'react-hot-toast';
 
 const departmentAssignSchema = z.object({
   name: z.string().min(1, 'Department name is required'),
@@ -37,7 +38,7 @@ export default function NewDepartmentAssignForm({ onCancel, onSave }: NewDepartm
     resolver: zodResolver(departmentAssignSchema),
     defaultValues: {
       name: '',
-      parent_department_id: undefined as unknown as number, // satisfy TS
+      parent_department_id: undefined as unknown as number,
     },
   });
 
@@ -47,9 +48,13 @@ export default function NewDepartmentAssignForm({ onCancel, onSave }: NewDepartm
   const onSubmit = (data: DepartmentAssignInput) => {
     createDepartmentAssign(data, {
       onSuccess: () => {
+        toast.success('Department Assignment Created!');
         onSave(data);
         reset();
         onCancel();
+      },
+      onError: () => {
+        toast.error('Error on creating Department Assignment!');
       },
     });
   };

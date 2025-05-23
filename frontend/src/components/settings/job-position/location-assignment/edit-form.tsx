@@ -10,6 +10,8 @@ import { useOfficeAssign } from '@/hooks/settings/job-position/office-assign/use
 import { useTeamAssign } from '@/hooks/settings/job-position/team-assign/use-fetch-team-assigns';
 import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
 import { useRecords } from '@/hooks/records/use-fetch-records';
+import toast from 'react-hot-toast';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 interface EditLocationAssignmentFormProps {
   location_assignment: LocationAssignment;
@@ -52,7 +54,7 @@ export function EditLocationAssignmentForm({ location_assignment, onCancel, onSa
       department_assign_id: data.department_assign_id,
       employee_id: data.employee_id,
     });
-
+    toast.success('Location assignment updated successfully!');
     reset(data);
     onCancel();
   };
@@ -160,9 +162,11 @@ export function EditLocationAssignmentForm({ location_assignment, onCancel, onSa
       </div>
 
       <div className="flex justify-end gap-x-4 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
-          Cancel
-        </Button>
+        <DialogClose>
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+            Cancel
+          </Button>
+        </DialogClose>
         <Button type="submit" className="bg-[#EE7A2A] text-white" disabled={isSubmitting}>
           {isSubmitting ? 'Saving...' : 'Save'}
         </Button>

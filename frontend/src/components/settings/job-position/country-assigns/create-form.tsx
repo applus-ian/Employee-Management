@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateCountryAssign } from '@/hooks/settings/job-position/country-assign/use-create-country-assign';
+import toast from 'react-hot-toast';
 
 // Zod Schema
 const countryAssignSchema = z.object({
@@ -37,11 +38,13 @@ export default function NewCountryAssignForm({ onCancel, onSave }: NewCountryAss
   const onSubmit = (data: CountryAssignInput) => {
     createCountryAssign(data, {
       onSuccess: () => {
+        toast.success('Country Assignment Created!');
         onSave(data);
         reset(); // Reset form
         onCancel(); // Close dialog
       },
       onError: (error: { message: string }) => {
+        toast.error('Error creating country assign!');
         console.error('Error creating country assign:', error.message);
       },
     });

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { CountryAssign } from '@/schemas';
 import { useUpdateCountryAssign } from '@/hooks/settings/job-position/country-assign/use-update-country-assign';
 import { useDeleteCountryAssign } from '@/hooks/settings/job-position/country-assign/use-delete-country-assign';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<CountryAssign>[] = [
   {
@@ -37,7 +38,7 @@ export const columns: ColumnDef<CountryAssign>[] = [
       const handleSave = async (updatedData: CountryAssign) => {
         try {
           await updateCountryAssign(updatedData);
-          alert(`Country assign changed to "${updatedData.name}"!`);
+          toast.success(`Country assign changed to "${updatedData.name}"!`);
           setEditOpen(false);
         } catch (error) {
           console.error('Failed to update country assign:', error);
@@ -47,9 +48,10 @@ export const columns: ColumnDef<CountryAssign>[] = [
       const handleDelete = async () => {
         try {
           await deleteCountryAssign(item.id);
-          alert('Country assign deleted successfully!');
+          toast.success('Country assign deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete country assign:');
           console.error('Failed to delete country assign:', error);
         }
       };

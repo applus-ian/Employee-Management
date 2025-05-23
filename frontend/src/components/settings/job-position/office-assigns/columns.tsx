@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { OfficeAssign } from '@/schemas';
 import { useUpdateOfficeAssign } from '@/hooks/settings/job-position/office-assign/use-update-office-assign';
 import { useDeleteOfficeAssign } from '@/hooks/settings/job-position/office-assign/use-delete-office-assign';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<OfficeAssign>[] = [
   {
@@ -31,15 +32,16 @@ export const columns: ColumnDef<OfficeAssign>[] = [
       const { mutate: deleteOfficeAssign, isPending: isDeleting } = useDeleteOfficeAssign();
 
       const handleCancel = () => {
-        setEditOpen(false); // Close the edit dialog when cancel is clicked
+        setEditOpen(false);
       };
 
       const handleSave = async (updatedData: OfficeAssign) => {
         try {
           await updateOfficeAssign(updatedData);
-          alert(`Office assign changed to "${updatedData.name}"!`);
+          toast.success(`Office assign changed to "${updatedData.name}"!`);
           setEditOpen(false);
         } catch (error) {
+          toast.error('Failed to update office assign!');
           console.error('Failed to update office assign:', error);
         }
       };
@@ -47,9 +49,10 @@ export const columns: ColumnDef<OfficeAssign>[] = [
       const handleDelete = async () => {
         try {
           await deleteOfficeAssign(item.id);
-          alert('Office assign deleted successfully!');
+          toast.success('Office assign deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete office assign!');
           console.error('Failed to delete office assign:', error);
         }
       };
@@ -67,11 +70,7 @@ export const columns: ColumnDef<OfficeAssign>[] = [
               <DialogHeader>
                 <DialogTitle>Edit Office Assign</DialogTitle>
               </DialogHeader>
-              <EditOfficeAssignForm
-                office_assign={item} // Pass the office data to the edit form
-                onCancel={handleCancel}
-                onSave={handleSave} // Handle the save action here
-              />
+              <EditOfficeAssignForm office_assign={item} onCancel={handleCancel} onSave={handleSave} />
             </DialogContent>
           </Dialog>
 
@@ -92,12 +91,8 @@ export const columns: ColumnDef<OfficeAssign>[] = [
                 <p className="text-center">Do you want to delete this Office Assign?</p>
               </div>
               <div className="px-5 pt-5 flex justify-center gap-x-6">
-                <Button
-                  onClick={handleDelete} // Call handleDelete to delete the office assign
-                  className="bg-[#EE7A2A] text-white w-[10rem]"
-                  disabled={isDeleting} // Disable button while deleting
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                <Button onClick={handleDelete} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isDeleting}>
+                  {isDeleting ? 'Deleting...' : 'Delete'}
                 </Button>
                 <DialogClose asChild>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>

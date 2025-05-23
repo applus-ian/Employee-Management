@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { JobPosition } from '@/schemas';
+import toast from 'react-hot-toast';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 interface EditJobPositionFormProps {
   job_position: JobPosition;
@@ -13,7 +15,7 @@ interface EditJobPositionFormProps {
 
 export function EditJobPositionForm({ job_position, onCancel, onSave }: EditJobPositionFormProps) {
   const [title, setTitle] = useState(job_position.title);
-  const [isLoading, setIsLoading] = useState(false); // State to track loading status
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (job_position) {
@@ -23,14 +25,16 @@ export function EditJobPositionForm({ job_position, onCancel, onSave }: EditJobP
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state to true when saving
+    setIsLoading(true);
     try {
-      await onSave({ ...job_position, title }); // Call onSave with updated data
+      await onSave({ ...job_position, title });
+      toast.success('Job Position updated successfully!');
       onCancel();
     } catch (error) {
-      console.error('Error saving job position:', error); // Handle any error
+      toast.error('Error saving job position!');
+      console.error('Error saving job position:', error);
     } finally {
-      setIsLoading(false); // Set loading state to false after saving
+      setIsLoading(false);
     }
   };
 
@@ -44,15 +48,13 @@ export function EditJobPositionForm({ job_position, onCancel, onSave }: EditJobP
       </div>
 
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]"
-          disabled={isLoading} // Disable button when loading
-        >
-          {isLoading ? 'Saving...' : 'Save'} {/* Show loading text when saving */}
+        <DialogClose>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button type="submit" className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]" disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save'}
         </Button>
       </div>
     </form>
