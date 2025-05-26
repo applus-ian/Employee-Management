@@ -1,20 +1,18 @@
+'use client';
+
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-import EditSkillForm from './edit-form';
-import { Badge } from '@/components/ui/badge';
-
-// This type defines each row's data
-export type Skill = {
-  skillName: string;
-  description: string;
-  category: string;
-};
+import { EditSkillForm } from './edit-form';
+import { useState } from 'react';
+import { Skill } from '@/schemas';
+import { useUpdateSkill } from '@/hooks/settings/employee/skill/use-update-skill';
+import { useDeleteSkill } from '@/hooks/settings/employee/skill/use-delete-skill';
 
 export const columns: ColumnDef<Skill>[] = [
   {
-    accessorKey: 'skillName',
+    accessorKey: 'name',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Skill Name
@@ -32,71 +30,71 @@ export const columns: ColumnDef<Skill>[] = [
     ),
   },
   {
-    accessorKey: 'category',
+    accessorKey: 'skill_category.name',
     header: ({ column }) => (
-      <div className="flex justify-center">
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className="text-center"
-        >
-          Category
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Category
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
     ),
-    cell: ({ row }) => {
-      const category = row.getValue<string>('category');
-
-      const getBadgeClass = (category: string) => {
-        switch (category) {
-          case 'Technical':
-            return 'bg-[#C0DFFF] text-[#007BFF]';
-          case 'Functional':
-            return 'bg-[#C9FFEF] text-[#20C997]';
-          case 'Leadership':
-            return 'bg-[#FFF4D4] text-[#FFC107]';
-          default:
-            return 'bg-gray-100 text-gray-600';
-        }
-      };
-
-      return (
-        <div className="flex justify-center items-center">
-          <Badge className={getBadgeClass(category)}>{category}</Badge>
-        </div>
-      );
-    },
   },
   {
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {
       const item = row.original;
+      const [editOpen, setEditOpen] = useState(false);
+      const [deleteOpen, setDeleteOpen] = useState(false);
+      const { mutate: updateSkill } = useUpdateSkill();
+      const { mutate: deleteSkill, isPending: isDeleting } = useDeleteSkill();
 
-      // These functions live inside the cell function and are available to your dialog
       const handleCancel = () => {
-        console.log('Cancelled');
+        setEditOpen(false); // Close the edit dialog when cancel is clicked
       };
 
-      const handleSave = () => {
-        console.log('Saved', item); // You can access the current item here too
+      const handleSave = async (updatedData: Skill) => {
+        try {
+          await updateSkill(updatedData);
+          alert(`Skill successfully updated!`);
+          setEditOpen(false);
+        } catch (error) {
+          console.error('Failed to update skill:', error);
+        }
+      };
+
+      const handleDelete = async () => {
+        try {
+          await deleteSkill(item.id);
+          alert('Skill successfully deleted!');
+          setDeleteOpen(false);
+        } catch (error) {
+          console.error('Failed to delete skill:', error);
+        }
       };
 
       return (
         <div className="flex gap-2">
           {/* Edit Dialog */}
-          <Dialog>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
             <DialogTrigger asChild>
               <button className="text-blue-500 hover:text-blue-700">
                 <Edit size={18} />
               </button>
             </DialogTrigger>
-            <EditSkillForm onCancel={handleCancel} onSave={handleSave} />
+            <DialogContent className="bg-white w-[50%]">
+              <DialogHeader>
+                <DialogTitle>Edit Skill</DialogTitle>
+              </DialogHeader>
+              <EditSkillForm
+                skill={item} // Pass the skill data to the edit form
+                onCancel={handleCancel}
+                onSave={handleSave} // Handle the save action here
+              />
+            </DialogContent>
           </Dialog>
 
           {/* Delete Dialog */}
-          <Dialog>
+          <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
             <DialogTrigger asChild>
               <button className="text-red-500 hover:text-red-700">
                 <Trash2 size={18} />
@@ -109,14 +107,22 @@ export const columns: ColumnDef<Skill>[] = [
                 </DialogTitle>
               </DialogHeader>
               <div className="flex justify-center items-center">
-                <p className="text-center">Do you want to delete this Employee Skill?</p>
+                <p className="text-center">Do you want to delete this Skill?</p>
               </div>
-              <DialogClose asChild>
-                <div className=" px-5 pt-5 flex justify-center gap-x-6">
-                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Save Changes</Button>
-                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
-                </div>
-              </DialogClose>
+              <div className="px-5 pt-5 flex justify-center gap-x-6">
+                <Button
+                  onClick={handleDelete} // Call handleDelete to delete the skill
+                  className="bg-[#EE7A2A] text-white w-[10rem]"
+                  disabled={isDeleting} // Disable button while deleting
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                </Button>
+                <DialogClose asChild>
+                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>
+                    Cancel
+                  </Button>
+                </DialogClose>
+              </div>
             </DialogContent>
           </Dialog>
         </div>

@@ -23,7 +23,17 @@ class UpdateJobPositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255', Rule::unique('job_positions', 'name')->ignore($this->job_position_id)]
+            'title' => ['required', 'string', 'max:255', Rule::unique('job_positions', 'title')->ignore($this->route('job_position'))]
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Job position title is required.',
+            'title.string' => 'Job position title must be a valid string.',
+            'title.max' => 'Job position title must not exceed 255 characters.',
+            'title.unique' => 'This job position title already exists.',
         ];
     }
 }

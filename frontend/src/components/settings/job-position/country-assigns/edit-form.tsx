@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { CountryAssign } from '@/schemas';
+import toast from 'react-hot-toast';
 
 interface EditCountryAssignFormProps {
   country_assign: CountryAssign;
@@ -13,7 +14,7 @@ interface EditCountryAssignFormProps {
 
 export function EditCountryAssignForm({ country_assign, onCancel, onSave }: EditCountryAssignFormProps) {
   const [name, setName] = useState(country_assign.name);
-  const [isLoading, setIsLoading] = useState(false); // State to track loading status
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (country_assign) {
@@ -23,14 +24,16 @@ export function EditCountryAssignForm({ country_assign, onCancel, onSave }: Edit
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state to true when saving
+    setIsLoading(true);
     try {
-      await onSave({ ...country_assign, name }); // Call onSave with updated data
+      await onSave({ ...country_assign, name });
+      toast.success('Country Assign Updated!');
       onCancel();
     } catch (error) {
-      console.error('Error saving country assign:', error); // Handle any error
+      toast.error('Error saving country assign:');
+      console.error('Error saving country assign:', error);
     } finally {
-      setIsLoading(false); // Set loading state to false after saving
+      setIsLoading(false);
     }
   };
 
@@ -47,12 +50,8 @@ export function EditCountryAssignForm({ country_assign, onCancel, onSave }: Edit
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button
-          type="submit"
-          className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]"
-          disabled={isLoading} // Disable button when loading
-        >
-          {isLoading ? 'Saving...' : 'Save'} {/* Show loading text when saving */}
+        <Button type="submit" className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]" disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save'}
         </Button>
       </div>
     </form>

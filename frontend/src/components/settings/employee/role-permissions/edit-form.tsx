@@ -1,68 +1,69 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DialogClose, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@radix-ui/react-separator';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { RoleWithPermissions } from '@/types/settings/employee/roles-and-permission/roleAndPermission';
+import { usePermissions } from '@/hooks/settings/employee/role-and-permission/usePermissions';
 
 interface EditRoleFormProps {
+  role: RoleWithPermissions;
   onCancel: () => void;
-  onSave: (roleData: { roleName: string; permissions: Record<string, boolean> }) => void;
+  onSave: (roleData: RoleWithPermissions) => void;
 }
 
-const permissionsList = [
-  {
-    id: 'update-employee',
-    name: 'Update Employee Records',
-    description: 'Can update employee records.',
-  },
-  {
-    id: 'set-status',
-    name: 'Set Employee Status',
-    description: 'Can set employee status.',
-  },
-  {
-    id: 'assign-role',
-    name: 'Assign Roles',
-    description: 'Can assign roles to employees.',
-  },
-  {
-    id: 'hehe-role',
-    name: 'Assign Roles',
-    description: 'Can assign roles to employees.',
-  },
-  {
-    id: 'haha-role',
-    name: 'Assign Roles',
-    description: 'Can assign roles to employees.',
-  },
-  {
-    id: 'hruru-role',
-    name: 'Assign Roles',
-    description: 'Can assign roles to employees.',
-  },
-];
+export default function EditRoleForm({ role, onCancel, onSave }: EditRoleFormProps) {
+  const [roleName, setRoleName] = useState(role.name);
+  const [permissions, setPermissions] = useState<Record<string, boolean>>({});
+  const { data: permissionList, isLoading, isError } = usePermissions();
 
-export default function EditRoleForm({ onCancel, onSave }: EditRoleFormProps) {
-  const [roleName, setRoleName] = useState('');
-  const [permissions, setPermissions] = useState<Record<string, boolean>>(
-    permissionsList.reduce(
+  useEffect(() => {
+    if (!permissionList) return;
+
+    const permissionsMap = permissionList.reduce(
       (acc, perm) => {
-        acc[perm.id] = false;
+        const hasPerm = role.permissions.some((p) => p.id === perm.id);
+        acc[perm.id] = hasPerm;
         return acc;
       },
       {} as Record<string, boolean>,
-    ),
-  );
+    );
+
+    setPermissions(permissionsMap);
+    setRoleName(role.name);
+  }, [role, permissionList]);
 
   const handleToggle = (id: string) => {
     setPermissions((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleSave = () => {
-    onSave({ roleName, permissions });
-    onCancel(); // Close the form after saving
+    const updatedPermissions = permissionList?.filter((perm) => permissions[perm.id]) || [];
+
+    onSave({
+      ...role,
+      name: roleName,
+      permissions: updatedPermissions,
+    });
+    onCancel(); // Close form after saving
   };
+
+  if (isLoading) {
+    return (
+      <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto">
+        <div className="p-5">Loading permissions...</div>
+      </DialogContent>
+    );
+  }
+
+  if (isError) {
+    return (
+      <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto">
+        <div className="p-5 text-red-500">Failed to load permissions</div>
+      </DialogContent>
+    );
+  }
 
   return (
     <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto">
@@ -72,37 +73,33 @@ export default function EditRoleForm({ onCancel, onSave }: EditRoleFormProps) {
       <form>
         <div className="grid">
           <div className="flex flex-col p-5">
-            <div>
-              <Label>
-                <h3 className="text-black font-base">User Role</h3>
-              </Label>
-            </div>
-            <div>
-              <input
-                type="text"
-                className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="Enter role name"
-                value={roleName}
-                onChange={(e) => setRoleName(e.target.value)}
-              />
-            </div>
+            <Label>
+              <h3 className="text-black font-base">User Role</h3>
+            </Label>
+            <input
+              type="text"
+              className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter role name"
+              value={roleName}
+              onChange={(e) => setRoleName(e.target.value)}
+            />
           </div>
           <div className="p-5">
-            <Label htmlFor="airplane-mode">
+            <Label>
               <h3 className="text-black font-base">Permissions</h3>
             </Label>
             <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm">
               <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3 max-h-50 overflow-y-auto gap-4">
-                {permissionsList.map((perm) => (
+                {permissionList?.map((perm) => (
                   <div key={perm.id} className="flex flex-col py-2 p-3">
                     <h4 className="text-sm font-medium">{perm.name}</h4>
                     <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
                     <div className="flex justify-between h-5 space-x-4 text-sm">
                       <div className="text-gray-500">{perm.description}</div>
                       <Switch
-                        id={perm.id}
+                        id={perm.id.toString()}
                         checked={permissions[perm.id]}
-                        onCheckedChange={() => handleToggle(perm.id)}
+                        onCheckedChange={() => handleToggle(perm.id.toString())}
                         className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
                       />
                     </div>
@@ -111,7 +108,7 @@ export default function EditRoleForm({ onCancel, onSave }: EditRoleFormProps) {
               </div>
             </div>
           </div>
-          <div className=" px-5 pt-5 flex justify-center gap-x-6">
+          <div className="px-5 pt-5 flex justify-center gap-x-6">
             <DialogClose asChild>
               <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
                 Save Changes

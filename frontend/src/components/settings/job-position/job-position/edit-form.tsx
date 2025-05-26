@@ -1,61 +1,62 @@
-import { useState } from 'react';
-import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { JobPosition } from '@/schemas';
+import toast from 'react-hot-toast';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 interface EditJobPositionFormProps {
+  job_position: JobPosition;
   onCancel: () => void;
-  onSave: (roleData: { job_positionName: string }) => void;
+  onSave: (updatedJobPosition: JobPosition) => void;
 }
 
-export default function EditJobPositionForm({ onCancel, onSave }: EditJobPositionFormProps) {
-  const [job_positionName, setJob_PositionName] = useState('');
+export function EditJobPositionForm({ job_position, onCancel, onSave }: EditJobPositionFormProps) {
+  const [title, setTitle] = useState(job_position.title);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSave = () => {
-    onSave({ job_positionName });
-    onCancel();
+  useEffect(() => {
+    if (job_position) {
+      setTitle(job_position.title);
+    }
+  }, [job_position]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await onSave({ ...job_position, title });
+      toast.success('Job Position updated successfully!');
+      onCancel();
+    } catch (error) {
+      toast.error('Error saving job position!');
+      console.error('Error saving job position:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[35rem] h-fit flex flex-col">
-      <DialogHeader>
-        <DialogTitle>Update Job Position</DialogTitle>
-      </DialogHeader>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <form>
-          <div className="grid">
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Job Position Title Name</h3>
-                </Label>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter job position title name..."
-                  value={job_positionName}
-                  onChange={(e) => setJob_PositionName(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className=" px-5 pt-5 flex justify-center gap-x-6">
-              <DialogClose asChild>
-                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-                  Save Changes
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                  Cancel New
-                </Button>
-              </DialogClose>
-            </div>
-          </div>
-        </form>
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+          Job Position Title
+        </label>
+        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
       </div>
-    </DialogContent>
+
+      <div className="flex justify-end space-x-2">
+        <DialogClose asChild>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button type="submit" className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]" disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save'}
+        </Button>
+      </div>
+    </form>
   );
 }

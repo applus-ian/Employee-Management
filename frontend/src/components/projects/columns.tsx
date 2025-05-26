@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { useUpdateProject } from '@/hooks/projects/use-update-project';
 import { useDeleteProject } from '@/hooks/projects/use-delete-project';
 import { Project } from '@/types/projects/project';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<Project>[] = [
   {
@@ -73,7 +74,7 @@ export const columns: ColumnDef<Project>[] = [
       const handleSave = async (updatedData: Project) => {
         try {
           await updateProject(updatedData);
-          alert(`Project successfully updated!`);
+          toast.success(`Project successfully updated!`);
           setEditOpen(false);
         } catch (error) {
           console.error('Failed to update project:', error);
@@ -83,9 +84,10 @@ export const columns: ColumnDef<Project>[] = [
       const handleDelete = async () => {
         try {
           await deleteProject(item.id);
-          alert('Project deleted successfully!');
+          toast.success('Project deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete project');
           console.error('Failed to delete project:', error);
         }
       };

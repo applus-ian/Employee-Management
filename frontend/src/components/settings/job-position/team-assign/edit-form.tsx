@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { TeamAssign } from '@/schemas';
+import toast from 'react-hot-toast';
 
 interface EditTeamAssignFormProps {
   team_assign: TeamAssign;
@@ -28,8 +29,10 @@ export default function EditTeamAssignForm({ team_assign, onCancel, onSave }: Ed
     setIsLoading(true);
     try {
       await onSave({ ...team_assign, name });
+      toast.success('Team assignment updated successfully!');
       onCancel();
     } catch (error) {
+      toast.error('Error saving team assignment!');
       console.error('Error saving team assignment:', error);
     } finally {
       setIsLoading(false);

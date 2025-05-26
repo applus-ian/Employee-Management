@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateEmploymentType } from '@/hooks/settings/employee/employment-type/use-create-employment-type';
-
+import toast from 'react-hot-toast';
 // Zod Schema
 const employmentTypeSchema = z.object({
   name: z.string().min(1, 'Employment type name is required'),
@@ -37,6 +37,7 @@ export default function NewEmploymentTypeForm({ onCancel, onSave }: NewEmploymen
   const onSubmit = (data: EmploymentTypeInput) => {
     createEmploymentType(data, {
       onSuccess: () => {
+        toast.success(`Employment type "${data.name}" created successfully!`);
         onSave(data);
         reset();
         onCancel();

@@ -1,55 +1,47 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Department_Assign, columns } from './columns';
+
+import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
+import { columns } from './columns';
 import { DataTable } from './data-table';
+import { DepartmentAssign } from '@/types/settings/job-position/department-assign/departmentAssign';
+import { Loader2, AlertTriangle } from 'lucide-react';
 
-export default function DepartmentAssign() {
-  const [data, setData] = useState<Department_Assign[]>([]);
+export default function DepartmentAssigns() {
+  const { data, isLoading, isError } = useDepartmentAssign();
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+  const rows: DepartmentAssign[] =
+    data?.map((item) => ({
+      id: item.id,
+      name: item.name,
+      parent_department: item.parent_department
+        ? {
+            id: item.parent_department.id,
+            name: item.parent_department.name,
+          }
+        : null,
+    })) ?? [];
 
-  async function getData(): Promise<Department_Assign[]> {
-    return [
-      {
-        department_assignName: 'Information Technology',
-        parent_departmentName: '-',
-      },
-      {
-        department_assignName: 'Finance',
-        parent_departmentName: '-',
-      },
-      {
-        department_assignName: 'Human Resource',
-        parent_departmentName: '-',
-      },
-      {
-        department_assignName: 'IT Support',
-        parent_departmentName: '-',
-      },
-      {
-        department_assignName: 'Engineering',
-        parent_departmentName: '-',
-      },
-      {
-        department_assignName: 'Backend',
-        parent_departmentName: 'Engineering',
-      },
-      {
-        department_assignName: 'DevOps',
-        parent_departmentName: 'Backend',
-      },
-    ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <span className="ml-2 text-sm text-gray-500">Loading department assignments...</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-40 text-red-500">
+        <AlertTriangle className="h-6 w-6 mr-2" />
+        <span className="text-sm">Failed to load department assignments.</span>
+      </div>
+    );
   }
 
   return (
     <div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rows} />
     </div>
   );
 }

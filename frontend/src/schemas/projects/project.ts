@@ -3,9 +3,9 @@ import { z } from 'zod';
 export const projectSchema = z.object({
   id: z.number(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   start_date: z.string(),
-  end_date: z.string(),
+  end_date: z.string().nullable(),
   employees: z
     .array(
       z.object({
@@ -17,7 +17,7 @@ export const projectSchema = z.object({
         project_role_id: z.number().min(1, 'Employee project role is required'),
       }),
     )
-    .optional(),
+    .nullable(),
 });
 
 export const projectArraySchema = z.array(projectSchema);
@@ -26,7 +26,7 @@ export type Project = z.infer<typeof projectSchema>;
 
 export const createProjectSchema = z.object({
   name: z.string().min(1, 'Project name is required'),
-  description: z.string().min(1, 'Description is required'),
+  description: z.string().nullable().optional(),
   employees: z
     .array(
       z.object({
@@ -34,9 +34,10 @@ export const createProjectSchema = z.object({
         project_role_id: z.number().min(1, 'Employee project role is required'),
       }),
     )
-    .min(1, 'At least one employee must be assigned'),
+    .optional()
+    .nullable(),
   start_date: z.string().min(1, 'Start date is required'),
-  end_date: z.string().min(1, 'End date is required'),
+  end_date: z.string().optional().nullable(),
 });
 
 export type CreateProjectSchema = z.infer<typeof createProjectSchema>;

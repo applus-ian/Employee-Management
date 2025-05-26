@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Resources\RolePermissionResource;
+use App\Models\Permission;
 use App\Models\Role;
 
 class RoleService
@@ -38,5 +40,25 @@ class RoleService
     public function deleteRole(Role $role): bool
     {
         return $role->delete();
+    }
+
+    // Fetch Role With Permissions
+    public function roleWithPermissions(int $role_id)
+    {
+        $role = Role::findOrFail($role_id);
+        return new RolePermissionResource($role->load('permissions'));
+    }
+
+    // Fetch All Roles With Permissions
+    public function allRolesWithPermissions()
+    {
+        $roles = Role::with('permissions')->get();
+        return RolePermissionResource::collection($roles);
+    }
+
+    // Fetch All Roles With Permissions
+    public function allPermissions()
+    {
+        return Permission::all();;
     }
 }

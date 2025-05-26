@@ -1,105 +1,120 @@
-import { useState } from 'react';
-import { DialogClose, DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
+'use client';
+
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
+import { useCreateDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-create-department-assign';
+import toast from 'react-hot-toast';
+
+const departmentAssignSchema = z.object({
+  name: z.string().min(1, 'Department name is required'),
+  parent_department_id: z
+    .string()
+    .transform((val) => (val === '' ? null : Number(val)))
+    .refine((val) => val === null || !isNaN(val), {
+      message: 'Invalid department',
+    }),
+});
+
+type DepartmentAssignInput = z.infer<typeof departmentAssignSchema>;
 
 interface NewDepartmentAssignFormProps {
   onCancel: () => void;
-  onSave: (department_assignData: { department_assignName: string; parent_departmentName: string }) => void;
+  onSave: (data: DepartmentAssignInput) => void;
 }
 
 export default function NewDepartmentAssignForm({ onCancel, onSave }: NewDepartmentAssignFormProps) {
-  const [department_assignName, setDepartment_AssignName] = useState('');
-  const [parent_departmentName, setParent_DepartmentName] = useState('');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<DepartmentAssignInput>({
+    resolver: zodResolver(departmentAssignSchema),
+    defaultValues: {
+      name: '',
+      parent_department_id: undefined as unknown as number,
+    },
+  });
 
-  const handleSave = () => {
-    onSave({ department_assignName, parent_departmentName });
-    onCancel();
+  const { data: departments = [], isLoading: deptLoading } = useDepartmentAssign();
+  const { mutate: createDepartmentAssign, isPending, isError, error } = useCreateDepartmentAssign();
+
+  const onSubmit = (data: DepartmentAssignInput) => {
+    createDepartmentAssign(data, {
+      onSuccess: () => {
+        toast.success('Department Assignment Created!');
+        onSave(data);
+        reset();
+        onCancel();
+      },
+      onError: () => {
+        toast.error('Error on creating Department Assignment!');
+      },
+    });
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[35rem] h-fit flex flex-col bg-white">
+    <DialogContent className="flex h-fit w-full flex-col bg-white lg:!max-w-[45rem]">
       <DialogHeader>
-        <DialogTitle>Create New Department Assignment</DialogTitle>
+        <DialogTitle>Create New Department Assign</DialogTitle>
       </DialogHeader>
-      <div>
-        <form>
-          <div className="grid">
-            <div className="flex flex-col p-5">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Department Name</h3>
-                </Label>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-[#EE7A2A] sm:text-sm"
-                  placeholder="Enter department name..."
-                  value={department_assignName}
-                  onChange={(e) => setDepartment_AssignName(e.target.value)}
-                />
-              </div>
-            </div>
 
-            <div className="flex flex-col p-5 pt-2">
-              <div>
-                <Label>
-                  <h3 className="text-black font-base">Parent Department</h3>
-                </Label>
-              </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 px-5 py-3">
+        <div>
+          <Label htmlFor="name" className="text-black">
+            Department Name
+          </Label>
+          <Input id="name" {...register('name')} placeholder="Enter department name..." className="mt-2" />
+          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+        </div>
 
-              <div>
-                <Select value={parent_departmentName} onValueChange={(value) => setParent_DepartmentName(value)}>
-                  <SelectTrigger className="mt-2 px-4 py-2 pl-3 w-full border rounded-xl border-gray-500 focus:border-[#EE7A2A]">
-                    <SelectValue placeholder="Choose parent department" className="text-gray-500" />
-                  </SelectTrigger>
-                  <SelectContent className="border rounded-xl border-gray-500 bg-white">
-                    <SelectItem value="Information Technology" className="hover:bg-gray-300 text-black">
-                      Information Technology
-                    </SelectItem>{' '}
-                    <SelectItem value="Finance" className="hover:bg-gray-300 text-black">
-                      Finance
-                    </SelectItem>{' '}
-                    <SelectItem value="Human Resource" className="hover:bg-gray-300 text-black">
-                      Human Resource
-                    </SelectItem>{' '}
-                    <SelectItem value="IT Support" className="hover:bg-gray-300 text-black">
-                      IT Support
-                    </SelectItem>{' '}
-                    <SelectItem value="Engineering" className="hover:bg-gray-300 text-black">
-                      Engineering
-                    </SelectItem>{' '}
-                    <SelectItem value="Backend" className="hover:bg-gray-300 text-black">
-                      Backend
-                    </SelectItem>{' '}
-                    <SelectItem value="DevOps" className="hover:bg-gray-300 text-black">
-                      DevOps
-                    </SelectItem>{' '}
-                    <SelectItem value="Flower" className="hover:bg-gray-300 text-black">
-                      Flower
-                    </SelectItem>{' '}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+        <div>
+          <Label htmlFor="parent_department_id" className="text-black">
+            Parent Department
+          </Label>
+          <select
+            id="parent_department_id"
+            className="mt-2 w-full rounded-md border px-2 py-1 text-sm"
+            {...register('parent_department_id')}
+            disabled={deptLoading}
+          >
+            <option value="">Select Parent Department</option>
+            {departments.map((dept) => (
+              <option key={dept.id} value={dept.id}>
+                {dept.name}
+              </option>
+            ))}
+          </select>
+          {errors.parent_department_id && <p className="text-sm text-red-500">{errors.parent_department_id.message}</p>}
+        </div>
 
-            <div className=" px-5 pt-5 flex justify-center gap-x-6">
-              <DialogClose asChild>
-                <Button className="bg-[#EE7A2A] text-white w-[10rem]" onClick={handleSave}>
-                  Create
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" onClick={onCancel}>
-                  Cancel
-                </Button>
-              </DialogClose>
-            </div>
+        {isError && (
+          <div className="text-red-600">
+            <p>Error creating department assign: {error?.message}</p>
           </div>
-        </form>
-      </div>
+        )}
+
+        {/* Actions ---------------------------------------------------------*/}
+        <div className="flex justify-center gap-x-6 pt-3">
+          <Button type="submit" className="w-[10rem] bg-[#EE7A2A] text-white" disabled={isPending}>
+            {isPending ? 'Creating...' : 'Create'}
+          </Button>
+          <Button
+            type="button"
+            className="w-[10rem] border-2 border-[#EE7A2A] bg-white text-[#EE7A2A]"
+            onClick={onCancel}
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
     </DialogContent>
   );
 }

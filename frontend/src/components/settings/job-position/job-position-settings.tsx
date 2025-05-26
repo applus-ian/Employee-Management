@@ -4,20 +4,20 @@ import { cn } from '@/lib/utils';
 import { CirclePlus } from 'lucide-react';
 import NewJobPositionForm from './job-position/create-form';
 import JobPosition from './job-position/job-position';
-import NewLocationAssignForm from './location-assign/create-form';
-import LocationAssign from './location-assign/location-assign';
+import NewLocationAssignForm from './location-assignment/create-form';
+import LocationAssignments from './location-assignment/location-assignment';
 import CountryAssigns from './country-assigns/country-assigns';
 import NewCountryAssignForm from './country-assigns/create-form';
 import OfficeAssigns from './office-assigns/office-assigns';
 import NewOfficeAssignForm from './office-assigns/create-form';
 import TeamAssigns from './team-assign/team-assign';
 import NewTeamAssignForm from './team-assign/create-form';
-import DepartmentAssign from './department-assign/department-assign';
+import DepartmentAssigns from './department-assign/department-assign';
 import NewDepartmentAssignForm from './department-assign/create-form';
 
 const navLinks = [
   { name: 'Job Position', href: 'Job Positions' },
-  { name: 'Location Assign', href: 'Location Assigns' },
+  { name: 'Location Assignment', href: 'Location Assignments' },
   { name: 'Country Assign', href: 'Country Assigns' },
   { name: 'Office Assign', href: 'Office Assigns' },
   { name: 'Team Assign', href: 'Team Assigns' },
@@ -30,23 +30,12 @@ export default function JobPositionPage() {
   const [activeTab, setactiveTab] = useState<TabKey>('Job Positions');
   const [isDialogOpen, setDialogOpen] = useState(false);
 
-  // Placeholder functions for onCancel and onSave
   const handleCancel = () => {
-    setDialogOpen(false); // Close the dialog
+    setDialogOpen(false);
   };
 
   const handleSave = () => {
     console.log('Saved');
-  };
-
-  const handleCountryAssignSave = (data: { name: string }) => {
-    alert(`Country Assign "${data.name}" created!`);
-    setDialogOpen(false); // Close dialog after save
-  };
-
-  const handleOfficeAssignSave = (data: { name: string }) => {
-    alert(`Office Assign "${data.name}" created!`);
-    setDialogOpen(false); // Close dialog after save
   };
 
   return (
@@ -88,15 +77,11 @@ export default function JobPositionPage() {
             </DialogTrigger>
             <div>
               {activeTab === 'Job Positions' && <NewJobPositionForm onCancel={handleCancel} onSave={handleSave} />}
-              {activeTab === 'Location Assigns' && (
+              {activeTab === 'Location Assignments' && (
                 <NewLocationAssignForm onCancel={handleCancel} onSave={handleSave} />
               )}
-              {activeTab === 'Country Assigns' && (
-                <NewCountryAssignForm onCancel={handleCancel} onSave={handleCountryAssignSave} />
-              )}
-              {activeTab === 'Office Assigns' && (
-                <NewOfficeAssignForm onCancel={handleCancel} onSave={handleOfficeAssignSave} />
-              )}
+              {activeTab === 'Country Assigns' && <NewCountryAssignForm onCancel={handleCancel} onSave={handleSave} />}
+              {activeTab === 'Office Assigns' && <NewOfficeAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Team Assigns' && <NewTeamAssignForm onCancel={handleCancel} onSave={handleSave} />}
               {activeTab === 'Department Assigns' && (
                 <NewDepartmentAssignForm onCancel={handleCancel} onSave={handleSave} />
@@ -107,11 +92,11 @@ export default function JobPositionPage() {
       </nav>
 
       {activeTab === 'Job Positions' && <JobPosition />}
-      {activeTab === 'Location Assigns' && <LocationAssign />}
+      {activeTab === 'Location Assignments' && <LocationAssignments />}
       {activeTab === 'Country Assigns' && <CountryAssigns />}
       {activeTab === 'Office Assigns' && <OfficeAssigns />}
       {activeTab === 'Team Assigns' && <TeamAssigns />}
-      {activeTab === 'Department Assigns' && <DepartmentAssign />}
+      {activeTab === 'Department Assigns' && <DepartmentAssigns />}
     </div>
   );
 }

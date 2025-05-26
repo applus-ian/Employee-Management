@@ -6,6 +6,7 @@ export interface Documentation {
   name: string;
   description: string;
   file_url: string;
+  document_type_id: number;
   document_type_name: string;
   upload_date: string;
   expiry_date: string;
@@ -39,4 +40,13 @@ export interface EmployeeStatusHistory {
   emp_id: string;
   status_set: string;
   effective_date: string;
+}
+
+export interface RecordCol {
+  employee_id: string;
+  profile: string;
+  full_name: string;
+  title: string;
+  email: string;
+  user_role: string;
 }
