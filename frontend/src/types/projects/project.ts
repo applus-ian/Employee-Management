@@ -1,10 +1,10 @@
 export interface Project {
   id: number;
   name: string;
-  description: string;
+  description: string | null;
   start_date: string;
-  end_date: string;
-  employees?: AssignedEmployee[];
+  end_date: string | null;
+  employees: AssignedEmployee[] | null;
 }
 
 export interface AssignedEmployee {
@@ -18,8 +18,8 @@ export interface AssignedEmployee {
 
 export interface CreateProject {
   name: string;
-  description: string;
-  employees: { id: string; project_role_id: number }[];
+  description?: string | null;
+  employees?: { id: string; project_role_id: number }[] | null;
   start_date: string;
-  end_date: string;
+  end_date?: string | null;
 }

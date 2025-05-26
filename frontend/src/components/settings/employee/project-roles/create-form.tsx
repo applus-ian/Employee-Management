@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useCreateProjectRole } from '@/hooks/settings/employee/project-role/use-create-project-role';
-
+import toast from 'react-hot-toast';
 const projectRoleSchema = z.object({
   name: z.string().min(1, 'Project role name is required'),
 });
@@ -35,6 +35,7 @@ export default function NewProjectRoleForm({ onCancel, onSave }: NewProjectRoleF
   const onSubmit = (data: ProjectRoleInput) => {
     createProjectRole(data, {
       onSuccess: () => {
+        toast.success(`Project role "${data.name}" created successfully!`);
         onSave(data);
         reset(); // Reset form
         onCancel(); // Close dialog

@@ -1,95 +1,42 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Role_Permission, columns } from './columns';
+
+import { useRolesWithPermissions } from '@/hooks/settings/employee/role-and-permission/useRolesWithPermissions';
 import { DataTable } from './data-table';
+import { columns } from './columns';
+import { RoleWithPermissions } from '@/types/settings/employee/roles-and-permission/roleAndPermission';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 
-export default function RolePermission() {
-  const [data, setData] = useState<Role_Permission[]>([]);
+export default function RolesAndPermissions() {
+  const { data, isLoading, isError } = useRolesWithPermissions();
 
-  useEffect(() => {
-    async function fetchData() {
-      const result = await getData();
-      setData(result);
-    }
-    fetchData();
-  }, []);
+  const rows: RoleWithPermissions[] =
+    data?.map((role) => ({
+      id: role.id,
+      name: role.name,
+      permissions: role.permissions,
+    })) ?? [];
 
-  async function getData(): Promise<Role_Permission[]> {
-    return [
-      {
-        role: '728ed52f',
-        permission: 100,
-      },
-      {
-        role: 'lug;ildhb',
-        permission: 457,
-      },
-      {
-        role: 'mdtbsfdwf',
-        permission: 796,
-      },
-      {
-        role: 'dygbnet3',
-        permission: 246,
-      },
-      {
-        role: 'dyfkawefg',
-        permission: 425,
-      },
-      {
-        role: 'dygbnet3',
-        permission: 246,
-      },
-      {
-        role: 'dyfkawefg',
-        permission: 467,
-      },
-      {
-        role: 'mdtbsfdwf',
-        permission: 796,
-      },
-      {
-        role: 'dygbnet3',
-        permission: 246,
-      },
-      {
-        role: 'dyfkawefg',
-        permission: 425,
-      },
-      {
-        role: 'dygbnet3',
-        permission: 246,
-      },
-      {
-        role: 'dyfkawefg',
-        permission: 467,
-      },
-      {
-        role: 'mdtbsfdwf',
-        permission: 796,
-      },
-      {
-        role: 'dygbnet3',
-        permission: 246,
-      },
-      {
-        role: 'dyfkawefg',
-        permission: 425,
-      },
-      {
-        role: 'dygbnet3',
-        permission: 246,
-      },
-      {
-        role: 'dyfkawefg',
-        permission: 467,
-      },
-    ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+        <span className="ml-2 text-sm text-gray-500">Loading roles...</span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center h-40 text-red-500">
+        <AlertTriangle className="h-6 w-6 mr-2" />
+        <span className="text-sm">Failed to load roles.</span>
+      </div>
+    );
   }
 
   return (
     <div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={rows} />
     </div>
   );
 }

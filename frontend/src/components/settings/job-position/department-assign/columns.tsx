@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { DepartmentAssign, EditDepartmentAssignInput } from '@/schemas';
 import { useUpdateDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-update-department-assign';
 import { useDeleteDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-delete-department-assign';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<DepartmentAssign>[] = [
   {
@@ -40,16 +41,18 @@ export const columns: ColumnDef<DepartmentAssign>[] = [
       const { mutate: deleteDepartmentAssign, isPending: isDeleting } = useDeleteDepartmentAssign();
 
       const handleCancel = () => {
-        setEditOpen(false); // Close the edit dialog when cancel is clicked
+        setEditOpen(false);
       };
 
       const handleSave = async (updatedData: EditDepartmentAssignInput) => {
         try {
           await updateDepartmentAssign(updatedData);
+
           console.log(updatedData);
-          alert(`Department Assign successfully updated!`);
+          toast.success(`Department Assign successfully updated!`);
           setEditOpen(false);
         } catch (error) {
+          toast.error('Failed to update department assign!');
           console.error('Failed to update department assign:', error);
         }
       };
@@ -57,9 +60,10 @@ export const columns: ColumnDef<DepartmentAssign>[] = [
       const handleDelete = async () => {
         try {
           await deleteDepartmentAssign(item.id);
-          alert('Department Assign successfully deleted!');
+          toast.success('Department Assign successfully deleted!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete department assign!');
           console.error('Failed to delete department assign:', error);
         }
       };
@@ -77,11 +81,7 @@ export const columns: ColumnDef<DepartmentAssign>[] = [
               <DialogHeader>
                 <DialogTitle>Edit Department Assign</DialogTitle>
               </DialogHeader>
-              <EditDepartmentAssignForm
-                department_assign={item} // Pass the department assign data to the edit form
-                onCancel={handleCancel}
-                onSave={handleSave} // Handle the save action here
-              />
+              <EditDepartmentAssignForm department_assign={item} onCancel={handleCancel} onSave={handleSave} />
             </DialogContent>
           </Dialog>
 
@@ -102,12 +102,8 @@ export const columns: ColumnDef<DepartmentAssign>[] = [
                 <p className="text-center">Do you want to delete this Department?</p>
               </div>
               <div className="px-5 pt-5 flex justify-center gap-x-6">
-                <Button
-                  onClick={handleDelete} // Call handleDelete to delete the department assign
-                  className="bg-[#EE7A2A] text-white w-[10rem]"
-                  disabled={isDeleting} // Disable button while deleting
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                <Button onClick={handleDelete} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isDeleting}>
+                  {isDeleting ? 'Deleting...' : 'Delete'}
                 </Button>
                 <DialogClose asChild>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>

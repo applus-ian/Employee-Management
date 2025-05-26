@@ -20,7 +20,7 @@ import NewSkillCategoryForm from './skills/skill-categories/create-form';
 const navLinks = [
   { name: 'Roles & Permissions', href: 'Roles' },
   { name: 'Skills', href: 'Skills' },
-  { name: 'Documents', href: 'Documents' },
+  { name: 'Document Types', href: 'Document_Types' },
   { name: 'Project Roles', href: 'Project Roles' },
   { name: 'Employment Types', href: 'Employment Types' },
 ] as const;
@@ -39,13 +39,11 @@ export default function EmployeeRolePage() {
     setDialogOpen(false); // Close the dialog
   };
 
-  const handleDocumentTypeSave = (data: { name: string }) => {
-    alert(`Document Type "${data.name}" created!`);
+  const handleDocumentTypeSave = () => {
     setDialogOpen(false); // Close dialog after save
   };
 
-  function handleSkillCategorySave(data: { name: string }): void {
-    alert(`Skill Category "${data.name}" created!`);
+  function handleSkillCategorySave(): void {
     setSkillCatNewOpen(false); // Close dialog after save
   }
 
@@ -134,7 +132,9 @@ export default function EmployeeRolePage() {
               {activeTab === 'Skills' && (
                 <NewSkillForm onCancel={handleCancel} onSave={() => console.log('Save skill')} />
               )}
-              {activeTab === 'Documents' && <NewDocumentForm onCancel={handleCancel} onSave={handleDocumentTypeSave} />}
+              {activeTab === 'Document_Types' && (
+                <NewDocumentForm onCancel={handleCancel} onSave={handleDocumentTypeSave} />
+              )}
               {activeTab === 'Project Roles' && (
                 <NewProjectRoleForm onCancel={handleCancel} onSave={() => console.log('Save project role')} />
               )}
@@ -148,7 +148,7 @@ export default function EmployeeRolePage() {
 
       {activeTab === 'Roles' && <RolePermission />}
       {activeTab === 'Skills' && <Skills />}
-      {activeTab === 'Documents' && <DocumentTypes />}
+      {activeTab === 'Document_Types' && <DocumentTypes />}
       {activeTab === 'Project Roles' && <ProjectRoles />}
       {activeTab === 'Employment Types' && <EmploymentTypes />}
     </div>

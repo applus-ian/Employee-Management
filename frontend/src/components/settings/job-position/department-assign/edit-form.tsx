@@ -5,8 +5,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { DialogClose } from '@/components/ui/dialog';
 import { DepartmentAssign, EditDepartmentAssignInput, editDepartmentAssignSchema } from '@/schemas';
 import { useDepartmentAssign } from '@/hooks/settings/job-position/department-assign/use-fetch-department-assigns';
+import toast from 'react-hot-toast';
 
 interface EditDepartmentAssignFormProps {
   department_assign: DepartmentAssign;
@@ -37,7 +39,7 @@ export function EditDepartmentAssignForm({ department_assign, onCancel, onSave }
       name: data.name,
       parent_department_id: data.parent_department_id,
     });
-
+    toast.success('Department Assignment Updated Successfully!');
     reset(data);
     onCancel();
   };
@@ -69,9 +71,11 @@ export function EditDepartmentAssignForm({ department_assign, onCancel, onSave }
       </div>
 
       <div className="flex justify-end gap-x-4 pt-2">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
-          Cancel
-        </Button>
+        <DialogClose asChild>
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+            Cancel
+          </Button>
+        </DialogClose>
         <Button type="submit" className="bg-[#EE7A2A] text-white" disabled={isSubmitting}>
           {isSubmitting ? 'Saving...' : 'Save'}
         </Button>

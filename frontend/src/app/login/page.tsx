@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, LoginFormInputs } from '@/schemas';
 import { FaEnvelope } from 'react-icons/fa';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const authContext = useContext(AuthContext);
@@ -36,9 +37,11 @@ export default function LoginPage() {
 
     try {
       await loginMutation.mutateAsync(data); // Call the login API
+      toast.success('Login Success!');
       router.push('/dashboard');
     } catch (error: unknown) {
       // If API sends a global error message
+      toast.error('Something went wrong! Login failed.');
       const message = (error as Error)?.message || 'Something went wrong.';
       setErrorMessage(message);
     }

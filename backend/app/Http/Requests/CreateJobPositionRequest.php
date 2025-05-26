@@ -22,7 +22,17 @@ class CreateJobPositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:document_types, name']
+            'title' => ['required', 'string', 'max:255', 'unique:job_positions,title']
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'Job position title is required.',
+            'title.string' => 'Job position title must be a valid string.',
+            'title.max' => 'Job position title must not exceed 255 characters.',
+            'title.unique' => 'This job position title already exists.',
         ];
     }
 }

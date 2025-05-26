@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { TeamAssign } from '@/schemas';
 import { useUpdateTeamAssign } from '@/hooks/settings/job-position/team-assign/use-update-team-assign';
 import { useDeleteTeamAssign } from '@/hooks/settings/job-position/team-assign/use-delete-team-assign';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<TeamAssign>[] = [
   {
@@ -37,9 +38,10 @@ export const columns: ColumnDef<TeamAssign>[] = [
       const handleSave = async (updatedData: TeamAssign) => {
         try {
           await updateTeamAssign(updatedData);
-          alert(`Employment type changed to "${updatedData.name}"!`);
+          toast.success(`Employment type changed to "${updatedData.name}"!`);
           setEditOpen(false);
         } catch (error) {
+          toast.error('Failed to update employment type!');
           console.error('Failed to update employment type:', error);
         }
       };
@@ -47,9 +49,10 @@ export const columns: ColumnDef<TeamAssign>[] = [
       const handleDelete = async () => {
         try {
           await deleteTeamAssign(item.id);
-          alert('Employment type deleted successfully!');
+          toast.success('Employment type deleted successfully!');
           setDeleteOpen(false);
         } catch (error) {
+          toast.error('Failed to delete employment type!');
           console.error('Failed to delete employment type:', error);
         }
       };

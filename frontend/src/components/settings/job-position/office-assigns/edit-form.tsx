@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { OfficeAssign } from '@/schemas';
+import toast from 'react-hot-toast';
+import { DialogClose } from '@/components/ui/dialog';
 
 interface EditOfficeAssignFormProps {
   office_assign: OfficeAssign;
@@ -23,14 +25,16 @@ export function EditOfficeAssignForm({ office_assign, onCancel, onSave }: EditOf
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // Set loading state to true when saving
+    setIsLoading(true);
     try {
-      await onSave({ ...office_assign, name }); // Call onSave with updated data
+      await onSave({ ...office_assign, name });
+      toast.success('Office assignment updated successfully!');
       onCancel();
     } catch (error) {
-      console.error('Error saving office assign:', error); // Handle any error
+      toast.error('Error saving office assign!');
+      console.error('Error saving office assign:', error);
     } finally {
-      setIsLoading(false); // Set loading state to false after saving
+      setIsLoading(false);
     }
   };
 
@@ -44,15 +48,13 @@ export function EditOfficeAssignForm({ office_assign, onCancel, onSave }: EditOf
       </div>
 
       <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button
-          type="submit"
-          className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]"
-          disabled={isLoading} // Disable button when loading
-        >
-          {isLoading ? 'Saving...' : 'Save'} {/* Show loading text when saving */}
+        <DialogClose asChild>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button type="submit" className="bg-[#EE7A2A] text-white hover:bg-[#d4681f]" disabled={isLoading}>
+          {isLoading ? 'Saving...' : 'Save'}
         </Button>
       </div>
     </form>

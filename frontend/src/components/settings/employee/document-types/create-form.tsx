@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateDocumentType } from '@/hooks/settings/employee/document-type/use-create-document-type';
+import toast from 'react-hot-toast';
 
 // Zod Schema
 const documentTypeSchema = z.object({
@@ -37,6 +38,7 @@ export default function NewDocumentForm({ onCancel, onSave }: NewDocumentFormPro
   const onSubmit = (data: DocumentTypeInput) => {
     createDocumentType(data, {
       onSuccess: () => {
+        toast.success(`Document type "${data.name}" created successfully!`);
         onSave(data);
         reset(); // Reset form
         onCancel(); // Close dialog

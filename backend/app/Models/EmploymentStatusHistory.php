@@ -22,5 +22,7 @@ class EmploymentStatusHistory extends Model
         'employee_id',
         'status_set',
         'effective_date',
+        'remarks',
+        'changed_by',
     ];
 }

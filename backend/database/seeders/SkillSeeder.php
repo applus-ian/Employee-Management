@@ -16,8 +16,8 @@ class SkillSeeder extends Seeder
         Skill::insert([
             [
                 'name' => 'Programming',
-                'description' => 'PHP, JavaScript,
-                Python','skill_category_id' => 1,
+                'description' => 'PHP, JavaScript, Python',
+                'skill_category_id' => 1,
             ],
             [
                 'name' => 'Team Management',

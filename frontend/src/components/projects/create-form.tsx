@@ -11,6 +11,7 @@ import { createProjectSchema } from '@/schemas/projects/project';
 import { useProjectRole } from '@/hooks/settings/employee/project-role/use-fetch-project-roles';
 import { CreateProject } from '@/types/projects/project';
 import { ProjectRole } from '@/types/settings/employee/project-role/projectRole';
+import toast from 'react-hot-toast';
 
 interface NewProjectFormProps {
   onCancel: () => void;
@@ -34,7 +35,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
   const handleCreateProject = () => {
     const employeeData = selectedEmployees.map((id) => ({
       id,
-      project_role_id: employeeProjectRoles[id], // don't default to ''
+      project_role_id: employeeProjectRoles[id],
     }));
 
     // Check for missing roles
@@ -49,10 +50,10 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
     const parsed = createProjectSchema.safeParse({
       name: projectName,
-      description,
-      employees: employeeData, // ✅ now matches expected structure
+      description: description || undefined || null,
+      employees: employeeData || undefined || null,
       start_date: startDate,
-      end_date: endDate,
+      end_date: endDate || undefined || null,
     });
 
     if (!parsed.success) {
@@ -71,9 +72,11 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
     createProject(parsed.data, {
       onSuccess: () => {
-        onSave(parsed.data); // ✅ same fix applies here
+        toast.success('Project created successfully!');
+        onSave(parsed.data);
       },
       onError: (err) => {
+        toast.error('Project creation failed!');
         console.error('Error creating project:', err);
       },
     });
@@ -97,9 +100,9 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             type="text"
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
-            className="border rounded-xl hover:border-orange-400"
+            className="border rounded-xl px-4 py-2 hover:border-orange-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
           />
-          {validationErrors.name && <p className="text-red-500 text-sm">{validationErrors.name}</p>}
+          {validationErrors.name && <p className="text-red-500 text-sm mt-1">{validationErrors.name}</p>}
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Start Date</label>
@@ -107,29 +110,29 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="border rounded-xl w-full px-3 py-2 hover:border-orange-400"
+            className="border rounded-xl w-full px-4 py-2 hover:border-orange-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
           />
-          {validationErrors.start_date && <p className="text-red-500 text-sm">{validationErrors.start_date}</p>}
+          {validationErrors.start_date && <p className="text-red-500 text-sm mt-1">{validationErrors.start_date}</p>}
         </div>
         <div className="md:col-span-1">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
-            className="w-full border rounded-xl px-3 py-2 text-sm resize-none hover:border-orange-400 h-[130px]"
+            className="w-full border rounded-xl px-4 py-2 text-sm resize-none hover:border-orange-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 h-[130px]"
             placeholder="Project Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
-          {validationErrors.description && <p className="text-red-500 text-sm">{validationErrors.description}</p>}
+          {validationErrors.description && <p className="text-red-500 text-sm mt-1">{validationErrors.description}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">End Date</label>
+          <label className="block text-sm font-medium mb-1">End Date (Optional)</label>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="border rounded-xl w-full px-3 py-2 hover:border-orange-400"
+            className="border rounded-xl w-full px-4 py-2 hover:border-orange-400 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
           />
-          {validationErrors.end_date && <p className="text-red-500 text-sm">{validationErrors.end_date}</p>}
+          {validationErrors.end_date && <p className="text-red-500 text-sm mt-1">{validationErrors.end_date}</p>}
         </div>
       </form>
 
@@ -143,7 +146,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
           <Button
             onClick={() => setOpenAssignModal(true)}
-            className="border border-orange-400 text-orange-500 hover:bg-orange-400 hover:text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2"
+            className="bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-50 px-4 py-2 rounded-xl text-sm font-medium flex items-center gap-2 transition-colors"
           >
             Assign Employee
             <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 -960 960 960" fill="currentColor">
@@ -154,7 +157,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
         {/* Modal */}
         <Dialog open={openAssignModal} onOpenChange={setOpenAssignModal}>
-          <DialogContent className="w-full lg:w-[25%] bg-white rounded-lg">
+          <DialogContent className="w-full lg:w-[25%] bg-white rounded-xl shadow-lg">
             <DialogHeader>
               <DialogTitle className="text-orange-500 text-center text-lg font-bold uppercase">
                 Available Employees
@@ -162,7 +165,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
               <p className="text-sm text-center mt-1 text-gray-600">Select an employee/s</p>
             </DialogHeader>
 
-            <CardContent className="p-2 border rounded-xl border-gray-350 bg-gray-100 ">
+            <CardContent className="p-2 border rounded-xl border-gray-200 bg-gray-50">
               <div className="max-h-80 overflow-y-auto rounded-md p-2 space-y-2 pt-3">
                 {employees?.records.users.map((user) => (
                   <label
@@ -193,14 +196,14 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
 
             <div className="mt-4 flex justify-center gap-2">
               <Button
-                className="bg-orange-500 text-white hover:bg-orange-600 px-6"
+                className="bg-orange-500 text-white hover:bg-orange-600 px-6 rounded-xl transition-colors"
                 onClick={() => setOpenAssignModal(false)}
               >
                 Assign
               </Button>
               <Button
                 variant="outline"
-                className="bg-white border-orange-400 text-orange-500 hover:bg-orange-50"
+                className="bg-white border-orange-400 text-orange-500 hover:bg-orange-50 rounded-xl transition-colors"
                 onClick={() => setOpenAssignModal(false)}
               >
                 Cancel
@@ -264,11 +267,15 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
           </Table>
         </div>
       </div>
-      <div className="flex gap-3 justify-center">
-        <Button onClick={handleCreateProject} disabled={isPending} className="flex-1">
+      <div className="px-5 pt-5 flex justify-center gap-x-6">
+        <Button onClick={handleCreateProject} disabled={isPending} className="bg-[#EE7A2A] text-white w-[10rem]">
           Create
         </Button>
-        <Button variant="outline" onClick={onCancel}>
+        <Button
+          variant="outline"
+          onClick={onCancel}
+          className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+        >
           Cancel
         </Button>
       </div>
