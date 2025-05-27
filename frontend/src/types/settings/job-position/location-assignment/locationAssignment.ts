@@ -29,3 +29,11 @@ export interface LocationAssignment {
     } | null;
   } | null;
 }
+
+export interface CreateLocationAssignment {
+  employee_id: string;
+  country_assign_id: number | null;
+  office_assign_id: number | null;
+  team_assign_id: number | null;
+  department_assign_id: number | null;
+}

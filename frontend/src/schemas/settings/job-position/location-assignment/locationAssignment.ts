@@ -51,7 +51,6 @@ export const locationAssignmentArraySchema = z.array(locationAssignmentSchema);
 export type LocationAssignment = z.infer<typeof locationAssignmentSchema>;
 
 export const createLocationAssignmentInput = z.object({
-  job_position_id: z.number(),
   country_assign_id: z
     .string()
     .transform((val) => (val === '' ? null : Number(val)))
@@ -83,7 +82,6 @@ export type CreateLocationAssignment = z.infer<typeof createLocationAssignmentIn
 
 export const updateLocationAssignmentInput = z.object({
   id: z.number(),
-  job_position_id: z.number(),
   country_assign_id: z
     .string()
     .transform((val) => (val === '' ? null : Number(val)))

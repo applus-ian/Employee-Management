@@ -16,6 +16,7 @@ class LocationAssignmentService
             'office_assign_id' => $data['office_assign_id'],
             'team_assign_id' => $data['team_assign_id'],
             'department_assign_id' => $data['department_assign_id'],
+            'employee_id' => $data['employee_id'],
         ]);
     }
 
