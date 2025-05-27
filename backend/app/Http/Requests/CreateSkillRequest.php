@@ -22,9 +22,9 @@ class CreateSkillRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:skills,name'],
-            'description' => ['nullable', 'string'],
-            'skill_categories_id' => ['required', 'exists: skill_categories,id']
-        ];
+        'name' => ['required', 'string', 'max:255', 'unique:skills,name'],
+        'description' => ['nullable', 'string'],
+        'skill_category_id' => ['required', 'exists:skill_categories,id'], // ✅ FIXED
+    ];
     }
 }

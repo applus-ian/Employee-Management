@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateSkillCategory } from '@/hooks/settings/employee/skill/skill-category/use-create-skill-category';
+import toast from 'react-hot-toast';
 
 // Zod Schema
 const skillCategorySchema = z.object({
@@ -36,6 +37,7 @@ export default function NewSkillCategoryForm({ onCancel, onSave }: NewSkillCateg
   const onSubmit = (data: SkillCategoryInput) => {
     createSkillCategory(data, {
       onSuccess: () => {
+        toast.success('Skill Category created successfully!');
         onSave(data);
         reset(); // Reset form
         onCancel(); // Close dialog

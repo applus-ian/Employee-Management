@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useCreateSkill } from '@/hooks/settings/employee/skill/use-create-skill';
 import { useSkillCategory } from '@/hooks/settings/employee/skill/skill-category/use-fetch-skill-categories';
+import toast from 'react-hot-toast';
 
 const skillSchema = z.object({
   name: z.string().min(1, 'Skill name is required'),
@@ -44,6 +45,7 @@ export default function NewSkillForm({ onCancel, onSave }: NewSkillFormProps) {
   const onSubmit = (data: SkillInput) => {
     createSkill(data, {
       onSuccess: () => {
+        toast.success('Skill created successfully!');
         onSave(data);
         reset();
         onCancel();
