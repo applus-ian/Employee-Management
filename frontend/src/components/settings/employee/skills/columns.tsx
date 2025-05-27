@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Skill } from '@/schemas';
 import { useUpdateSkill } from '@/hooks/settings/employee/skill/use-update-skill';
 import { useDeleteSkill } from '@/hooks/settings/employee/skill/use-delete-skill';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<Skill>[] = [
   {
@@ -55,7 +56,7 @@ export const columns: ColumnDef<Skill>[] = [
       const handleSave = async (updatedData: Skill) => {
         try {
           await updateSkill(updatedData);
-          alert(`Skill successfully updated!`);
+          toast.success(`Skill successfully updated!`);
           setEditOpen(false);
         } catch (error) {
           console.error('Failed to update skill:', error);
@@ -65,7 +66,7 @@ export const columns: ColumnDef<Skill>[] = [
       const handleDelete = async () => {
         try {
           await deleteSkill(item.id);
-          alert('Skill successfully deleted!');
+          toast.success('Skill successfully deleted!');
           setDeleteOpen(false);
         } catch (error) {
           console.error('Failed to delete skill:', error);
