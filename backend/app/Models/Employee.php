@@ -72,9 +72,9 @@ class Employee extends Model
         return $this->belongsTo(EmploymentType::class);
     }
 
-    public function Manager(): BelongsTo
+    public function manager(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'manager_id');
+        return $this->belongsTo(Employee::class);
     }
 
     public function getAgeAttribute(): int

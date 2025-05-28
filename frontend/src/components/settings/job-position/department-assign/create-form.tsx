@@ -13,12 +13,7 @@ import toast from 'react-hot-toast';
 
 const departmentAssignSchema = z.object({
   name: z.string().min(1, 'Department name is required'),
-  parent_department_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid department',
-    }),
+  parent_department_id: z.coerce.number().nullable(),
 });
 
 type DepartmentAssignInput = z.infer<typeof departmentAssignSchema>;
@@ -86,7 +81,7 @@ export default function NewDepartmentAssignForm({ onCancel, onSave }: NewDepartm
           >
             <option value="">Select Parent Department</option>
             {departments.map((dept) => (
-              <option key={dept.id} value={dept.id}>
+              <option key={dept.id} value={dept.id.toString()}>
                 {dept.name}
               </option>
             ))}

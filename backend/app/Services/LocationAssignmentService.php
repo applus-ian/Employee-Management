@@ -7,16 +7,25 @@ use App\Models\LocationAssignment;
 
 class LocationAssignmentService
 {
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
+
     // Create Location Assignment
     public function createLocationAssignment(array $data)
     {
+        $decoded_id = $this->employeeService->decodeEmployeeId($data['employee_id']);
+
         return LocationAssignment::create([
             'job_position_id' => $data['job_position_id'],
             'country_assign_id' => $data['country_assign_id'],
             'office_assign_id' => $data['office_assign_id'],
             'team_assign_id' => $data['team_assign_id'],
             'department_assign_id' => $data['department_assign_id'],
-            'employee_id' => $data['employee_id'],
+            'employee_id' => $decoded_id,
         ]);
     }
 
@@ -37,6 +46,8 @@ class LocationAssignmentService
     // Update Location Assignment
     public function updateLocationAssignment(LocationAssignment $location_assignment, array $data)
     {
+         $data['employee_id'] = $this->employeeService->decodeEmployeeId($data['employee_id']);
+
         $location_assignment->update($data);
         return $location_assignment;
     }

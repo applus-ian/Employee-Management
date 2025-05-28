@@ -26,4 +26,9 @@ class Documentation extends Model
         'upload_date',
         'expiry_date',
     ];
+
+    public function documentType()
+    {
+        return $this->belongsTo(DocumentType::class, 'document_type_id');
+    }
 }

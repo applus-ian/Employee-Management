@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { createDocumentation } from '@/utils/api/records/fetchDocuments';
+import { createDocumentation } from '@/utils/api/records/fetchDocumentation';
 import { useQueryClient } from '@tanstack/react-query';
 
 const documentUploadSchema = z.object({

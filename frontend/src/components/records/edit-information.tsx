@@ -134,7 +134,7 @@ export const EditInformation = (data: { id: string }) => {
 
         {/* DOCUMENTS */}
         <TabsContent value="documents">
-          <DocumentationInformation />
+          {record?.employee.id && <DocumentationInformation employeeId={record.employee.id} />}
         </TabsContent>
 
         {/* PROJECTS */}

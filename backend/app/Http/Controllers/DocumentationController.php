@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateDocumentationRequest;
 use App\Models\Documentation;
 use App\Services\DocumentationService;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\DocumentationResource;
 
 class DocumentationController extends Controller
 {
@@ -53,5 +54,11 @@ class DocumentationController extends Controller
         $this->documentationService->deleteDocumentation($documentations);
 
         return response()->json(['message' => 'Documentation deleted successfully!'], 200);
+    }
+
+    public function getByEmployee($employee_id): JsonResponse
+    {
+        $documentations = $this->documentationService->getByEmployee($employee_id);
+        return response()->json(DocumentationResource::collection($documentations), 200);
     }
 }

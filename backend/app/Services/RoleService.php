@@ -32,8 +32,22 @@ class RoleService
     // Update Role
     public function updateRole(Role $role, array $data)
     {
-        $role->update($data);
-        return $role;
+        // Update role fields
+        $role->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+        ]);
+
+        // Sync permissions if provided
+        if (isset($data['permission_ids'])) {
+            // permission_ids can be array of objects [{id: 1}, ...] or just ids [1,2,...]
+            $ids = array_map(function($item) {
+                return is_array($item) && isset($item['id']) ? $item['id'] : $item;
+            }, $data['permission_ids']);
+            $role->permissions()->sync($ids);
+        }
+
+        return $role->load('permissions');
     }
 
     // Delete Role

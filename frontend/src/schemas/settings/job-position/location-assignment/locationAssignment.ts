@@ -50,63 +50,25 @@ export const locationAssignmentArraySchema = z.array(locationAssignmentSchema);
 
 export type LocationAssignment = z.infer<typeof locationAssignmentSchema>;
 
-export const createLocationAssignmentInput = z.object({
-  country_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid country',
-    }),
-  office_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid office',
-    }),
-  team_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid team',
-    }),
-  department_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid department',
-    }),
+export const createLocationAssignmentSchema = z.object({
+  job_position_id: z.number(),
+  country_assign_id: z.coerce.number().nullable(),
+  office_assign_id: z.coerce.number().nullable(),
+  team_assign_id: z.coerce.number().nullable(),
+  department_assign_id: z.coerce.number().nullable(),
   employee_id: z.string(),
 });
 
-export type CreateLocationAssignment = z.infer<typeof createLocationAssignmentInput>;
+export type CreateLocationAssignmentInput = z.infer<typeof createLocationAssignmentSchema>;
 
-export const updateLocationAssignmentInput = z.object({
+export const updateLocationAssignmentSchema = z.object({
   id: z.number(),
-  country_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid country',
-    }),
-  office_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid office',
-    }),
-  team_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid team',
-    }),
-  department_assign_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid department',
-    }),
+  job_position_id: z.number(),
+  country_assign_id: z.coerce.number().nullable(),
+  office_assign_id: z.coerce.number().nullable(),
+  team_assign_id: z.coerce.number().nullable(),
+  department_assign_id: z.coerce.number().nullable(),
   employee_id: z.string(),
 });
 
-export type UpdateLocationAssignment = z.infer<typeof updateLocationAssignmentInput>;
+export type UpdateLocationAssignmentInput = z.infer<typeof updateLocationAssignmentSchema>;

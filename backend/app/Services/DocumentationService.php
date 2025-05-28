@@ -6,6 +6,12 @@ use App\Models\Documentation;
 
 class DocumentationService
 {
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
     // Create Documentation
     public function createDocumentation(array $data)
     {
@@ -43,5 +49,12 @@ class DocumentationService
     public function deleteDocumentation(Documentation $documentation): bool
     {
         return $documentation->delete();
+    }
+
+    // Get Documentation by Employee
+    public function getByEmployee($employee_id)
+    {
+        $decoded_id = $this->employeeService->decodeEmployeeId($employee_id);
+        return Documentation::where('employee_id', $decoded_id)->get();
     }
 }

@@ -35,6 +35,7 @@ export default function JobPositionPage() {
   };
 
   const handleSave = () => {
+    setDialogOpen(false);
     console.log('Saved');
   };
 

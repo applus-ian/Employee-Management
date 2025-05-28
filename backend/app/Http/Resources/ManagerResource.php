@@ -19,7 +19,7 @@ class ManagerResource extends JsonResource
         return [
             'id' => $hashids->encode($this->id),
             'email' => $this->email,
-            'full_name' => optional($this->employee) ? "{$this->employee->first_name} {$this->employee->last_name}" : null,
+            'full_name' => $this->first_name. ' ' .$this->last_name,
         ];
     }
 }

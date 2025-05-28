@@ -62,7 +62,7 @@ export function EditDepartmentAssignForm({ department_assign, onCancel, onSave }
         >
           <option value="">Select Parent Department</option>
           {departments.map((dept) => (
-            <option key={dept.id} value={dept.id}>
+            <option key={dept.id} value={dept.id.toString()}>
               {dept.name}
             </option>
           ))}

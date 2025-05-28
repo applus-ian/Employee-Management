@@ -7,7 +7,7 @@ export const useDeleteDocument = () => {
   return useMutation({
     mutationFn: deleteDocument,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      queryClient.invalidateQueries({ queryKey: ['documentations'] });
     },
   });
 };

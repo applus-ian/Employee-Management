@@ -23,11 +23,11 @@ class CreateLocationAssignmentRequest extends FormRequest
     {
         return [
             'job_position_id' => ['required', 'exists:job_positions,id'],
-            'country_assign_id' => ['required', 'exists:country_assigns,id'],
-            'office_assign_id' => ['required', 'exists:office_assigns,id'],
-            'team_assign_id' => ['required', 'exists:team_assigns,id'],
-            'department_assign_id' => ['required', 'exists:department_assigns,id'],
-            'employee_id' => ['required', 'exists:employees,id'],
+            'country_assign_id' => ['nullable', 'exists:country_assigns,id'],
+            'office_assign_id' => ['nullable', 'exists:office_assigns,id'],
+            'team_assign_id' => ['nullable', 'exists:team_assigns,id'],
+            'department_assign_id' => ['nullable', 'exists:department_assigns,id'],
+            'employee_id' => ['required'],
         ];
     }
 }

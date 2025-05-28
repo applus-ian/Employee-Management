@@ -2,6 +2,7 @@
 namespace Database\Seeders;
 
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,16 +20,16 @@ class EmployeeSeeder extends Seeder
                 'birthdate' => '1990-01-01',
                 'civil_status' => 'single',
                 'nationality' => 'Filipino',
-                'region' => 'NCR',
-                'province' => 'Metro Manila',
-                'city_or_municipality' => 'Quezon City',
-                'barangay' => 'Bagumbayan',
-                'street' => '123 Main St',
-                'phone_number' => '09171234567',
-                'emergency_contact1' => 'Jane Doe',
-                'emergency_contact2' => 'Jake Doe',
+                'region' => '070000000',
+                'province' => '072200000',
+                'city_or_municipality' => '072217000',
+                'barangay' => '072217044',
+                'street' => 'Ayala',
+                'phone_number' => '01234567892',
+                'emergency_contact1' => '01234567891',
+                'emergency_contact2' => '01234567891',
                 'email' => 'john.doe@example.com',
-                'job_position_id' => 1,
+                'job_position_id' => 2,
                 'date_hired' => '2022-01-15',
                 'employment_type_id' => 1,
                 'manager_id' => null,
@@ -48,19 +49,19 @@ class EmployeeSeeder extends Seeder
                 'birthdate' => '1985-05-10',
                 'civil_status' => 'married',
                 'nationality' => 'Filipino',
-                'region' => 'IV-A',
-                'province' => 'Laguna',
-                'city_or_municipality' => 'Calamba',
-                'barangay' => 'Real',
-                'street' => '456 South St',
-                'phone_number' => '09181234567',
-                'emergency_contact1' => 'Pedro Santos',
-                'emergency_contact2' => 'Juan Santos',
+                'region' => '070000000',
+                'province' => '072200000',
+                'city_or_municipality' => '072217000',
+                'barangay' => '072217044',
+                'street' => 'Ayala',
+                'phone_number' => '01234567893',
+                'emergency_contact1' => '01234567891',
+                'emergency_contact2' => '01234567891',
                 'email' => 'maria.santos@example.com',
                 'job_position_id' => 2,
                 'date_hired' => '2021-06-01',
-                'employment_type_id' => 2,
-                'manager_id' => 1,
+                'employment_type_id' => 1,
+                'manager_id' => 2,
                 'profile_pic_url' => 'applus-image2.png',
                 'tin_number' => '987-654-321',
                 'sss_number' => '98-7654321-0',
@@ -77,14 +78,14 @@ class EmployeeSeeder extends Seeder
                 'birthdate' => '1992-09-20',
                 'civil_status' => 'single',
                 'nationality' => 'Filipino',
-                'region' => 'VII',
-                'province' => 'Cebu',
-                'city_or_municipality' => 'Cebu City',
-                'barangay' => 'Lahug',
-                'street' => '789 North St',
-                'phone_number' => '09191234567',
-                'emergency_contact1' => 'Ana Reyes',
-                'emergency_contact2' => 'Luis Reyes',
+                'region' => '070000000',
+                'province' => '072200000',
+                'city_or_municipality' => '072217000',
+                'barangay' => '072217044',
+                'street' => 'Ayala',
+                'phone_number' => '01234567894',
+                'emergency_contact1' => '01234567891',
+                'emergency_contact2' => '01234567891',
                 'email' => 'carlos.reyes@example.com',
                 'job_position_id' => 3,
                 'date_hired' => '2023-03-10',
@@ -96,6 +97,24 @@ class EmployeeSeeder extends Seeder
                 'pagibig_number' => '5678-1234-0987',
                 'philhealth_number' => '32-165498701-3',
                 'bank_number' => '1122334455',
+            ],
+        ]);
+
+        User::insert([
+            [
+                'employee_id' => 2, // John
+                'email' => 'employee1@example.com',
+                'password' => Hash::make('employee_applus123'),
+            ],
+            [
+                'employee_id' => 3, // Maria
+                'email' => 'employee2@example.com',
+                'password' => Hash::make('employee_applus123'),
+            ],
+            [
+                'employee_id' => 4, // Carlos
+                'email' => 'employee3@example.com',
+                'password' => Hash::make('employee_applus123'),
             ],
         ]);
     }

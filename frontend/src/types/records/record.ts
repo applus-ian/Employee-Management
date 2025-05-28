@@ -7,7 +7,10 @@ export interface Documentation {
   description: string;
   file_url: string;
   document_type_id: number;
-  document_type_name: string;
+  document_type?: {
+    id: number;
+    name: string;
+  };
   upload_date: string;
   expiry_date: string;
 }

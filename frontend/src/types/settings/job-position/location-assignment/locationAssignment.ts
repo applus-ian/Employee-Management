@@ -32,6 +32,7 @@ export interface LocationAssignment {
 
 export interface CreateLocationAssignment {
   employee_id: string;
+  job_position_id: number;
   country_assign_id: number | null;
   office_assign_id: number | null;
   team_assign_id: number | null;

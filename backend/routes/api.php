@@ -48,6 +48,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{documentation}', 'show')->middleware('permission:documentation_view');
         Route::put('/update/{documentation}', 'update')->middleware('permission:documentation_update');
         Route::delete('/delete/{documentation}', 'destroy')->middleware('permission:documentation_delete');
+        Route::get('/employee/{employee_id}', 'getByEmployee')->middleware('permission:documentation_list');
     });
 });
 
@@ -264,7 +265,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/test', 'test');
     });
 });
-
-Route::get('/records/documents/{employeeId}', [DocumentController::class, 'index']);
-Route::post('/records/documents/upload', [DocumentController::class, 'upload']);
-Route::delete('/records/documents/{id}', [DocumentController::class, 'delete']);

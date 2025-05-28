@@ -9,3 +9,8 @@ export type RoleWithPermissions = {
   name: string;
   permissions: Permission[];
 };
+
+export type CreateRoleWithPermissions = {
+  name: string;
+  permissions: Permission[] | null;
+};

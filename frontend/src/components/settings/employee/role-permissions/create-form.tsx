@@ -1,70 +1,126 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DialogHeader, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { useCreateDocumentType } from '@/hooks/settings/employee/document-type/use-create-document-type';
+import { Textarea } from '@/components/ui/textarea';
+import { useCreateRoleWithPermissions } from '@/hooks/settings/employee/role-and-permission/use-create-role-with-permissions';
+import {
+  createRoleWithPermissionsSchema,
+  RoleWithPermissionsInput,
+} from '@/schemas/settings/employee/role-and-permission/roleAndPermission';
+import { usePermissions } from '@/hooks/settings/employee/role-and-permission/use-permissions';
+import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
-// Zod Schema
-const documentTypeSchema = z.object({
-  name: z.string().min(1, 'Document name is required'),
-});
-
-// Infer the form type
-type DocumentTypeInput = z.infer<typeof documentTypeSchema>;
-
-interface NewDocumentFormProps {
+interface NewRoleFormProps {
   onCancel: () => void;
-  onSave: (data: DocumentTypeInput) => void;
+  onSave: (data: RoleWithPermissionsInput) => void;
 }
 
-export default function NewRoleForm({ onCancel, onSave }: NewDocumentFormProps) {
+export default function NewRoleForm({ onCancel, onSave }: NewRoleFormProps) {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<DocumentTypeInput>({
-    resolver: zodResolver(documentTypeSchema),
+  } = useForm<RoleWithPermissionsInput>({
+    resolver: zodResolver(createRoleWithPermissionsSchema),
   });
 
-  const { mutate: createDocumentType, isPending, isError, error } = useCreateDocumentType();
+  const { mutate: createRoleWithPermissions, isPending, isError, error } = useCreateRoleWithPermissions();
+  const { data: permissionList } = usePermissions();
+  const [permissions, setPermissions] = useState<Record<number, boolean>>({});
 
-  const onSubmit = (data: DocumentTypeInput) => {
-    createDocumentType(data, {
+  const handleToggle = (id: number) => {
+    setPermissions((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const onSubmit = (data: RoleWithPermissionsInput) => {
+    const selectedPermissionIds = permissionList?.filter((perm) => permissions[perm.id]).map((perm) => perm.id) || [];
+
+    const payload = {
+      name: data.name,
+      description: data.description,
+      permission_ids: selectedPermissionIds, // now sending only integers
+    };
+
+    createRoleWithPermissions(payload, {
       onSuccess: () => {
-        onSave(data);
-        reset(); // Reset form
-        onCancel(); // Close dialog
+        toast.success('Role created successfully!');
+        console.log('Role created:', payload);
+        onSave(payload);
+        reset();
+        onCancel();
       },
       onError: (error: { message: string }) => {
-        console.error('Error creating document type:', error.message);
+        toast.error(error.message || 'Error creating role');
+        console.error('Error creating role:', error.message);
       },
     });
   };
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white">
+    <DialogContent className="w-full lg:!max-w-[45rem] h-fit max-h-[35rem] flex flex-col bg-white overflow-y-auto">
       <DialogHeader>
-        <DialogTitle>Create New Document Type</DialogTitle>
+        <DialogTitle>Create New Role</DialogTitle>
       </DialogHeader>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 px-5 py-3">
         <div>
           <Label htmlFor="name">
-            <h3 className="text-black font-base">Document Name</h3>
+            <h3 className="text-black font-base">Role Name</h3>
           </Label>
-          <Input id="name" {...register('name')} placeholder="Enter document name..." className="mt-2" />
+          <Input id="name" {...register('name')} placeholder="Enter role name..." className="mt-2" />
           {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+        </div>
+
+        <div>
+          <Label htmlFor="description">
+            <h3 className="text-black font-base">Description</h3>
+          </Label>
+          <Textarea
+            id="description"
+            {...register('description')}
+            placeholder="Enter role description..."
+            className="mt-2"
+          />
+          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+        </div>
+
+        <div className="p-5">
+          <Label>
+            <h3 className="text-black font-base">Permissions</h3>
+          </Label>
+          <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm">
+            <div className="grid lg:grid-cols-2 md:grid-cols-1 py-4 p-3 max-h-50 overflow-y-auto gap-4">
+              {permissionList?.map((perm) => (
+                <div key={perm.id} className="flex flex-col py-2 p-3">
+                  <h4 className="text-sm font-medium">{perm.name}</h4>
+                  <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
+                  <div className="flex justify-between h-5 space-x-4 text-sm">
+                    <div className="text-gray-500">{perm.description}</div>
+                    <Switch
+                      id={perm.id.toString()}
+                      checked={!!permissions[perm.id]}
+                      onCheckedChange={() => handleToggle(perm.id)}
+                      className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {isError && (
           <div className="text-red-600">
-            <p>Error creating document type: {error?.message}</p>
+            <p>Error creating role: {error?.message}</p>
           </div>
         )}
 

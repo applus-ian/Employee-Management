@@ -21,8 +21,8 @@ export { skillSchema, employeeSkillSchema } from './settings/employee/skill/skil
 export { jobPositionSchema } from './settings/job-position/job-position/jobPosition';
 export {
   locationAssignmentSchema,
-  createLocationAssignmentInput,
-  updateLocationAssignmentInput,
+  createLocationAssignmentSchema,
+  updateLocationAssignmentSchema,
 } from './settings/job-position/location-assignment/locationAssignment';
 
 export type { LoginFormInputs } from './loginSchema';
@@ -48,6 +48,6 @@ export type { Skill, EmployeeSkill } from './settings/employee/skill/skill';
 export type { JobPosition } from './settings/job-position/job-position/jobPosition';
 export type {
   LocationAssignment,
-  CreateLocationAssignment,
-  UpdateLocationAssignment,
+  CreateLocationAssignmentInput,
+  UpdateLocationAssignmentInput,
 } from './settings/job-position/location-assignment/locationAssignment';

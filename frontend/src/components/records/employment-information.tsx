@@ -107,19 +107,27 @@ export function EmploymentInformation({ record }: Props) {
         </div>
         <div>
           <p className="text-gray-500">Department</p>
-          <p className="font-medium">{record?.employee.location_assignment.department_assign?.name}</p>
+          <p className="font-medium">
+            {record?.employee.location_assignment?.department_assign?.name || 'Not yet assigned.'}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">Country</p>
-          <p className="font-medium">{record?.employee.location_assignment.country_assign?.name}</p>
+          <p className="font-medium">
+            {record?.employee.location_assignment?.country_assign?.name || 'Not yet assigned.'}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">Office</p>
-          <p className="font-medium">{record?.employee.location_assignment.office_assign?.name}</p>
+          <p className="font-medium">
+            {record?.employee.location_assignment?.office_assign?.name || 'Not yet assigned.'}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">Team</p>
-          <p className="font-medium">{record?.employee.location_assignment.team_assign?.name}</p>
+          <p className="font-medium">
+            {record?.employee.location_assignment?.team_assign?.name || 'Not yet assigned.'}
+          </p>
         </div>
         <div>
           <p className="text-gray-500">Date Hired</p>
@@ -178,7 +186,7 @@ export function EmploymentInformation({ record }: Props) {
               </TableHeader>
               <TableBody>
                 {employee_skills?.map((skill) => (
-                  <TableRow key={skill.employee_id} className="hover:bg-gray-50">
+                  <TableRow key={skill.skill.id} className="hover:bg-gray-50">
                     <TableCell>{skill.skill.name}</TableCell>
                     <TableCell className="max-w-xs truncate">{skill.skill.description}</TableCell>
                     <TableCell>{skill.skill.skill_category.name}</TableCell>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRolesWithPermissions } from '@/hooks/settings/employee/role-and-permission/useRolesWithPermissions';
+import { useRolesWithPermissions } from '@/hooks/settings/employee/role-and-permission/use-roles-with-permissions';
 import { DataTable } from './data-table';
 import { columns } from './columns';
 import { RoleWithPermissions } from '@/types/settings/employee/roles-and-permission/roleAndPermission';

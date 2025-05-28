@@ -29,12 +29,7 @@ export type CreateDepartmentAssignSchema = z.infer<typeof createdepartmentAssign
 export const editDepartmentAssignSchema = z.object({
   id: z.number(),
   name: z.string().min(1, 'Department name is required'),
-  parent_department_id: z
-    .string()
-    .transform((val) => (val === '' ? null : Number(val)))
-    .refine((val) => val === null || !isNaN(val), {
-      message: 'Invalid department',
-    }),
+  parent_department_id: z.coerce.number().nullable(),
 });
 
 export type EditDepartmentAssignInput = z.infer<typeof editDepartmentAssignSchema>;

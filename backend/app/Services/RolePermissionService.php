@@ -15,6 +15,20 @@ class RolePermissionService
         ]);
     }
 
+    // Create Role Permissions (multiple)
+    public function createRolePermissions(int $role_id, array $data)
+    {
+        $created = [];
+        $permission_ids = $data['permission_ids'] ?? [];
+        foreach ($permission_ids as $permission_id) {
+            $created[] = RolePermission::create([
+                'role_id' => $role_id,
+                'permission_id' => $permission_id,
+            ]);
+        }
+        return $created;
+    }
+
     // Read (Get a single role permission by ID)
     public function getRolePermissionById(int $id): ?RolePermission
     {

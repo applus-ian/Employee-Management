@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { EditLocationAssignmentForm } from './edit-form';
 import { useState } from 'react';
-import { LocationAssignment, UpdateLocationAssignment } from '@/schemas';
+import { LocationAssignment, UpdateLocationAssignmentInput } from '@/schemas';
 import { useUpdateLocationAssignment } from '@/hooks/settings/job-position/location-assignment/use-update-location-assignment';
 import { useDeleteLocationAssignment } from '@/hooks/settings/job-position/location-assignment/use-delete-location-assignment';
 import toast from 'react-hot-toast';
@@ -81,7 +81,7 @@ export const columns: ColumnDef<LocationAssignment>[] = [
         setEditOpen(false);
       };
 
-      const handleSave = async (updatedData: UpdateLocationAssignment) => {
+      const handleSave = async (updatedData: UpdateLocationAssignmentInput) => {
         try {
           await updateLocationAssignment(updatedData);
           console.log(updatedData);

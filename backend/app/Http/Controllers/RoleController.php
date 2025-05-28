@@ -5,24 +5,29 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Role;
+use App\Models\RolePermission;
+use App\Services\RolePermissionService;
 use App\Services\RoleService;
 use Illuminate\Http\JsonResponse;
 
 class RoleController extends Controller
 {
-    protected $roleService;
+    protected $roleService, $rolePermissionService;
 
-    public function __construct(RoleService $roleService)
+    public function __construct(RoleService $roleService, RolePermissionService $rolePermissionService)
     {
         $this->roleService = $roleService;
+        $this->rolePermissionService = $rolePermissionService;
     }
 
     // Create Role Method
     public function create(CreateRoleRequest $request): JsonResponse
     {
-        $this->roleService->createRole($request->validated());
+        $role = $this->roleService->createRole($request->validated());
 
-        return response()->json(['message' => 'Role created successfully!'], 201);
+        $this->rolePermissionService->createRolePermissions($role->id, $request->validated());
+
+        return response()->json(['message' => 'Role with Permissions created successfully!'], 201);
     }
 
     // Update Role Method

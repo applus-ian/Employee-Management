@@ -47,6 +47,10 @@ export default function EmployeeRolePage() {
     setSkillCatNewOpen(false); // Close dialog after save
   }
 
+  const handleRoleSave = () => {
+    setDialogOpen(false); // Close dialog after save
+  };
+
   return (
     <div>
       <h2 className="text-xl font-semibold text-[#454D5A]">
@@ -128,7 +132,7 @@ export default function EmployeeRolePage() {
               </button>
             </DialogTrigger>
             <div>
-              {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={() => console.log('Save role')} />}
+              {activeTab === 'Roles' && <NewRoleForm onCancel={handleCancel} onSave={handleRoleSave} />}
               {activeTab === 'Skills' && (
                 <NewSkillForm onCancel={handleCancel} onSave={() => console.log('Save skill')} />
               )}

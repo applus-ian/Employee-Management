@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import EditRoleForm from './edit-form';
 import { RoleWithPermissions } from '@/types/settings/employee/roles-and-permission/roleAndPermission';
+import { useState } from 'react';
+import { deleteRole } from '@/utils/api/settings/employee/role-and-permission/deleteRoleWithPermissions';
+import toast from 'react-hot-toast';
 
 export const columns: ColumnDef<RoleWithPermissions>[] = [
   {
@@ -51,19 +54,34 @@ export const columns: ColumnDef<RoleWithPermissions>[] = [
     header: 'Actions',
     cell: ({ row }) => {
       const item = row.original;
+      // Dialog control state
+      const [isDialogOpen, setDialogOpen] = useState(false);
+      const [isDeleteOpen, setDeleteOpen] = useState(false);
 
       const handleCancel = () => {
+        setDialogOpen(false); // Close the dialog
         console.log('Cancelled');
       };
 
       const handleSave = () => {
+        setDialogOpen(false); // Close dialog after save
         console.log('Saved', item);
+      };
+
+      const handleDelete = async () => {
+        try {
+          await deleteRole(item.id);
+          toast.success('Role with permissions deleted successfully!');
+          setDeleteOpen(false);
+        } catch (error) {
+          console.error('Failed to delete  role with permissions:', error);
+        }
       };
 
       return (
         <div className="flex gap-2">
           {/* Edit */}
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <button className="text-blue-500 hover:text-blue-700">
                 <Edit size={18} />
@@ -73,7 +91,7 @@ export const columns: ColumnDef<RoleWithPermissions>[] = [
           </Dialog>
 
           {/* Delete */}
-          <Dialog>
+          <Dialog open={isDeleteOpen} onOpenChange={setDeleteOpen}>
             <DialogTrigger asChild>
               <button className="text-red-500 hover:text-red-700">
                 <Trash2 size={18} />
@@ -86,7 +104,9 @@ export const columns: ColumnDef<RoleWithPermissions>[] = [
               <p className="text-center">Do you want to delete this role?</p>
               <DialogClose asChild>
                 <div className="px-5 pt-5 flex justify-center gap-x-6">
-                  <Button className="bg-[#EE7A2A] text-white w-[10rem]">Delete</Button>
+                  <Button onClick={handleDelete} className="bg-[#EE7A2A] text-white w-[10rem]">
+                    Delete
+                  </Button>
                   <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]">Cancel</Button>
                 </div>
               </DialogClose>

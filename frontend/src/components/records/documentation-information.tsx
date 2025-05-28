@@ -10,11 +10,19 @@ interface DocumentationInformationProps {
   employeeId: string;
 }
 
+const typeColorMap: Record<string, string> = {
+  certificate: 'bg-green-100 text-green-700',
+  id: 'bg-yellow-100 text-yellow-700',
+  contract: 'bg-purple-100 text-purple-700',
+  other: 'bg-gray-200 text-gray-700',
+  unknown: 'bg-gray-100 text-gray-700',
+};
+
 export function DocumentationInformation({ employeeId }: DocumentationInformationProps) {
   const { data: documentations, isLoading } = useFetchDocuments(employeeId);
   const { mutate: deleteDoc } = useDeleteDocument();
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: number) => {
     deleteDoc(id, {
       onSuccess: () => {
         toast.success('Document deleted successfully');
@@ -66,9 +74,20 @@ export function DocumentationInformation({ employeeId }: DocumentationInformatio
                   <td className="px-4 py-2">{doc.name}</td>
                   <td className="px-4 py-2">{doc.description}</td>
                   <td className="px-4 py-2">
-                    <span className="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">
-                      {doc.document_type_name}
-                    </span>
+                    {(() => {
+                      const typeName = (
+                        doc.document_type && doc.document_type.name ? doc.document_type.name : 'Unknown'
+                      )
+                        .toLowerCase()
+                        .trim();
+                      return (
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full font-semibold ${typeColorMap[typeName] || typeColorMap['unknown']}`}
+                        >
+                          {doc.document_type && doc.document_type.name ? doc.document_type.name : 'Unknown'}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="px-4 py-2">
                     <Input
@@ -80,10 +99,7 @@ export function DocumentationInformation({ employeeId }: DocumentationInformatio
                   </td>
                   <td className="px-4 py-2 flex gap-2">
                     <EditDocumentInformation document={doc} />
-                    <button
-                      onClick={() => handleDelete(doc.id.toString())}
-                      className="text-red-500 hover:text-red-600 text-lg"
-                    >
+                    <button onClick={() => handleDelete(doc.id)} className="text-red-500 hover:text-red-600 text-lg">
                       <TrashIcon className="w-4 h-4" />
                     </button>
                   </td>
