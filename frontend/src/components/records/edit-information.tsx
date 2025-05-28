@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, KeyRound, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -12,12 +12,38 @@ import GovBankNumbers from './gov-bank-numbers';
 import { useRecord } from '@/hooks/records/use-fetch-record';
 import EmployeeProjects from './employee-projects/employee-projects';
 import { EmploymentStatusHistory } from './employment-status-history';
+import api from '@/utils/api/apiInstance';
+
+interface EmploymentStatusHistoryEntry {
+  id: string;
+  status: string;
+  changed_at: string;
+  changed_by: string;
+  remarks?: string;
+}
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'onboarding':
+      return 'bg-blue-100 text-blue-700';
+    case 'account creation':
+      return 'bg-purple-100 text-purple-700';
+    case 'active':
+      return 'bg-green-100 text-green-700';
+    case 'terminated':
+      return 'bg-red-100 text-red-700';
+    default:
+      return 'bg-gray-100 text-gray-700';
+  }
+};
 
 export const EditInformation = (data: { id: string }) => {
   // const [showProfileDialog, setShowProfileDialog] = useState(false);
   // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   // const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('personal');
+  const [currentStatus, setCurrentStatus] = useState<string>('Active');
+  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   // const handleDelete = () => {
   //     if (employeeToDelete !== null) {
   //     console.log('Deleting employee with ID:', employeeToDelete);
@@ -27,6 +53,30 @@ export const EditInformation = (data: { id: string }) => {
   // };
 
   const { data: record, isLoading, isError } = useRecord(data.id);
+
+  useEffect(() => {
+    if (record?.employee.id) {
+      setIsLoadingStatus(true);
+      api
+        .get(`/employment-status-histories/${record.employee.id}`)
+        .then((res) => {
+          const history = res.data as EmploymentStatusHistoryEntry[];
+          if (history.length > 0) {
+            // Sort by changed_at in descending order and get the most recent status
+            const sortedHistory = [...history].sort(
+              (a, b) => new Date(b.changed_at).getTime() - new Date(a.changed_at).getTime(),
+            );
+            setCurrentStatus(sortedHistory[0].status);
+          }
+        })
+        .catch(() => {
+          console.error('Failed to load employment status history');
+        })
+        .finally(() => {
+          setIsLoadingStatus(false);
+        });
+    }
+  }, [record?.employee.id]);
 
   if (isLoading) {
     return (
@@ -61,9 +111,17 @@ export const EditInformation = (data: { id: string }) => {
             Role:{' '}
             <span className="font-medium text-gray-800">{`${record?.roles.map((role) => role.name).join(', ') || 'No roles assigned'}`}</span>{' '}
             · Status:{' '}
-            <span className="ml-1 inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-semibold">
-              Active
-            </span>
+            {isLoadingStatus ? (
+              <span className="ml-1 inline-block px-2 py-0.5 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold">
+                Loading...
+              </span>
+            ) : (
+              <span
+                className={`ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(currentStatus)}`}
+              >
+                {currentStatus}
+              </span>
+            )}
           </p>
         </div>
 
@@ -139,7 +197,7 @@ export const EditInformation = (data: { id: string }) => {
 
         {/* PROJECTS */}
         <TabsContent value="projects">
-          <EmployeeProjects />
+          {record?.employee.id && <EmployeeProjects employeeId={record.employee.id} />}
         </TabsContent>
 
         {/* EMPLOYMENT STATUS HISTORY */}

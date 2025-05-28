@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ProjectResource;
 use App\Models\Employee;
 use App\Models\EmployeeProject;
-
+use App\Models\Project;
 
 class EmployeeProjectService
 {
@@ -44,9 +45,13 @@ class EmployeeProjectService
     }
 
     // Read (Get all employee projects - will refactor for filters in the future)
-    public function getAllEmployeeProjects()
+    public function getAllEmployeeProjects(string $employee_id)
     {
-        return EmployeeProject::all();
+        $decodedId = $this->employeeService->decodeEmployeeId($employee_id);
+
+        $employee_projects = EmployeeProject::where('employee_id', $decodedId)->pluck('project_id');
+        $projects = Project::whereIn('id', $employee_projects)->get();
+        return ProjectResource::collection($projects);
     }
 
     // Update Employee Project

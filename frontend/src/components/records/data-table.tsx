@@ -20,6 +20,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { EditInformation } from './edit-information';
+import { RecordCol } from '@/schemas';
 
 type MyColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
   meta?: { label: string };
@@ -28,13 +32,20 @@ type MyColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue> & {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onRowClick?: (row: TData) => void;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends RecordCol, TValue>({
+  columns,
+  data,
+  onRowClick,
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = React.useState('');
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [selectedRow, setSelectedRow] = React.useState<TData | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -50,9 +61,15 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  const handleRowClick = (row: TData) => {
+    setSelectedRow(row);
+    setEditDialogOpen(true);
+    onRowClick?.(row);
+  };
+
   return (
     <div>
-      <div className="flex flex-col mt-5 sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+      <div className="flex flex-col mt-2 sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
         {/* Column Selector Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -127,7 +144,11 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className={cn('cursor-pointer transition-colors', 'hover:bg-orange-50 hover:text-orange-900')}
+                  onClick={() => handleRowClick(row.original)}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
@@ -178,6 +199,16 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           Next
         </Button>
       </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="bg-white w-[75%]">
+          <DialogHeader>
+            <DialogTitle>Edit Record</DialogTitle>
+          </DialogHeader>
+          {selectedRow && <EditInformation id={selectedRow.employee_id} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

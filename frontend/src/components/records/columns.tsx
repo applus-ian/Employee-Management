@@ -1,13 +1,36 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Edit, Trash2 } from 'lucide-react';
+import { ArrowUpDown, Ban } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RecordCol } from '@/schemas';
 import { useDeleteRecord } from '@/hooks/records/use-delete-record';
-import { EditInformation } from './edit-information';
+import api from '@/utils/api/apiInstance';
+
+interface EmploymentStatusHistoryEntry {
+  id: string;
+  status: string;
+  changed_at: string;
+  changed_by: string;
+  remarks?: string;
+}
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case 'onboarding':
+      return 'bg-blue-100 text-blue-700';
+    case 'account creation':
+      return 'bg-purple-100 text-purple-700';
+    case 'active':
+      return 'bg-green-100 text-green-700';
+    case 'terminated':
+      return 'bg-red-100 text-red-700';
+    default:
+      return 'bg-gray-100 text-gray-700';
+  }
+};
 
 export const columns: ColumnDef<RecordCol>[] = [
   {
@@ -87,6 +110,52 @@ export const columns: ColumnDef<RecordCol>[] = [
     },
   },
   {
+    id: 'status',
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Status
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const [currentStatus, setCurrentStatus] = useState<string>('Loading...');
+      const [isLoading, setIsLoading] = useState(true);
+
+      useEffect(() => {
+        const fetchStatus = async () => {
+          try {
+            const response = await api.get(`/employment-status-histories/${row.original.employee_id}`);
+            const history = response.data as EmploymentStatusHistoryEntry[];
+            if (history.length > 0) {
+              const sortedHistory = [...history].sort(
+                (a, b) => new Date(b.changed_at).getTime() - new Date(a.changed_at).getTime(),
+              );
+              setCurrentStatus(sortedHistory[0].status);
+            }
+          } catch (error) {
+            console.error('Failed to load status:', error);
+            setCurrentStatus('Unknown');
+          } finally {
+            setIsLoading(false);
+          }
+        };
+
+        fetchStatus();
+      }, [row.original.employee_id]);
+
+      return (
+        <span
+          className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(currentStatus)}`}
+        >
+          {isLoading ? 'Loading...' : currentStatus}
+        </span>
+      );
+    },
+    meta: {
+      label: 'Status',
+    },
+  },
+  {
     id: 'actions',
     header: 'Actions',
     meta: {
@@ -94,71 +163,53 @@ export const columns: ColumnDef<RecordCol>[] = [
     },
     cell: ({ row }) => {
       const item = row.original;
-      const [editOpen, setEditOpen] = useState(false);
-      const [deleteOpen, setDeleteOpen] = useState(false);
-      const { mutate: deleteRecord, isPending: isDeleting } = useDeleteRecord();
+      const [suspendOpen, setSuspendOpen] = useState(false);
+      const { mutate: deleteRecord, isPending: isSuspending } = useDeleteRecord();
 
-      // const handleCancel = () => {
-      //   setEditOpen(false); // Close the edit dialog when cancel is clicked
-      // };
-
-      // const handleSave = async (updatedData: {}) => {
-      //   //
-      // };
-
-      const handleDelete = async () => {
+      const handleSuspend = async (e: React.MouseEvent) => {
+        e.stopPropagation();
         try {
           await deleteRecord(item.employee_id);
-          alert('Record deleted successfully!');
-          setDeleteOpen(false);
+          alert('Account suspended successfully!');
+          setSuspendOpen(false);
         } catch (error) {
-          console.error('Failed to delete record:', error);
+          console.error('Failed to suspend account:', error);
         }
       };
 
       return (
-        <div className="flex gap-2">
-          {/* Edit Dialog */}
-          <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+          {/* Suspend Dialog */}
+          <Dialog open={suspendOpen} onOpenChange={setSuspendOpen}>
             <DialogTrigger asChild>
-              <button className="text-blue-500 hover:text-blue-700">
-                <Edit size={18} />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="bg-white w-[75%]">
-              <DialogHeader>
-                <DialogTitle>Edit Record</DialogTitle>
-              </DialogHeader>
-              <EditInformation id={item.employee_id} />
-            </DialogContent>
-          </Dialog>
-
-          {/* Delete Dialog */}
-          <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-            <DialogTrigger asChild>
-              <button className="text-red-500 hover:text-red-700">
-                <Trash2 size={18} />
-              </button>
+              <Button
+                variant="outline"
+                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Ban className="h-4 w-4 mr-2" />
+                Suspend
+              </Button>
             </DialogTrigger>
             <DialogContent className="bg-white">
               <DialogHeader>
                 <DialogTitle className="flex justify-center items-center">
-                  <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Deletion?</span>
+                  <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Suspension</span>
                 </DialogTitle>
               </DialogHeader>
               <div className="flex justify-center items-center">
-                <p className="text-center">Do you want to delete this Document Type?</p>
+                <p className="text-center">Are you sure you want to suspend this account?</p>
               </div>
               <div className="px-5 pt-5 flex justify-center gap-x-6">
-                <Button
-                  onClick={handleDelete} // Call handleDelete to delete the record
-                  className="bg-[#EE7A2A] text-white w-[10rem]"
-                  disabled={isDeleting} // Disable button while deleting
-                >
-                  {isDeleting ? 'Deleting...' : 'Delete'} {/* Show 'Deleting...' while loading */}
+                <Button onClick={handleSuspend} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isSuspending}>
+                  {isSuspending ? 'Suspending...' : 'Suspend'}
                 </Button>
                 <DialogClose asChild>
-                  <Button className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]" disabled={isDeleting}>
+                  <Button
+                    className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+                    disabled={isSuspending}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     Cancel
                   </Button>
                 </DialogClose>

@@ -12,7 +12,7 @@ export default function GovBankNumbers({ record }: Props) {
       <CardHeader>
         <div className="flex justify-between">
           <div className="order-1">
-            <CardTitle>Government and Bank Numbers</CardTitle>
+            <CardTitle>🏛️ Government and Bank Numbers</CardTitle>
           </div>
 
           {/* Modal Trigger */}

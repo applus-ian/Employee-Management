@@ -37,7 +37,7 @@ export function EmploymentStatusHistory({ employeeId }: { employeeId: string }) 
     setLoading(true);
     setError(null);
     api
-      .get(`/employees/${employeeId}/employment-status-history`)
+      .get(`/employment-status-histories/${employeeId}`)
       .then((res) => setHistory(res.data))
       .catch(() => setError('Failed to load employment status history.'))
       .finally(() => setLoading(false));

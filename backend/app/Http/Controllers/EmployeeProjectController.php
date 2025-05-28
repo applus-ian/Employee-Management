@@ -17,14 +17,6 @@ class EmployeeProjectController extends Controller
         $this->employeeProjectService = $employeeProjectService;
     }
 
-    // Create Employee Project
-    public function create(CreateEmployeeProjectRequest $request): JsonResponse
-    {
-        $this->employeeProjectService->createEmployeeProject($request->validated());
-
-        return response()->json(['message' => 'Employee project created successfully!'], 201);
-    }
-
     // Update Employee Project
     public function update(UpdateEmployeeProjectRequest $request, EmployeeProject $employeeProject): JsonResponse
     {
@@ -34,9 +26,9 @@ class EmployeeProjectController extends Controller
     }
 
     // Get All Employee Projects
-    public function index(): JsonResponse
+    public function index($employee_id): JsonResponse
     {
-        $projects = $this->employeeProjectService->getAllEmployeeProjects();
+        $projects = $this->employeeProjectService->getAllEmployeeProjects($employee_id);
 
         return response()->json($projects, 200);
     }

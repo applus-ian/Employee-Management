@@ -15,7 +15,22 @@ export interface Documentation {
   expiry_date: string;
 }
 
+export interface Employee {
+  id: string;
+  first_name: string;
+  middle_name?: string;
+  last_name: string;
+  suffix?: string;
+  status: string;
+  job_position_id: number;
+  country_id: number;
+  office_id: number;
+  team_id: number;
+  department_id: number;
+}
+
 export interface Record {
+  employee: Employee;
   records: {
     users: User[];
     projects: EmployeeProjects[];

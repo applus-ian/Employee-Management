@@ -6,6 +6,12 @@ use App\Models\EmploymentStatusHistory;
 
 class EmploymentStatusHistoryService
 {
+    protected $employeeService;
+
+    public function __construct(EmployeeService $employeeService)
+    {
+        $this->employeeService = $employeeService;
+    }
     // Create Employee Status History
     public function createEmploymentStatusHistory(int $employee_id, string $status_set, string $effective_date, string $remarks = null, string $changed_by = null)
     {
@@ -19,9 +25,11 @@ class EmploymentStatusHistoryService
     }
 
     // Get Employee Status History
-    public function getEmployeeStatusHistory(int $employee_id)
+    public function getEmployeeStatusHistory(string $employee_id)
     {
-        return EmploymentStatusHistory::where('employee_id', $employee_id)
+        $decoded_id = $this->employeeService->decodeEmployeeId($employee_id);
+
+        return EmploymentStatusHistory::where('employee_id', $decoded_id)
             ->orderBy('effective_date', 'desc')
             ->get();
     }

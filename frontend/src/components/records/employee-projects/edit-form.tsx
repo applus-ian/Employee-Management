@@ -105,13 +105,19 @@ export function EditProjectForm({ project, onCancel, onSave }: EditProjectFormPr
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
             className="w-full border px-3 py-2 text-sm resize-none h-[130px] rounded-xl hover:border-orange-300"
-            value={description}
+            value={description ?? ''}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">End Date</label>
-          <Input id="end_date" type="date" value={end_date} onChange={(e) => setEndDate(e.target.value)} required />
+          <Input
+            id="end_date"
+            type="date"
+            value={end_date ?? ''}
+            onChange={(e) => setEndDate(e.target.value)}
+            required
+          />
         </div>
       </form>
 

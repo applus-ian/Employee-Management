@@ -1,30 +1,17 @@
 'use client';
 
-import { useProjects } from '@/hooks/projects/use-fetch-projects';
+import { useEmployeeProjects } from '@/hooks/projects/use-employee-projects';
 import { DataTable } from './data-table';
 import { columns } from './columns';
 import { Project } from '@/types/projects/project';
-
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { AlertTriangle, Loader2 } from 'lucide-react';
-import '@pathofdev/react-tag-Input/build/index.css';
-// import { CreateProject } from '@/types/projects/project';
 
-export default function EmployeeProjects() {
-  // const [isDialogOpen, setDialogOpen] = useState(false);
+interface EmployeeProjectsProps {
+  employeeId: string;
+}
 
-  // const handleCancel = () => {
-  //   console.log('Cancelled');
-  //   setDialogOpen(false);
-  // };
-
-  // const handleProjectSave = (data: CreateProject) => {
-  //   console.log(data);
-  //   alert(`Project successfully created!`);
-  //   setDialogOpen(false);
-  // };
-
-  const { data, isLoading, isError } = useProjects();
+export default function EmployeeProjects({ employeeId }: EmployeeProjectsProps) {
+  const { data, isLoading, isError } = useEmployeeProjects(employeeId);
 
   const rows: Project[] =
     data?.map((item) => ({
@@ -61,56 +48,12 @@ export default function EmployeeProjects() {
       </div>
     );
   }
-  // if (isError && error) {
-  //   const err = error as Error;
-  //   return <p>Error loading projects: {err.message}</p>;
-  // }
 
   return (
     <div>
       {/* Header Section */}
       <div className="space-y-5">
-        <h2 className="text-lg font-semibold text-gray-800">Projects</h2>
-
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          {/* Filters - Left Side */}
-          <div className="flex gap-2 flex-wrap">
-            <Select>
-              <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                <SelectValue placeholder="All Departments" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all_department">All Departments</SelectItem>
-                <SelectItem value="it">IT</SelectItem>
-                <SelectItem value="hr">HR</SelectItem>
-                <SelectItem value="finance">Finance</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select>
-              <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                <SelectValue placeholder="All Positions" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="allposition">All Positions</SelectItem>
-                <SelectItem value="manager">Manager</SelectItem>
-                <SelectItem value="developer">Developer</SelectItem>
-                <SelectItem value="recruiter">Recruiter</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select>
-              <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                <SelectValue placeholder="All Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all_status">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <h2 className="text-lg font-semibold text-gray-800">Employee&apos;s Projects</h2>
       </div>
 
       {/* Table */}
