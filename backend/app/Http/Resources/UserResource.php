@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class UserResource extends JsonResource
 {
@@ -15,9 +15,8 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $hashids = new Hashids('', 7);
         return [
-            'id' => $hashids->encode($this->id),
+            'id' => Hashids::encode($this->id),
             'email' => $this->email,
             'employee' => new EmployeeResource($this->whenLoaded('employee')), // Include employee data
             'roles' => RoleResource::collection($this->whenLoaded('roles')),

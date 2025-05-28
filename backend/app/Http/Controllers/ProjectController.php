@@ -45,6 +45,13 @@ class ProjectController extends Controller
         // Proceed with updating the project's details
         $updated_project = $this->projectService->updateProject($project, $request->validated());
 
+        // Assign employees to the project
+        try {
+            $this->employeeProjectService->updateEmployeeProject($project, $request->input('employees', []));
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+
         // Return the updated project as a JSON response
         return response()->json($updated_project, 200);
     }

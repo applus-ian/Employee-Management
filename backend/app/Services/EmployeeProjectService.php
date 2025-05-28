@@ -16,7 +16,7 @@ class EmployeeProjectService
     }
 
     // Create Employee Project
-    public function createEmployeeProject($project, array $employees): void
+    public function createEmployeeProject($project, array $employees)
     {
         foreach ($employees as $employee) {
             $decodedId = $this->employeeService->decodeEmployeeId($employee['id']);
@@ -50,11 +50,64 @@ class EmployeeProjectService
     }
 
     // Update Employee Project
-    public function updateEmployeeProject(EmployeeProject $employee_project, array $data)
+    public function updateEmployeeProject($project, array $employees)
     {
-        $employee_project->update($data);
-        return $employee_project;
+        $currentEmployeeIds = EmployeeProject::where('project_id', $project->id)
+            ->pluck('employee_id')
+            ->toArray();
+
+        // Decode new employee IDs from the incoming $employees array
+        $newEmployeeIds = [];
+        foreach ($employees as $employee) {
+            $decodedId = $this->employeeService->decodeEmployeeId($employee['id']);
+            if (!$decodedId || !Employee::find($decodedId)) {
+                throw new \Exception("Invalid employee ID: {$employee['id']}");
+            }
+            $newEmployeeIds[] = $decodedId;
+        }
+
+        // Determine which employees to remove (no longer assigned)
+        $toRemove = array_diff($currentEmployeeIds, $newEmployeeIds);
+
+        // Determine which employees to add (new assignments)
+        $toAdd = array_diff($newEmployeeIds, $currentEmployeeIds);
+
+        // Remove employee_project records for removed employees
+        EmployeeProject::where('project_id', $project->id)
+            ->whereIn('employee_id', $toRemove)
+            ->delete();
+
+        // Add new employee_project records for added employees
+        foreach ($employees as $employee) {
+            $decodedId = $this->employeeService->decodeEmployeeId($employee['id']);
+
+            if (in_array($decodedId, $toAdd)) {
+                EmployeeProject::create([
+                    'employee_id' => $decodedId,
+                    'project_id' => $project->id,
+                    'project_role_id' => $employee['project_role_id'],
+                    'start_date' => $project->start_date ?? null,
+                    'end_date' => $project->end_date ?? null,
+                ]);
+            }
+        }
+
+        // Optionally: Update existing assignments with changed role or dates
+        foreach ($employees as $employee) {
+            $decodedId = $this->employeeService->decodeEmployeeId($employee['id']);
+            if (in_array($decodedId, $currentEmployeeIds) && !in_array($decodedId, $toAdd)) {
+                // Update the existing pivot record
+                EmployeeProject::where('project_id', $project->id)
+                    ->where('employee_id', $decodedId)
+                    ->update([
+                        'project_role_id' => $employee['project_role_id'],
+                        'start_date' => $project->start_date ?? null,
+                        'end_date' => $project->end_date ?? null,
+                    ]);
+            }
+        }
     }
+
 
     // Delete Employee Project
     public function deleteEmployeeProject(EmployeeProject $employee_project): bool

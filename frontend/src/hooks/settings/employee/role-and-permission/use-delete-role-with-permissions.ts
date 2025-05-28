@@ -7,7 +7,7 @@ export const useDeleteRole = () => {
   return useMutation({
     mutationFn: deleteRole,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roles'] });
+      queryClient.invalidateQueries({ queryKey: ['roles-with-permissions'] });
     },
   });
 };

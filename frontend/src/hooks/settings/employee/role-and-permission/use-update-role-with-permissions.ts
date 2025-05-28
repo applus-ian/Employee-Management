@@ -7,7 +7,7 @@ export const useUpdateRole = () => {
   return useMutation({
     mutationFn: updateRole,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roles'] });
+      queryClient.invalidateQueries({ queryKey: ['roles-with-permissions'] });
     },
   });
 };

@@ -10,7 +10,7 @@ use App\Models\EmployeeProject;
 use App\Models\EmployeeSkill;
 use App\Models\EmploymentStatusHistory;
 use App\Models\User;
-use Hashids\Hashids;
+use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeService
 {
@@ -111,16 +111,13 @@ class EmployeeService
     // Encode Employee ID
     public function encodeEmployeeId(string $employeeId): string
     {
-        $hashids = new Hashids('', 7);
-
-        return $hashids->encode($employeeId);
+        return Hashids::encode($employeeId);
     }
 
     // Decode Employee ID
     public function decodeEmployeeId(string $encodedId): ?int // This function will return either an int or null.
     {
-        $hashids = new Hashids('', 7);
-        return $hashids->decode($encodedId)[0] ?? null; // output of decoding is always array
+        return Hashids::decode($encodedId)[0] ?? null; // output of decoding is always array
     }
 
     // Delete Employee

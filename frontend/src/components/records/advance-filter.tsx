@@ -19,17 +19,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-export type FilterValues = {
-  job_position_id?: string;
-  country_id?: string;
-  office_id?: string;
-  team_id?: string;
-  department_id?: string;
-  skills?: number[];
-  experience?: number;
-  status?: string;
-};
+import { FilterValues } from '@/types/filter';
 
 const statuses = ['Active', 'Inactive', 'On Leave', 'Onboarding', 'Account Creation'];
 

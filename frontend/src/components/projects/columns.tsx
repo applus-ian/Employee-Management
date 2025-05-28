@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { EditProjectForm } from './edit-form';
 import { useState } from 'react';
-import { useUpdateProject } from '@/hooks/projects/use-update-project';
 import { useDeleteProject } from '@/hooks/projects/use-delete-project';
 import { Project } from '@/types/projects/project';
 import toast from 'react-hot-toast';
@@ -64,21 +63,14 @@ export const columns: ColumnDef<Project>[] = [
       const item = row.original;
       const [editOpen, setEditOpen] = useState(false);
       const [deleteOpen, setDeleteOpen] = useState(false);
-      const { mutate: updateProject } = useUpdateProject();
       const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject();
 
       const handleCancel = () => {
         setEditOpen(false); // Close the edit dialog when cancel is clicked
       };
 
-      const handleSave = async (updatedData: Project) => {
-        try {
-          await updateProject(updatedData);
-          toast.success(`Project successfully updated!`);
-          setEditOpen(false);
-        } catch (error) {
-          console.error('Failed to update project:', error);
-        }
+      const handleSave = async () => {
+        setEditOpen(false);
       };
 
       const handleDelete = async () => {

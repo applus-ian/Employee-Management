@@ -199,14 +199,7 @@ export default function NewProjectForm({ onCancel, onSave }: NewProjectFormProps
                 className="bg-orange-500 text-white hover:bg-orange-600 px-6 rounded-xl transition-colors"
                 onClick={() => setOpenAssignModal(false)}
               >
-                Assign
-              </Button>
-              <Button
-                variant="outline"
-                className="bg-white border-orange-400 text-orange-500 hover:bg-orange-50 rounded-xl transition-colors"
-                onClick={() => setOpenAssignModal(false)}
-              >
-                Cancel
+                Continue
               </Button>
             </div>
           </DialogContent>

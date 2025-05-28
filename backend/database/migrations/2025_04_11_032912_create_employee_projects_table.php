@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('project_role_id');
             $table->date('start_date');
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
