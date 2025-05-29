@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::table('employment_status_histories', function (Blueprint $table) {
             $table->string('remarks')->nullable();
             $table->string('changed_by')->nullable();
+            $table->unsignedBigInteger('changed_by_employee_id')->nullable()->after('changed_by');
+            $table->foreign('changed_by_employee_id')->references('id')->on('employees')->onDelete('set null');
         });
     }
 
@@ -23,7 +25,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('employment_status_histories', function (Blueprint $table) {
-            $table->dropColumn(['remarks', 'changed_by']);
+            $table->dropForeign(['changed_by_employee_id']);
+            $table->dropColumn(['remarks', 'changed_by', 'changed_by_employee_id']);
         });
     }
 };

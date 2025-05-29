@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useActivateAccount } from '@/hooks/records/use-activate-account';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const activateAccountSchema = z
   .object({
@@ -27,6 +28,7 @@ interface ActivateAccountFormProps {
 }
 
 export const ActivateAccountForm = ({ employeeId, onSuccess, onCancel }: ActivateAccountFormProps) => {
+  const router = useRouter();
   const { mutate: activateAccount, isPending } = useActivateAccount();
 
   const {
@@ -36,6 +38,11 @@ export const ActivateAccountForm = ({ employeeId, onSuccess, onCancel }: Activat
   } = useForm<ActivateAccountFormData>({
     resolver: zodResolver(activateAccountSchema),
   });
+
+  const activateLater = () => {
+    onCancel();
+    router.push('/records');
+  };
 
   const onSubmit = async (data: ActivateAccountFormData) => {
     try {
@@ -52,56 +59,66 @@ export const ActivateAccountForm = ({ employeeId, onSuccess, onCancel }: Activat
   };
 
   return (
-    <div className="p-6 rounded-xl mb-6 pb-6">
-      <h1 className="text-2xl font-semibold mb-8">Activate Employee Account</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md space-y-4">
+    <div className="max-w-lg mx-auto bg-white rounded-2xl">
+      <h2 className="text-2xl font-bold text-center mb-2 text-orange-600 flex items-center justify-center gap-2">
+        <span className="bg-orange-100 text-orange-500 rounded-full p-2 mr-2">🔑</span>
+        Activate Employee Account
+      </h2>
+      <p className="text-center text-gray-500 mb-6 text-sm">
+        Set up the employee&apos;s login credentials. You can activate the account now or choose to activate it later.
+      </p>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
-          <Label className="block text-sm text-gray-700 mb-1">Email Address</Label>
+          <Label className="block text-sm font-medium text-gray-700 mb-1">Email Address</Label>
           <Input
             {...register('email')}
             type="email"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
+            placeholder="Enter employee's email address"
+            className="border border-gray-300 rounded-xl px-4 py-3 text-sm w-full hover:border-orange-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </div>
-
-        <div>
-          <Label className="block text-sm text-gray-700 mb-1">Password</Label>
-          <Input
-            {...register('password')}
-            type="password"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
-          />
-          {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-1">Password</Label>
+            <Input
+              {...register('password')}
+              type="password"
+              placeholder="Enter password"
+              className="border border-gray-300 rounded-xl px-4 py-3 text-sm w-full hover:border-orange-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+            />
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+          </div>
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</Label>
+            <Input
+              {...register('passwordConfirmation')}
+              type="password"
+              placeholder="Re-enter password"
+              className="border border-gray-300 rounded-xl px-4 py-3 text-sm w-full hover:border-orange-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+            />
+            {errors.passwordConfirmation && (
+              <p className="text-red-500 text-xs mt-1">{errors.passwordConfirmation.message}</p>
+            )}
+          </div>
         </div>
-
-        <div>
-          <Label className="block text-sm text-gray-700 mb-1">Confirm Password</Label>
-          <Input
-            {...register('passwordConfirmation')}
-            type="password"
-            className="border border-gray-300 rounded-xl px-4 py-2 text-sm w-full hover:border-orange-500"
-          />
-          {errors.passwordConfirmation && (
-            <p className="text-red-500 text-xs mt-1">{errors.passwordConfirmation.message}</p>
-          )}
-        </div>
-
-        <div className="flex gap-2 mt-6">
+        <div className="flex flex-col md:flex-row gap-3 mt-8 justify-center">
           <button
             type="submit"
             disabled={isPending}
-            className="bg-orange-500 text-white px-4 py-2 rounded-xl hover:bg-orange-600 text-sm disabled:opacity-50"
+            className="bg-orange-500 text-white px-6 py-2 rounded-xl hover:bg-orange-600 text-base font-semibold disabled:opacity-50 shadow-sm"
           >
             {isPending ? 'Activating...' : 'Activate Account'}
           </button>
           <button
             type="button"
-            onClick={onCancel}
-            className="bg-gray-200 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-300 text-sm"
+            onClick={(e) => {
+              e.preventDefault();
+              activateLater();
+            }}
+            className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-xl hover:bg-gray-100 text-base font-semibold shadow-sm"
           >
-            Cancel
+            Activate Later
           </button>
         </div>
       </form>

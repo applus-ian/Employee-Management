@@ -22,9 +22,10 @@ class CreateEmploymentStatusHistoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'employee_id' => ['required', 'exists:employment_status_history, employee_id'],
+            'employee_id' => ['required'],
             'status_set' => ['required', 'string', 'max:255'],
-            'effective_date' => ['required', 'date', 'after_or_equal:today']
+            'effective_date' => ['required', 'date', 'after_or_equal:today'],
+            'remarks' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

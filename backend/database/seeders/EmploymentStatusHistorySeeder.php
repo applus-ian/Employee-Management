@@ -14,6 +14,10 @@ class EmploymentStatusHistorySeeder extends Seeder
     public function run(): void
     {
         EmploymentStatusHistory::insert([
+            // Super Admin
+            ['employee_id' => 1, 'status_set' => 'onboarding', 'effective_date' => now()->subDays(30)->toDateString(), 'remarks' => 'Initial onboarding', 'changed_by' => 'System'],
+            ['employee_id' => 1, 'status_set' => 'account creation', 'effective_date' => now()->subDays(25)->toDateString(), 'remarks' => 'User account created', 'changed_by' => 'System'],
+            ['employee_id' => 1, 'status_set' => 'active', 'effective_date' => now()->subDays(20)->toDateString(), 'remarks' => 'Activated', 'changed_by' => 'System'],
             // John Doe
             ['employee_id' => 2, 'status_set' => 'onboarding', 'effective_date' => now()->subDays(30)->toDateString(), 'remarks' => 'Initial onboarding', 'changed_by' => 'HR Admin'],
             ['employee_id' => 2, 'status_set' => 'account creation', 'effective_date' => now()->subDays(25)->toDateString(), 'remarks' => 'User account created', 'changed_by' => 'System'],

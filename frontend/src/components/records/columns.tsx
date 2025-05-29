@@ -1,23 +1,24 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Ban } from 'lucide-react';
+import { ArrowUpDown, Ban, EllipsisVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTrigger, DialogTitle, DialogClose } from '@/components/ui/dialog';
-import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useState } from 'react';
 import { RecordCol } from '@/schemas';
 import { useDeleteRecord } from '@/hooks/records/use-delete-record';
-import api from '@/utils/api/apiInstance';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import UpdateStatusDialog from './update-status-dialog';
+import { useEmployeeCurrentStatus } from '@/hooks/records/use-employee-current-status';
+import { ActivateAccountForm } from './activate-account-form';
 
-interface EmploymentStatusHistoryEntry {
-  id: string;
-  status: string;
-  changed_at: string;
-  changed_by: string;
-  remarks?: string;
-}
-
-const getStatusColor = (status: string) => {
+const getStatusColor = (status?: string | null) => {
+  if (!status) return 'bg-gray-100 text-gray-700';
   switch (status.toLowerCase()) {
     case 'onboarding':
       return 'bg-blue-100 text-blue-700';
@@ -118,36 +119,14 @@ export const columns: ColumnDef<RecordCol>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const [currentStatus, setCurrentStatus] = useState<string>('Loading...');
-      const [isLoading, setIsLoading] = useState(true);
-
-      useEffect(() => {
-        const fetchStatus = async () => {
-          try {
-            const response = await api.get(`/employment-status-histories/${row.original.employee_id}`);
-            const history = response.data as EmploymentStatusHistoryEntry[];
-            if (history.length > 0) {
-              const sortedHistory = [...history].sort(
-                (a, b) => new Date(b.changed_at).getTime() - new Date(a.changed_at).getTime(),
-              );
-              setCurrentStatus(sortedHistory[0].status);
-            }
-          } catch (error) {
-            console.error('Failed to load status:', error);
-            setCurrentStatus('Unknown');
-          } finally {
-            setIsLoading(false);
-          }
-        };
-
-        fetchStatus();
-      }, [row.original.employee_id]);
-
+      const employeeId = row.original.employee_id;
+      const { data: statusHistory, isLoading } = useEmployeeCurrentStatus(employeeId);
+      const latestStatus = statusHistory && statusHistory.length > 0 ? statusHistory[0] : null;
       return (
         <span
-          className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(currentStatus)}`}
+          className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(latestStatus?.status_set)}`}
         >
-          {isLoading ? 'Loading...' : currentStatus}
+          {isLoading ? 'Loading...' : latestStatus?.status_set ? latestStatus.status_set : 'No Status'}
         </span>
       );
     },
@@ -164,7 +143,45 @@ export const columns: ColumnDef<RecordCol>[] = [
     cell: ({ row }) => {
       const item = row.original;
       const [suspendOpen, setSuspendOpen] = useState(false);
+      const [updateStatusOpen, setUpdateStatusOpen] = useState(false);
+      const [activateOpen, setActivateOpen] = useState(false);
       const { mutate: deleteRecord, isPending: isSuspending } = useDeleteRecord();
+      const { data: statusHistory } = useEmployeeCurrentStatus(item.employee_id);
+      const latestStatus = statusHistory && statusHistory.length > 0 ? statusHistory[0] : null;
+
+      // Handlers to open dialogs after dropdown closes
+      const openSuspendDialog = () => setTimeout(() => setSuspendOpen(true), 0);
+      const openUpdateStatusDialog = () => setTimeout(() => setUpdateStatusOpen(true), 0);
+      const openActivateDialog = () => setTimeout(() => setActivateOpen(true), 0);
+
+      // If latest status is 'employee_created', show only Activate Account in the dropdown
+      if (latestStatus?.status_set === 'employee_created') {
+        return (
+          <>
+            <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <EllipsisVertical className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={openActivateDialog}>Activate Account</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <Dialog open={activateOpen} onOpenChange={setActivateOpen}>
+              <DialogContent className="bg-white" onClick={(e) => e.stopPropagation()}>
+                <ActivateAccountForm
+                  employeeId={item.employee_id}
+                  onSuccess={() => setActivateOpen(false)}
+                  onCancel={() => setActivateOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
+          </>
+        );
+      }
 
       const handleSuspend = async (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -178,20 +195,27 @@ export const columns: ColumnDef<RecordCol>[] = [
       };
 
       return (
-        <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-          {/* Suspend Dialog */}
+        <>
+          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <EllipsisVertical className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {latestStatus?.status_set !== 'terminated' && latestStatus?.status_set !== 'resigned' && (
+                  <DropdownMenuItem onClick={openSuspendDialog} className="text-red-500">
+                    <Ban className="h-4 w-4 mr-2" /> Suspend
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={openUpdateStatusDialog}>Update Status</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          {/* Suspend Dialog (always mounted, open controlled by state) */}
           <Dialog open={suspendOpen} onOpenChange={setSuspendOpen}>
-            <DialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Ban className="h-4 w-4 mr-2" />
-                Suspend
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-white">
+            <DialogContent className="bg-white" onClick={(e) => e.stopPropagation()}>
               <DialogHeader>
                 <DialogTitle className="flex justify-center items-center">
                   <span className="text-[#EE7A2A] text-3xl font-lg text-center">Confirm Suspension</span>
@@ -204,19 +228,26 @@ export const columns: ColumnDef<RecordCol>[] = [
                 <Button onClick={handleSuspend} className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isSuspending}>
                   {isSuspending ? 'Suspending...' : 'Suspend'}
                 </Button>
-                <DialogClose asChild>
-                  <Button
-                    className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
-                    disabled={isSuspending}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Cancel
-                  </Button>
-                </DialogClose>
+                <Button
+                  className="bg-white border-[#EE7A2A] border-2 text-[#EE7A2A] w-[10rem]"
+                  disabled={isSuspending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSuspendOpen(false);
+                  }}
+                >
+                  Cancel
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
-        </div>
+          {/* Update Status Dialog (always mounted, open controlled by state) */}
+          <UpdateStatusDialog
+            open={updateStatusOpen}
+            onOpenChange={setUpdateStatusOpen}
+            employeeId={item.employee_id}
+          />
+        </>
       );
     },
   },

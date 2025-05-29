@@ -77,6 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Employment Status History
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmploymentStatusHistoryController::class)->prefix('employment-status-histories')->group(function () {
+        Route::post('/new-status-history', 'create');
         Route::get('/{employeeId}', 'index');
     });
 });

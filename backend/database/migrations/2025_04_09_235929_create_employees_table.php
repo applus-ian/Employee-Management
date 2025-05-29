@@ -29,8 +29,12 @@ return new class extends Migration
             $table->string('barangay');
             $table->string('street');
             $table->string('phone_number')->unique();
-            $table->string('emergency_contact1');
-            $table->string('emergency_contact2');
+            $table->string('emergency_contact1_name');
+            $table->string('emergency_contact1_relationship');
+            $table->string('emergency_contact1_phone_number');
+            $table->string('emergency_contact2_name')->nullable();
+            $table->string('emergency_contact2_relationship')->nullable();
+            $table->string('emergency_contact2_phone_number')->nullable();
             $table->string('email')->unique();
             $table->unsignedBigInteger('job_position_id');
             $table->date('date_hired');

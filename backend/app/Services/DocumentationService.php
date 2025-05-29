@@ -13,10 +13,10 @@ class DocumentationService
         $this->employeeService = $employeeService;
     }
     // Create Documentation
-    public function createDocumentation(array $data)
+    public function createDocumentation(int $employee_id, array $data)
     {
         return Documentation::create([
-            'employee_id' => $data['employee_id'],
+            'employee_id' => $employee_id,
             'name' => $data['name'],
             'description' => $data['description'],
             'file_url' => $data['file_url'],
