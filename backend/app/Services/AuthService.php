@@ -6,6 +6,8 @@ use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
 class AuthService
 {
@@ -79,5 +81,22 @@ class AuthService
     {
         $employee->update($data);
         return $employee;
+    }
+
+    public function updateUserProfilePhoto(User $user, UploadedFile $photo): User
+    {
+        // Delete old photo if exists
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
+        }
+
+        // Store new photo in 'profile-photos' directory in the public disk
+        $path = $photo->store('profile-photos', 'public');
+
+        // Update user record with new photo path
+        $user->profile_photo_path = $path;
+        $user->save();
+
+        return $user;
     }
 }

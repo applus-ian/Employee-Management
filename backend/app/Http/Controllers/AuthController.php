@@ -12,6 +12,7 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateProfilePhotoRequest;
 
 class AuthController extends Controller
 {
@@ -150,6 +151,26 @@ class AuthController extends Controller
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Failed to update government and bank numbers.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function updateProfilePhoto(UpdateProfilePhotoRequest $request): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+
+            $updatedUser = $this->authService->updateUserProfilePhoto($user, $request->file('photo'));
+
+            return response()->json([
+                'message' => 'Profile photo updated successfully.',
+                'user' => $updatedUser,
+            ], 200);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update profile photo.',
                 'error' => $e->getMessage(),
             ], 400);
         }
