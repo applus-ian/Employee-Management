@@ -57,6 +57,33 @@ export const columns: ColumnDef<Project>[] = [
     ),
   },
   {
+    accessorKey: 'status',
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Status
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <span
+        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold tracking-wide shadow-sm
+    ${
+      row.getValue('status') === 'completed'
+        ? 'bg-green-100 text-green-900 ring-1 ring-green-300'
+        : row.getValue('status') === 'ongoing'
+          ? 'bg-yellow-100 text-yellow-900 ring-1 ring-yellow-300'
+          : row.getValue('status') === 'upcoming'
+            ? 'bg-blue-100 text-blue-900 ring-1 ring-blue-300'
+            : 'bg-gray-100 text-gray-700 ring-1 ring-gray-300'
+    }
+  `}
+        style={{ textTransform: 'capitalize' }}
+      >
+        {row.getValue('status')}
+      </span>
+    ),
+  },
+  {
     id: 'actions',
     header: 'Actions',
     cell: ({ row }) => {

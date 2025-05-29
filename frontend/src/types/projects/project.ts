@@ -4,6 +4,7 @@ export interface Project {
   description: string | null;
   start_date: string;
   end_date: string | null;
+  status?: 'upcoming' | 'ongoing' | 'completed';
   employees: AssignedEmployee[] | null;
 }
 

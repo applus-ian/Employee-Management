@@ -15,7 +15,7 @@ import { CreateProject } from '@/types/projects/project';
 
 export default function Projects() {
   const [isDialogOpen, setDialogOpen] = useState(false);
-
+  const [statusFilter, setStatusFilter] = useState('all_status');
   const handleCancel = () => {
     console.log('Cancelled');
     setDialogOpen(false);
@@ -35,6 +35,12 @@ export default function Projects() {
       description: item.description,
       start_date: item.start_date,
       end_date: item.end_date,
+      status:
+        item.end_date && new Date(item.end_date) < new Date()
+          ? 'completed'
+          : item.start_date && new Date(item.start_date) > new Date()
+            ? 'upcoming'
+            : 'ongoing',
       employees:
         item.employees?.map((employee) => ({
           id: employee.id,
@@ -77,38 +83,15 @@ export default function Projects() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           {/* Filters - Left Side */}
           <div className="flex gap-2 flex-wrap">
-            <Select>
-              <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                <SelectValue placeholder="All Departments" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all_department">All Departments</SelectItem>
-                <SelectItem value="it">IT</SelectItem>
-                <SelectItem value="hr">HR</SelectItem>
-                <SelectItem value="finance">Finance</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select>
-              <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
-                <SelectValue placeholder="All Positions" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="allposition">All Positions</SelectItem>
-                <SelectItem value="manager">Manager</SelectItem>
-                <SelectItem value="developer">Developer</SelectItem>
-                <SelectItem value="recruiter">Recruiter</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select>
+            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value)}>
               <SelectTrigger className="ml-2 px-3 py-1 rounded-md bg-white text-sm flex items-center gap-2">
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectItem value="all_status">All Status</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
+                <SelectItem value="ongoing">Ongoing</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="upcoming">Upcoming</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -137,7 +120,10 @@ export default function Projects() {
 
       {/* Table */}
       <div>
-        <DataTable columns={columns} data={rows} />
+        <DataTable
+          columns={columns}
+          data={statusFilter === 'all_status' ? rows : rows.filter((project) => project.status === statusFilter)}
+        />
       </div>
     </div>
   );
