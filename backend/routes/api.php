@@ -37,6 +37,7 @@ Route::controller(AuthController::class)
             Route::patch('/update-personal-info', 'updateOwnPersonalInfo');
             Route::patch('/update-residential-info', 'updateOwnResidentialInfo');
             Route::patch('/update-gov-bank-numbers', 'updateOwnGovBankNumbers');
+            Route::patch('/update-profile-photo', 'updateProfilePhoto');
         });
 });
 

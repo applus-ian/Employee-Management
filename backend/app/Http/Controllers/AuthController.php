@@ -156,18 +156,25 @@ class AuthController extends Controller
         }
     }
 
-    public function updateProfilePhoto(UpdateProfilePhotoRequest $request): JsonResponse
+    public function updateProfilePhoto(Request $request): JsonResponse
     {
-        try {
-            $user = Auth::user();
+        $request->validate([
+            'filename' => 'required|string|max:255',
+        ]);
 
-            $updatedUser = $this->authService->updateUserProfilePhoto($user, $request->file('photo'));
+        try {
+            $user = Auth::user()->load('employee');
+
+            // Store only the image name (e.g., avatar123.jpg)
+            $filename = basename($request->input('filename')); // sanitize it
+
+            $user->employee->profile_pic_url = $filename;
+            $user->employee->save();
 
             return response()->json([
                 'message' => 'Profile photo updated successfully.',
-                'user' => $updatedUser,
-            ], 200);
-
+                'filename' => $filename,
+            ]);
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Failed to update profile photo.',
@@ -175,4 +182,5 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
 }

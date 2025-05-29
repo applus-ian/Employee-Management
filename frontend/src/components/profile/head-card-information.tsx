@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useEffect, useState, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -14,11 +14,9 @@ import { updatePasswordSchema, UpdatePasswordInput } from '@/schemas';
 import { useUpdatePassword } from '@/hooks/profile/use-update-password';
 import toast from 'react-hot-toast';
 import type { Area } from 'react-easy-crop';
-
-// For The Profile Avatar
-import { useState, useRef, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import { Camera } from 'lucide-react';
+import { useUploadProfilePhoto } from '@/hooks/profile/use-update-personal-photo';
 
 export default function HeadCardInformation() {
   const { user } = useContext(AuthContext);
@@ -28,6 +26,7 @@ export default function HeadCardInformation() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [avatarSrc, setAvatarSrc] = useState<string>(user?.employee?.profile_pic_url || '/Superadmin.png');
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [open, setOpen] = useState(false);
@@ -61,6 +60,9 @@ export default function HeadCardInformation() {
     });
   };
 
+  // NEW: Upload profile photo hook
+  const uploadProfilePhoto = useUploadProfilePhoto();
+
   // For The Profile Avatar
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -74,11 +76,8 @@ export default function HeadCardInformation() {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
-  const showCroppedImage = useCallback(() => {
-    getCroppedImage();
-  }, [imageSrc, croppedAreaPixels]);
-
-  const getCroppedImage = async () => {
+  // Updated to handle uploading after cropping
+  const showCroppedImage = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
 
     const image = new Image();
@@ -105,10 +104,36 @@ export default function HeadCardInformation() {
       croppedAreaPixels.height,
     );
 
-    const base64 = canvas.toDataURL('image/jpeg');
+    const base64 = canvas.toDataURL('png');
     setCroppedImage(base64);
     setOpen(false);
-  };
+
+    const generateFileName = () => {
+      const timestamp = Date.now();
+      return `profile-photo-${timestamp}.jpg`;
+    };
+
+    const filename = generateFileName();
+
+    uploadProfilePhoto.mutate(
+      { profile_pic_url: base64 },
+      {
+        onSuccess: () => {
+          toast.success('Profile photo updated!');
+          setAvatarSrc(base64);
+        },
+        onError: (error: { message: string }) => {
+          console.log('Uploaded filename:', filename);
+          console.error('Failed to upload profile photo', error);
+          toast.error('Failed to upload profile photo.');
+        },
+      },
+    );
+  }, [imageSrc, croppedAreaPixels, uploadProfilePhoto]);
+
+  useEffect(() => {
+    setAvatarSrc(user?.employee?.profile_pic_url || '/Superadmin.png');
+  }, [user?.employee?.profile_pic_url]);
 
   return (
     <>
@@ -130,7 +155,8 @@ export default function HeadCardInformation() {
                 {/* Circular Avatar */}
                 <Avatar className="w-[8rem] h-[8rem] rounded-full overflow-hidden mx-5 border-gray-600">
                   <AvatarImage
-                    src={croppedImage || '/Superadmin.png'}
+                    src={croppedImage || avatarSrc}
+                    onError={() => setAvatarSrc('/Superadmin.png')}
                     alt="Profile"
                     className="object-cover w-full h-full"
                   />
