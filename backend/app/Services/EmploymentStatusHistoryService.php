@@ -13,7 +13,7 @@ class EmploymentStatusHistoryService
         $this->employeeService = $employeeService;
     }
     // Create Employee Status History
-    public function createEmploymentStatusHistory(int $employee_id, string $status_set, string $effective_date, string $remarks = null, string $changed_by = null)
+    public function createEmploymentStatusHistory(int $employee_id, string $status_set, string $effective_date, string $remarks = null, string $changed_by = null, $changed_by_employee_id = null)
     {
         return EmploymentStatusHistory::create([
             'employee_id' => $employee_id,
@@ -21,6 +21,7 @@ class EmploymentStatusHistoryService
             'effective_date' => $effective_date,
             'remarks' => $remarks,
             'changed_by' => $changed_by,
+            'changed_by_employee_id' => $changed_by_employee_id,
         ]);
     }
 

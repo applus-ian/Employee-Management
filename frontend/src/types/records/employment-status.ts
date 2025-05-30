@@ -6,12 +6,11 @@ export interface EmploymentStatusChange {
 }
 
 export interface EmploymentStatusHistoryEntry {
-  id: number;
-  employee_id: number;
-  status_set: EmploymentStatus;
+  id: string;
+  status_set: string;
   effective_date: string;
   remarks: string;
-  changed_by: number;
   created_at: string;
-  updated_at: string;
+  changed_by: string;
+  changed_by_employee_id: string | null;
 }

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class RegisterUserRequest extends FormRequest
+class ActivateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,6 +25,7 @@ class RegisterUserRequest extends FormRequest
         return [
             'employee_id' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'user_role' => ['required', 'numeric', 'exists:roles,id'],
             'password' => [
                 'required',
                 'string',
@@ -35,16 +36,4 @@ class RegisterUserRequest extends FormRequest
             'password_confirmation' => ['required', 'string', 'min:8'],
         ];
     }
-
-    /**
-     * Custom messages for validation errors.
-     */
-    public function messages()
-    {
-        return [
-            'password.confirmed' => 'The password confirmation does not match.',
-            // Add other custom messages if needed
-        ];
-    }
 }
-

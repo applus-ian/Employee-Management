@@ -18,13 +18,28 @@ class UserService
         return new UserResource($user->load('employee', 'employee.jobPosition', 'employee.employmentType', 'employee.manager', 'roles'));
     }
 
-    public function registerUser(array $data)
+    public function registerUser(int $employee_id, string $email, string $password )
     {
         return User::create([
-            'employee_id' => $data['employee_id'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'employee_id' => $employee_id,
+            'email' => $email,
+            'password' => bcrypt($password),
         ]);
+    }
+
+    public function activateUser(int $employee_id, string $email, string $password )
+    {
+        $user = User::where('employee_id', $employee_id)->first();
+
+        if($user){
+            //  update the email and password
+            $user->email = $email;
+            $user->password = bcrypt($password);
+            $user->save();
+            return $user;
+        }
+
+        return false;
     }
 
     public function changeUserPassword(User $user, string $newPassword): User

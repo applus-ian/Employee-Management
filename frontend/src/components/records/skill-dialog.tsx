@@ -7,10 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useSkill } from '@/hooks/settings/employee/skill/use-fetch-skill';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export interface TemporarySkill {
   id: string;
@@ -21,7 +18,7 @@ export interface TemporarySkill {
 }
 
 const skillSchema = z.object({
-  skill_id: z.number().min(1, 'Skill is required'),
+  skill_id: z.coerce.number().min(1, 'Skill is required'),
   years_of_experience: z.string().min(1, 'Years of experience is required'),
 });
 
@@ -36,7 +33,6 @@ interface SkillDialogProps {
 }
 
 export const SkillDialog = ({ onSkillAdd, initialSkill, open, onOpenChange }: SkillDialogProps) => {
-  const [openCombobox, setOpenCombobox] = React.useState(false);
   const { data: skills = [] } = useSkill();
 
   const {
@@ -82,42 +78,21 @@ export const SkillDialog = ({ onSkillAdd, initialSkill, open, onOpenChange }: Sk
               name="skill_id"
               control={control}
               render={({ field }) => (
-                <Popover open={openCombobox} onOpenChange={setOpenCombobox}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={openCombobox}
-                      className="w-full justify-between rounded-xl px-4 py-5 border border-gray-300 hover:border-orange-500"
-                    >
-                      {field.value ? skills.find((skill) => skill.id === field.value)?.name : 'Select skill...'}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-full p-0">
-                    <Command>
-                      <CommandInput placeholder="Search skill..." className="h-9" />
-                      <CommandEmpty>No skill found.</CommandEmpty>
-                      <CommandGroup>
-                        {skills.map((skill) => (
-                          <CommandItem
-                            key={skill.id}
-                            value={skill.name}
-                            onSelect={() => {
-                              field.onChange(skill.id);
-                              setOpenCombobox(false);
-                            }}
-                          >
-                            <Check
-                              className={cn('mr-2 h-4 w-4', field.value === skill.id ? 'opacity-100' : 'opacity-0')}
-                            />
-                            {skill.name}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                <Select
+                  value={field.value ? String(field.value) : ''}
+                  onValueChange={(val) => field.onChange(Number(val))}
+                >
+                  <SelectTrigger className="w-full rounded-xl px-4 py-3 border border-gray-300 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-sm bg-white">
+                    <SelectValue placeholder="Select skill..." />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white shadow-lg rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
+                    {skills.map((skill) => (
+                      <SelectItem key={skill.id} value={String(skill.id)}>
+                        {skill.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             />
             {errors.skill_id && <p className="text-sm text-red-500">{errors.skill_id.message}</p>}

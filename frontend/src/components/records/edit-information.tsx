@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, KeyRound, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -12,15 +12,7 @@ import GovBankNumbers from './gov-bank-numbers';
 import { useRecord } from '@/hooks/records/use-fetch-record';
 import EmployeeProjects from './employee-projects/employee-projects';
 import { EmploymentStatusHistory } from './employment-status-history';
-import api from '@/utils/api/apiInstance';
-
-interface EmploymentStatusHistoryEntry {
-  id: string;
-  status: string;
-  changed_at: string;
-  changed_by: string;
-  remarks?: string;
-}
+import { useEmploymentStatusHistory } from '@/hooks/records/use-employment-status-history';
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
@@ -42,8 +34,8 @@ export const EditInformation = (data: { id: string }) => {
   // const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   // const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('personal');
-  const [currentStatus, setCurrentStatus] = useState<string>('Active');
-  const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+  // const [currentStatus, setCurrentStatus] = useState<string>('Active');
+  // const [isLoadingStatus, setIsLoadingStatus] = useState(true);
   // const handleDelete = () => {
   //     if (employeeToDelete !== null) {
   //     console.log('Deleting employee with ID:', employeeToDelete);
@@ -53,30 +45,21 @@ export const EditInformation = (data: { id: string }) => {
   // };
 
   const { data: record, isLoading, isError } = useRecord(data.id);
-
-  useEffect(() => {
-    if (record?.employee.id) {
-      setIsLoadingStatus(true);
-      api
-        .get(`/employment-status-histories/${record.employee.id}`)
-        .then((res) => {
-          const history = res.data as EmploymentStatusHistoryEntry[];
-          if (history.length > 0) {
-            // Sort by changed_at in descending order and get the most recent status
-            const sortedHistory = [...history].sort(
-              (a, b) => new Date(b.changed_at).getTime() - new Date(a.changed_at).getTime(),
-            );
-            setCurrentStatus(sortedHistory[0].status);
-          }
-        })
-        .catch(() => {
-          console.error('Failed to load employment status history');
-        })
-        .finally(() => {
-          setIsLoadingStatus(false);
-        });
-    }
-  }, [record?.employee.id]);
+  const employeeId = record?.employee.id;
+  const { data: history, isLoading: isLoadingStatus } = useEmploymentStatusHistory(employeeId || '');
+  const latestStatus =
+    history && history.length > 0
+      ? [...history].sort((a, b) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const getTime = (entry: any) => {
+            if (!entry.created_at) return 0;
+            const safeDate = entry.created_at.includes(' ') ? entry.created_at.replace(' ', 'T') : entry.created_at;
+            const t = new Date(safeDate).getTime();
+            return isNaN(t) ? 0 : t;
+          };
+          return getTime(b) - getTime(a);
+        })[0]
+      : null;
 
   if (isLoading) {
     return (
@@ -117,9 +100,9 @@ export const EditInformation = (data: { id: string }) => {
               </span>
             ) : (
               <span
-                className={`ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(currentStatus)}`}
+                className={`ml-1 inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${getStatusColor(latestStatus?.status_set || '')}`}
               >
-                {currentStatus}
+                {latestStatus?.status_set || 'No Status'}
               </span>
             )}
           </p>

@@ -77,6 +77,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Employment Status History
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(EmploymentStatusHistoryController::class)->prefix('employment-status-histories')->group(function () {
+        Route::post('/new-status-history', 'create');
         Route::get('/{employeeId}', 'index');
     });
 });
@@ -247,11 +248,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // Routes for User
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::controller(UserController::class)->prefix('users')->group(function () {
-        // Route::get('/list', 'index')->middleware('permission:user_list');
-        Route::post('/new', 'create')->middleware('permission:user_register');
-        // Route::get('/{user}', 'show')->middleware('permission:user_view');
-        // Route::put('/update/{user}', 'update')->middleware('permission:user_update');
-        // Route::delete('/delete/{user}', 'destroy')->middleware('permission:user_delete');
+        Route::put('/activate', 'activate')->middleware('permission:user_register');
     });
 });
 

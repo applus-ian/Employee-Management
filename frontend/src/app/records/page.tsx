@@ -133,7 +133,6 @@ export default function RecordsPage() {
                     className="text-orange-600 border-orange-400 bg-white hover:bg-orange-500 hover:text-white"
                     onClick={() => {
                       setShowForm(true);
-                      setFormType('new');
                     }}
                   >
                     New Employee

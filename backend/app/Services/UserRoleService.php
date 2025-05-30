@@ -7,12 +7,18 @@ use App\Models\UserRole;
 class UserRoleService
 {
     // Create User Role
-    public function createUserRole(array $data)
+    public function createUserRole(int $user_id, int $role_id)
     {
-        return UserRole::create([
-            'user_id' => $data['user_id'],
-            'role_id' => $data['role_id'],
+        $role_assigned = UserRole::create([
+            'user_id' => $user_id,
+            'role_id' => $role_id,
         ]);
+
+        if($role_assigned){
+            return true;
+        }
+
+        return false;
     }
 
     // Read (Get a single user role by ID)

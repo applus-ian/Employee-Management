@@ -8,10 +8,10 @@ use App\Models\EmployeeSkill;
 class EmployeeSkillService
 {
     // Create Employee Skill
-    public function createEmployeeSkill(array $data)
+    public function createEmployeeSkill(int $employee_id, array $data)
     {
         return EmployeeSkill::create([
-            'employee_id' => $data['employee_id'],
+            'employee_id' => $employee_id,
             'skill_id' => $data['skill_id'],
             'years_of_experience' => $data['years_of_experience'],
         ]);

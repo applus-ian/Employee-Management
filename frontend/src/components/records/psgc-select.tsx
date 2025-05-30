@@ -73,7 +73,7 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select Region" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-100">
+          <SelectContent className="bg-white shadow-lg rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
             {regions.map((r) => (
               <SelectItem key={r.code} value={r.code}>
                 {r.name}
@@ -97,7 +97,7 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select Province" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-100">
+          <SelectContent className="bg-white shadow-lg rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
             {provinces.map((p) => (
               <SelectItem key={p.code} value={p.code}>
                 {p.name}
@@ -121,7 +121,7 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select City" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-100">
+          <SelectContent className="bg-white shadow-lg rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
             {cities.map((c) => (
               <SelectItem key={c.code} value={c.code}>
                 {c.name}
@@ -145,7 +145,7 @@ const PSGCSelect: React.FC<PSGCSelectProps> = (props) => {
           <SelectTrigger className="mt-1 p-2 pl-3 w-full rounded-md border border-gray-300 bg-white text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
             <SelectValue placeholder="Select Barangay" />
           </SelectTrigger>
-          <SelectContent className="bg-gray-100">
+          <SelectContent className="bg-white shadow-lg rounded-lg border border-gray-200 max-h-[300px] overflow-y-auto">
             {barangays.map((b) => (
               <SelectItem key={b.code} value={b.code}>
                 {b.name}
