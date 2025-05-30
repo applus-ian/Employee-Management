@@ -7,6 +7,7 @@ export type Permission = {
 export type RoleWithPermissions = {
   id: number;
   name: string;
+  description: string;
   permissions: Permission[];
 };
 

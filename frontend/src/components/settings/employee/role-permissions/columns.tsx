@@ -20,6 +20,17 @@ export const columns: ColumnDef<RoleWithPermissions>[] = [
     cell: ({ row }) => <span className="capitalize">{row.original.name}</span>,
   },
   {
+    accessorKey: 'description',
+    header: ({ column }) => (
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+        Description
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <span className="text-sm text-gray-700">{row.original.description}</span>,
+  },
+
+  {
     accessorKey: 'permissions',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>

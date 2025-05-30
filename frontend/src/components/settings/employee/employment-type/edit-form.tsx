@@ -47,7 +47,7 @@ export default function EditEmploymentTypeForm({ employment_type, onCancel, onSa
             <div className="flex flex-col p-5">
               <div>
                 <Label htmlFor="name">
-                  <h3 className="text-black font-base">Employment Type Name</h3>
+                  <h3 className="text-black font-base pb-2">Employment Type Name</h3>
                 </Label>
               </div>
               <div>
