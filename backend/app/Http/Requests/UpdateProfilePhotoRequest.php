@@ -14,16 +14,18 @@ class UpdateProfilePhotoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'photoPath' => 'required|string|max:255',
+            'profile_pic_url' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'photoPath.required' => 'Photo path is required.',
-            'photoPath.string' => 'Photo path must be a string.',
-            'photoPath.max' => 'Photo path must not exceed 255 characters.',
+            'profile_pic_url.required' => 'Profile photo is required.',
+            'profile_pic_url.file' => 'Uploaded file must be a valid file.',
+            'profile_pic_url.image' => 'Uploaded file must be an image.',
+            'profile_pic_url.mimes' => 'Allowed image types: jpeg, jpg, png.',
+            'profile_pic_url.max' => 'Image must not exceed 2MB.',
         ];
     }
 }

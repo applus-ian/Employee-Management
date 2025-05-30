@@ -156,25 +156,34 @@ class AuthController extends Controller
         }
     }
 
-    public function updateProfilePhoto(Request $request): JsonResponse
+    public function updateProfilePhoto(UpdateProfilePhotoRequest $request): JsonResponse
     {
-        $request->validate([
-            'filename' => 'required|string|max:255',
-        ]);
-
         try {
             $user = Auth::user()->load('employee');
 
-            // Store only the image name (e.g., avatar123.jpg)
-            $filename = basename($request->input('filename')); // sanitize it
+            if (!$request->hasFile('profile_pic_url')) {
+                return response()->json(['error' => 'No file uploaded.'], 422);
+            }
 
-            $user->employee->profile_pic_url = $filename;
-            $user->employee->save();
+        
+            if ($request->hasFile('profile_pic_url')) {
+                $file = $request->file('profile_pic_url');
+                
+                $filename = 'avatar_' . $user->id . '.' . $file->getClientOriginalExtension();
 
-            return response()->json([
-                'message' => 'Profile photo updated successfully.',
-                'filename' => $filename,
-            ]);
+                $path = $file->move(public_path('profiles'), $filename);
+
+                $user->employee->profile_pic_url = 'profiles/' . $filename;
+                $user->employee->save();
+
+                return response()->json([
+                    'message' => 'Profile photo updated successfully.',
+                    'filename' => $filename,
+                    'url' => asset('profiles/' . $filename),
+                ]);
+            }
+
+            return response()->json(['message' => 'No file uploaded.'], 400);
         } catch (\Throwable $e) {
             return response()->json([
                 'message' => 'Failed to update profile photo.',
@@ -182,5 +191,6 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
 
 }

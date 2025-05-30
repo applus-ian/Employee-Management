@@ -39,6 +39,12 @@ export const api = axios.create({
   withCredentials: true, // Enable credentials for cross-origin requests
 });
 
+export const apiFile = axios.create({
+  baseURL: API_BASE_URL,
+  // Do NOT set Content-Type here! Let browser/axios set it for FormData
+  withCredentials: true, // Enable credentials for cross-origin requests
+});
+
 // Attach the token to every request if available in cookies
 api.interceptors.request.use(
   async (config) => {
@@ -60,6 +66,26 @@ api.interceptors.request.use(
   (error) => {
     return Promise.reject(error);
   },
+);
+
+// Attach the token to every request for apiFile as well
+apiFile.interceptors.request.use(
+  async (config) => {
+    const token = Cookies.get('token');
+
+    if (token) {
+      const isValidToken = await validateToken(token);
+
+      if (isValidToken) {
+        config.headers.Authorization = `Bearer ${token}`;
+      } else {
+        Cookies.remove('token');
+      }
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error),
 );
 
 export default api;

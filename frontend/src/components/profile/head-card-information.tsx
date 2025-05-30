@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect, useState, useRef, useCallback } from 'react';
+import { useContext, useState, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -25,8 +25,6 @@ export default function HeadCardInformation() {
   // For The Profile Avatar
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
-  const [avatarSrc, setAvatarSrc] = useState<string>(user?.employee?.profile_pic_url || '/Superadmin.png');
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [open, setOpen] = useState(false);
@@ -60,10 +58,8 @@ export default function HeadCardInformation() {
     });
   };
 
-  // NEW: Upload profile photo hook
   const uploadProfilePhoto = useUploadProfilePhoto();
 
-  // For The Profile Avatar
   const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -76,7 +72,6 @@ export default function HeadCardInformation() {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
-  // Updated to handle uploading after cropping
   const showCroppedImage = useCallback(async () => {
     if (!imageSrc || !croppedAreaPixels) return;
 
@@ -104,36 +99,39 @@ export default function HeadCardInformation() {
       croppedAreaPixels.height,
     );
 
-    const base64 = canvas.toDataURL('png');
-    setCroppedImage(base64);
-    setOpen(false);
-
     const generateFileName = () => {
       const timestamp = Date.now();
-      return `profile-photo-${timestamp}.jpg`;
+      return `profile-photo-${timestamp}.png`;
     };
-
     const filename = generateFileName();
 
-    uploadProfilePhoto.mutate(
-      { profile_pic_url: base64 },
-      {
-        onSuccess: () => {
-          toast.success('Profile photo updated!');
-          setAvatarSrc(base64);
-        },
-        onError: (error: { message: string }) => {
-          console.log('Uploaded filename:', filename);
-          console.error('Failed to upload profile photo', error);
-          toast.error('Failed to upload profile photo.');
-        },
-      },
-    );
-  }, [imageSrc, croppedAreaPixels, uploadProfilePhoto]);
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
 
-  useEffect(() => {
-    setAvatarSrc(user?.employee?.profile_pic_url || '/Superadmin.png');
-  }, [user?.employee?.profile_pic_url]);
+      const file = new File([blob], filename, { type: 'image/png' });
+      console.log('File size in bytes:', file.size);
+      // Debug: log FormData content
+      const formData = new FormData();
+      formData.append('profile_pic_url', file, file.name);
+      for (const [key, value] of formData.entries()) {
+        console.log('FormData:', key, value);
+      }
+      // Use the uploadProfilePhoto hook as before
+      uploadProfilePhoto.mutate(
+        { profile_pic_url: file },
+        {
+          onSuccess: () => {
+            toast.success('Profile photo updated!');
+          },
+          onError: () => {
+            toast.error('Failed to upload profile photo.');
+          },
+        },
+      );
+    }, 'image/png');
+
+    setOpen(false);
+  }, [imageSrc, croppedAreaPixels, uploadProfilePhoto]);
 
   return (
     <>
@@ -155,8 +153,7 @@ export default function HeadCardInformation() {
                 {/* Circular Avatar */}
                 <Avatar className="w-[8rem] h-[8rem] rounded-full overflow-hidden mx-5 border-gray-600">
                   <AvatarImage
-                    src={croppedImage || avatarSrc}
-                    onError={() => setAvatarSrc('/Superadmin.png')}
+                    src={`${user?.employee?.profile_pic_url}?${Date.now()}`}
                     alt="Profile"
                     className="object-cover w-full h-full"
                   />
