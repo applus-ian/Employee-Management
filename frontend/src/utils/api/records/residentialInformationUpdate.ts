@@ -1,0 +1,7 @@
+import { api } from '@/utils/api/apiInstance';
+import { UpdateResidentialInfoInput } from '@/schemas/profile/residentialInformationSchema';
+
+export const updateResidentialInfo = async (data: UpdateResidentialInfoInput) => {
+  const response = await api.patch('/employees/update-residential-info', data);
+  return response.data;
+};

@@ -72,6 +72,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{employee_id}', 'show')->middleware('permission:employee_view');
         Route::put('/update/{employee}', 'update')->middleware('permission:employee_update');
         Route::delete('/delete/{employee}', 'destroy')->middleware('permission:employee_delete');
+
+        Route::patch('/change-password/{employee_id}', 'changePassword');
+        Route::patch('/update-personal-info/{employee_id}', 'updatePersonalInfo');
+        Route::patch('/update-residential-info/{employee_id}', 'updateResidentialInfo');
+        Route::patch('/update-gov-bank-numbers/{employee_id}', 'updateGovBankNumbers');
     });
 });
 

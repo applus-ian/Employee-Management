@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePenLine } from 'lucide-react';
@@ -6,16 +5,16 @@ import { FilePenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
-import { AuthContext } from '@/context/AuthContext';
+import { useRecord } from '@/hooks/records/use-fetch-record';
 import {
   updateResidentialInfoSchema,
   UpdateResidentialInfoInput,
 } from '@/schemas/profile/residentialInformationSchema';
-import { useUpdateResidentialInfo } from '@/hooks/profile/use-update-residential-info';
+import { useUpdateResidentialInfo } from '@/hooks/records/use-update-residential-info';
 import PSGCSelect from './psgc-select';
 
-export default function EditResidentialInformation() {
-  const { user } = useContext(AuthContext);
+export default function EditResidentialInformation({ user_id }: { user_id: string }) {
+  const { data: user } = useRecord(user_id);
   const employee = user?.employee;
 
   const {

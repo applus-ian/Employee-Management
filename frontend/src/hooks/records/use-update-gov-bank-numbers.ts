@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateGovBankNumbers } from '@/utils/api/profile/govBankNumbersUpdate';
+import { updateGovBankNumbers } from '@/utils/api/records/govBankNumbersUpdate';
 import { UpdateGovBankNumberInput } from '@/schemas/profile/govBankNumberSchema';
 
 export const useUpdateGovBankNumbers = () => {
@@ -7,15 +7,13 @@ export const useUpdateGovBankNumbers = () => {
 
   return useMutation({
     mutationFn: (data: UpdateGovBankNumberInput) => updateGovBankNumbers(data),
-
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'], exact: true });
-      alert('Government and Bank Numbers updated successfully!'); // Success notification
+      alert('Government and bank numbers updated successfully!');
     },
-
     onError: (error) => {
-      console.error('Error updating government and bank numbers:', error);
-      alert('An error occurred while updating your information.'); // Error notification
+      console.error('Error updating gov/bank numbers:', error);
+      alert('An error occurred while updating your government or bank numbers.');
     },
   });
 };

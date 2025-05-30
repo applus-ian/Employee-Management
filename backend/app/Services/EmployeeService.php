@@ -10,6 +10,7 @@ use App\Models\EmployeeProject;
 use App\Models\EmployeeSkill;
 use App\Models\EmploymentStatusHistory;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Vinkla\Hashids\Facades\Hashids;
 
 class EmployeeService
@@ -81,6 +82,14 @@ class EmployeeService
 
     }
 
+
+    public function getEmployeeModelById(string $id): Employee
+    {
+        $decoded_id = $this->decodeEmployeeId($id);
+        $employee = Employee::findOrFail($decoded_id);
+        return $employee;
+    }
+
     // Get all employees
     public function getAllEmployees()
     {
@@ -128,6 +137,40 @@ class EmployeeService
     public function deleteEmployee(Employee $employee): bool
     {
         return $employee->delete();
+    }
+
+    public function changeUserPassword(int $employee_id, string $newPassword)
+    {
+        $user = User::where('employee_id', $employee_id)->firstOrFail();
+
+        if($user) {
+            $user->password = Hash::make($newPassword);
+            $user->save();
+
+            return $user;
+        }
+        return false;
+    }
+
+    // Update Employee Personal Info
+    public function updateUserPersonalInfo(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
+
+    // Update Employee Residential Info
+    public function updateUserResidentialInfo(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
+    }
+
+    // Update Employee Government and Bank Numbers
+    public function updateUserGovBankNumbers(Employee $employee, array $data)
+    {
+        $employee->update($data);
+        return $employee;
     }
 
 }

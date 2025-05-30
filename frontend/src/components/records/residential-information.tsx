@@ -9,6 +9,8 @@ interface Props {
 }
 
 export function ResidentialInformation({ record }: Props) {
+  const user_id = record?.id || '';
+
   const [regionName, setRegionName] = useState('');
   const [provinceName, setProvinceName] = useState('');
   const [cityName, setCityName] = useState('');
@@ -43,7 +45,7 @@ export function ResidentialInformation({ record }: Props) {
               <CardTitle>📍 Residential Information</CardTitle>
             </div>
             {/* Modal Trigger */}
-            <EditResidentialInformation />
+            <EditResidentialInformation user_id={user_id} />
           </div>
         </CardHeader>
         <CardContent>

@@ -18,15 +18,17 @@ import { Badge } from '@/components/ui/badge';
 import { useEmploymentForm } from '@/hooks/records/use-employment-form';
 import { useEmploymentStatus } from '@/hooks/records/use-employment-status';
 import { EmploymentStatus } from '@/types/records/employment-status';
-import { Record } from '@/types/records/record';
+import { useRecordMoreDet } from '@/hooks/records/use-fetch-record-more-details';
 
 interface EditEmploymentInformationProps {
-  record: Record;
+  user_id: string;
   onClose?: () => void;
 }
 
-export function EditEmploymentInformation({ record, onClose }: EditEmploymentInformationProps) {
-  const { data: employee_skills = [] } = useEmployeeSkills(record.employee.id);
+export function EditEmploymentInformation({ user_id, onClose }: EditEmploymentInformationProps) {
+  const { data: record } = useRecordMoreDet(user_id); // TO BE MODIFED!!!!! NOT YET WORKING!
+  const employee_id = record?.employee.id || '';
+  const { data: employee_skills = [] } = useEmployeeSkills(employee_id);
   const { data: jobPositions = [] } = useJobPositions();
   const { data: countries = [] } = useCountryAssign();
   const { data: offices = [] } = useOfficeAssign();
@@ -47,7 +49,7 @@ export function EditEmploymentInformation({ record, onClose }: EditEmploymentInf
 
   const { showStatusChange, openStatus, setOpenStatus, toggleStatusChange, handleStatusSelect, availableStatuses } =
     useEmploymentStatus({
-      currentStatus: record.employee.status as EmploymentStatus,
+      currentStatus: record?.employee.status as EmploymentStatus,
       onStatusChange: (status) => setValue('status_change.status', status),
     });
 
@@ -308,14 +310,14 @@ export function EditEmploymentInformation({ record, onClose }: EditEmploymentInf
               <Badge
                 className={cn(
                   'ml-2',
-                  record.employee.status === 'active' && 'bg-green-100 text-green-800',
-                  record.employee.status === 'onboarding' && 'bg-blue-100 text-blue-800',
-                  record.employee.status === 'account creation' && 'bg-purple-100 text-purple-800',
-                  record.employee.status === 'terminated' && 'bg-red-100 text-red-800',
-                  record.employee.status === 'inactive' && 'bg-yellow-100 text-yellow-800',
+                  record?.employee.status === 'active' && 'bg-green-100 text-green-800',
+                  record?.employee.status === 'onboarding' && 'bg-blue-100 text-blue-800',
+                  record?.employee.status === 'account creation' && 'bg-purple-100 text-purple-800',
+                  record?.employee.status === 'terminated' && 'bg-red-100 text-red-800',
+                  record?.employee.status === 'inactive' && 'bg-yellow-100 text-yellow-800',
                 )}
               >
-                {record.employee.status}
+                {record?.employee.status}
               </Badge>
             </p>
           </div>
@@ -421,7 +423,7 @@ export function EditEmploymentInformation({ record, onClose }: EditEmploymentInf
                   <AlertDescription className="text-yellow-800">
                     <p className="font-medium mb-1">Status Change Warning</p>
                     <p>
-                      Changing the employment status from <strong>{record.employee.status}</strong> to{' '}
+                      Changing the employment status from <strong>{record?.employee.status}</strong> to{' '}
                       <strong>{currentStatus}</strong> will be recorded in the employee&apos;s history. This action
                       cannot be undone.
                     </p>

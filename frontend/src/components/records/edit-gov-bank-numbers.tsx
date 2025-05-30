@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FilePenLine } from 'lucide-react';
@@ -6,12 +5,12 @@ import { FilePenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
-import { AuthContext } from '@/context/AuthContext';
+import { useRecord } from '@/hooks/records/use-fetch-record';
 import { updateGovBankNumberSchema, UpdateGovBankNumberInput } from '@/schemas/profile/govBankNumberSchema';
-import { useUpdateGovBankNumbers } from '@/hooks/profile/use-update-gov-bank-numbers';
+import { useUpdateGovBankNumbers } from '@/hooks/records/use-update-gov-bank-numbers';
 
-export default function EditGovBankNumbers() {
-  const { user } = useContext(AuthContext);
+export default function EditGovBankNumbers({ user_id }: { user_id: string }) {
+  const { data: user } = useRecord(user_id);
   const employee = user?.employee;
 
   const {

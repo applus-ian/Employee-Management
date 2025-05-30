@@ -7,6 +7,7 @@ interface Props {
 }
 
 export default function GovBankNumbers({ record }: Props) {
+  const user_id = record?.id || '';
   return (
     <Card className="rounded-xl border shadow-sm">
       <CardHeader>
@@ -16,7 +17,7 @@ export default function GovBankNumbers({ record }: Props) {
           </div>
 
           {/* Modal Trigger */}
-          <EditGovBankNumbers />
+          <EditGovBankNumbers user_id={user_id} />
         </div>
       </CardHeader>
       <CardContent>

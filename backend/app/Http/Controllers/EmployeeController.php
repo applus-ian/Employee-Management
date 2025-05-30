@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEmployeeRequest;
+use App\Http\Requests\PasswordChangeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Http\Requests\UpdateGovBankNumbersRequest;
+use App\Http\Requests\UpdatePersonalInfoRequest;
+use App\Http\Requests\UpdateResidentialInfoRequest;
 use App\Models\Employee;
 use App\Services\DocumentationService;
 use App\Services\EmployeeService;
@@ -119,6 +123,94 @@ class EmployeeController extends Controller
         $this->employeeService->deleteEmployee($employee);
 
         return response()->json(['message' => 'Employee deleted successfully!'], 200);
+    }
+
+    // Change Password
+    public function changePassword(PasswordChangeRequest $request, String $employee_id): JsonResponse
+    {
+        try {
+            $decoded_employee_id = $this->employeeService->decodeEmployeeId($employee_id);
+            $updatedUser = $this->employeeService->changeUserPassword(
+                $decoded_employee_id,
+                $request->input('new_password')
+            );
+
+            return response()->json([
+                'message' => 'Password changed successfully.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to change password.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    // Update Own Personal Info
+    public function updatePersonalInfo(UpdatePersonalInfoRequest $request, String $employee_id): JsonResponse
+    {
+        try {
+            $employee = $this->employeeService->getEmployeeModelById($employee_id);
+            $updatedUser = $this->employeeService->updateUserPersonalInfo(
+                $employee,
+                $request->validated()
+            );
+
+            return response()->json([
+                'message' => 'Personal Information Updated.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update personal information.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    // Update Own Residential Info
+    public function updateResidentialInfo(UpdateResidentialInfoRequest $request, String $employee_id): JsonResponse
+    {
+        try {
+            $employee = $this->employeeService->getEmployeeModelById($employee_id);
+            $updatedUser = $this->employeeService->updateUserResidentialInfo(
+                $employee,
+                $request->validated()
+            );
+
+            return response()->json([
+                'message' => 'Residential Information Updated.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update residential information.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    // Update Own Government and Bank Numbers
+    public function updateGovBankNumbers(UpdateGovBankNumbersRequest $request, String $employee_id): JsonResponse
+    {
+        try {
+            $employee = $this->employeeService->getEmployeeModelById($employee_id);
+            $updatedUser = $this->employeeService->updateUserGovBankNumbers(
+                $employee,
+                $request->validated()
+            );
+
+            return response()->json([
+                'message' => 'Government and Bank Numbers Updated.',
+                'user' => $updatedUser,
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update government and bank numbers.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
 
 }

@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updatePersonalInfoSchema, UpdatePersonalInfoInput } from '@/schemas/profile/personalInformationSchema';
-import { useUpdatePersonalInfo } from '@/hooks/profile/use-update-personal-info';
-import { AuthContext } from '@/context/AuthContext';
+import { useUpdatePersonalInfo } from '@/hooks/records/use-update-personal-info';
+import { useRecord } from '@/hooks/records/use-fetch-record';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -14,9 +13,9 @@ import { FilePenLine } from 'lucide-react';
 type Gender = 'male' | 'female' | 'other';
 type CivilStatus = 'single' | 'married' | 'divorced' | 'widowed';
 
-export default function EditPersonalInformation() {
-  const authContext = useContext(AuthContext);
-  const employee = authContext.user?.employee;
+export default function EditPersonalInformation({ user_id }: { user_id: string }) {
+  const { data: user } = useRecord(user_id);
+  const employee = user?.employee;
 
   const {
     register,

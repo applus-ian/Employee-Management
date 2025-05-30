@@ -7,6 +7,7 @@ interface Props {
 }
 
 export function PersonalInformation({ record }: Props) {
+  const user_id = record?.id || '';
   return (
     <>
       <Card className="rounded-xl border shadow-sm ">
@@ -16,7 +17,7 @@ export function PersonalInformation({ record }: Props) {
               <CardTitle>👤 Personal Information</CardTitle>
             </div>
             {/* Modal Trigger */}
-            <EditPersonalInformation />
+            <EditPersonalInformation user_id={user_id} />
           </div>
         </CardHeader>
         <CardContent>

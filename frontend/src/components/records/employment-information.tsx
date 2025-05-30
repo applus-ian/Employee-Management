@@ -94,7 +94,7 @@ export function EmploymentInformation({ record }: Props) {
                 <DialogHeader className="shrink-0 pb-4">
                   <DialogTitle>Edit Employment Information</DialogTitle>
                 </DialogHeader>
-                <EditEmploymentInformation record={record} />
+                <EditEmploymentInformation user_id={record.id} />
               </DialogContent>
             </Dialog>
           )}
