@@ -98,69 +98,73 @@ export default function EditRoleForm({ role, onCancel, onSave }: EditRoleFormPro
   }
 
   return (
-    <DialogContent className="w-full lg:!max-w-[45rem] h-fit flex flex-col bg-white overflow-y-auto max-h-[90vh]">
+    <DialogContent className="w-full lg:!max-w-[45rem] max-h-[90vh] flex flex-col bg-white overflow-hidden">
       <DialogHeader>
         <DialogTitle>Edit Role</DialogTitle>
       </DialogHeader>
 
-      <form onSubmit={handleSubmit} className="space-y-5 px-5 py-3">
-        <div className="flex flex-col">
-          <Label htmlFor="roleName">
-            <h3 className="text-black font-base">User Role</h3>
-          </Label>
-          <input
-            id="roleName"
-            type="text"
-            value={roleName}
-            onChange={(e) => setRoleName(e.target.value)}
-            className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm"
-            required
-            disabled={isLoading}
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto space-y-5 px-5 py-3" style={{ maxHeight: 'calc(90vh - 11rem)' }}>
+          <div className="flex flex-col">
+            <Label htmlFor="roleName">
+              <h3 className="text-black font-base">User Role</h3>
+            </Label>
+            <input
+              id="roleName"
+              type="text"
+              value={roleName}
+              onChange={(e) => setRoleName(e.target.value)}
+              className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm"
+              required
+              disabled={isLoading}
+            />
+          </div>
 
-        <div className="flex flex-col">
-          <Label htmlFor="description">
-            <h3 className="text-black font-base">Description</h3>
-          </Label>
-          <Textarea
-            id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter role description..."
-            className="mt-2"
-            disabled={isLoading}
-          />
-        </div>
+          <div className="flex flex-col">
+            <Label htmlFor="description">
+              <h3 className="text-black font-base">Description</h3>
+            </Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter role description..."
+              className="mt-2"
+              disabled={isLoading}
+            />
+          </div>
 
-        <div>
-          <Label>
-            <h3 className="text-black font-base">Permissions</h3>
-          </Label>
-          <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm max-h-[20rem] overflow-y-auto">
-            <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {permissionList?.map((perm: any) => (
-                <div key={perm.id} className="flex flex-col py-2 p-3">
-                  <h4 className="text-sm font-medium">{perm.name}</h4>
-                  <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
-                  <div className="flex justify-between h-5 space-x-4 text-sm">
-                    <div className="text-gray-500">{perm.description}</div>
-                    <Switch
-                      id={perm.id.toString()}
-                      checked={!!permissions[perm.id]}
-                      onCheckedChange={() => handleToggle(perm.id)}
-                      className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
-                      disabled={isLoading}
-                    />
+          <div>
+            <Label>
+              <h3 className="text-black font-base">Permissions</h3>
+            </Label>
+            <div className="mt-2 px-4 py-2 pl-3 block w-full border rounded-xl bg-transparent border-gray-500 focus:border-indigo-500 sm:text-sm max-h-[20rem] overflow-y-auto">
+              <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                {permissionList?.map((perm: any) => (
+                  <div key={perm.id} className="flex flex-col py-2 p-3">
+                    <h4 className="text-sm font-medium">{perm.name}</h4>
+                    <Separator className="my-4 border border-[#BBD2EC] rounded-xl" />
+                    <div className="flex justify-between h-5 space-x-4 text-sm">
+                      <div className="text-gray-500">{perm.description}</div>
+                      <Switch
+                        id={perm.id.toString()}
+                        checked={!!permissions[perm.id]}
+                        onCheckedChange={() => handleToggle(perm.id)}
+                        className="bg-gray-400 data-[state=checked]:bg-[#A7C513]"
+                        disabled={isLoading}
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-5 flex justify-center gap-x-6">
+        {/* Fixed Footer with Buttons */}
+        <div className="p-3 border-t flex justify-center gap-x-6 bg-white">
           <Button type="submit" className="bg-[#EE7A2A] text-white w-[10rem]" disabled={isLoading}>
             {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>

@@ -13,6 +13,7 @@ export default function RolesAndPermissions() {
     data?.map((role) => ({
       id: role.id,
       name: role.name,
+      description: role.description,
       permissions: role.permissions,
     })) ?? [];
 
