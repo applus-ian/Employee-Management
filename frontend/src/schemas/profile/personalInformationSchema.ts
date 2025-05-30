@@ -10,9 +10,10 @@ export const updatePersonalInfoSchema = z.object({
   emergency_contact1: z.string().optional(),
   emergency_contact2: z.string().optional(),
   gender: z.enum(['male', 'female', 'other']),
-  birthdate: z.string(), // Can also use z.coerce.date() if you convert to Date
+  birthdate: z.string(),
   civil_status: z.enum(['single', 'married', 'divorced', 'widowed']),
   nationality: z.string().optional(),
+  profile_pic_url: z.string().optional(),
 });
 
 export type UpdatePersonalInfoInput = z.infer<typeof updatePersonalInfoSchema>;

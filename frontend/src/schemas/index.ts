@@ -3,6 +3,7 @@ export { updatePasswordSchema } from './profile/changePasswordSchema';
 export { updatePersonalInfoSchema } from './profile/personalInformationSchema';
 export { updateResidentialInfoSchema } from './profile/residentialInformationSchema';
 export { updateGovBankNumberSchema } from './profile/govBankNumberSchema';
+export { updatePersonalPhotoSchema } from './profile/personalPhotoSchema';
 export { documentTypeSchema } from './settings/employee/document-type/documentType';
 export { projectSchema, createProjectSchema } from './projects/project';
 export { projectRoleSchema } from './settings/employee/project-role/projectRole';

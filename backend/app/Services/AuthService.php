@@ -6,6 +6,8 @@ use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 
 class AuthService
 {
@@ -80,4 +82,14 @@ class AuthService
         $employee->update($data);
         return $employee;
     }
+
+    public function updateLoggedUserProfilePhotoPath(Employee $employee, string $photoPath): Employee
+    {
+        
+        $employee->profile_photo_path = $photoPath;
+        $employee->save();
+
+        return $employee;
+    }
+
 }

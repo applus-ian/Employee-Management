@@ -12,6 +12,7 @@ use App\Services\AuthService;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateProfilePhotoRequest;
 
 class AuthController extends Controller
 {
@@ -154,4 +155,42 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
+    public function updateProfilePhoto(UpdateProfilePhotoRequest $request): JsonResponse
+    {
+        try {
+            $user = Auth::user()->load('employee');
+
+            if (!$request->hasFile('profile_pic_url')) {
+                return response()->json(['error' => 'No file uploaded.'], 422);
+            }
+
+        
+            if ($request->hasFile('profile_pic_url')) {
+                $file = $request->file('profile_pic_url');
+                
+                $filename = 'avatar_' . $user->id . '.' . $file->getClientOriginalExtension();
+
+                $path = $file->move(public_path('profiles'), $filename);
+
+                $user->employee->profile_pic_url = 'profiles/' . $filename;
+                $user->employee->save();
+
+                return response()->json([
+                    'message' => 'Profile photo updated successfully.',
+                    'filename' => $filename,
+                    'url' => asset('profiles/' . $filename),
+                ]);
+            }
+
+            return response()->json(['message' => 'No file uploaded.'], 400);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Failed to update profile photo.',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+
 }

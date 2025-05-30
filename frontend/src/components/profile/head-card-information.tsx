@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useState, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -13,10 +13,27 @@ import { AuthContext } from '@/context/AuthContext';
 import { updatePasswordSchema, UpdatePasswordInput } from '@/schemas';
 import { useUpdatePassword } from '@/hooks/profile/use-update-password';
 import toast from 'react-hot-toast';
+import type { Area } from 'react-easy-crop';
+import Cropper from 'react-easy-crop';
+import { Camera } from 'lucide-react';
+import { useUploadProfilePhoto } from '@/hooks/profile/use-update-personal-photo';
 
 export default function HeadCardInformation() {
   const { user } = useContext(AuthContext);
   const roleNames = user?.roles.map((role) => role.name).join(', ') || 'No roles assigned';
+
+  // For The Profile Avatar
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [open, setOpen] = useState(false);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+  } | null>(null);
 
   const {
     register,
@@ -41,15 +58,150 @@ export default function HeadCardInformation() {
     });
   };
 
+  const uploadProfilePhoto = useUploadProfilePhoto();
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const imageDataUrl = URL.createObjectURL(file);
+    setImageSrc(imageDataUrl);
+    setOpen(true);
+  };
+
+  const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const showCroppedImage = useCallback(async () => {
+    if (!imageSrc || !croppedAreaPixels) return;
+
+    const image = new Image();
+    image.src = imageSrc;
+    await new Promise((resolve) => {
+      image.onload = resolve;
+    });
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = croppedAreaPixels.width;
+    canvas.height = croppedAreaPixels.height;
+
+    ctx?.drawImage(
+      image,
+      croppedAreaPixels.x,
+      croppedAreaPixels.y,
+      croppedAreaPixels.width,
+      croppedAreaPixels.height,
+      0,
+      0,
+      croppedAreaPixels.width,
+      croppedAreaPixels.height,
+    );
+
+    const generateFileName = () => {
+      const timestamp = Date.now();
+      return `profile-photo-${timestamp}.png`;
+    };
+    const filename = generateFileName();
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+
+      const file = new File([blob], filename, { type: 'image/png' });
+      console.log('File size in bytes:', file.size);
+      // Debug: log FormData content
+      const formData = new FormData();
+      formData.append('profile_pic_url', file, file.name);
+      for (const [key, value] of formData.entries()) {
+        console.log('FormData:', key, value);
+      }
+      // Use the uploadProfilePhoto hook as before
+      uploadProfilePhoto.mutate(
+        { profile_pic_url: file },
+        {
+          onSuccess: () => {
+            toast.success('Profile photo updated!');
+          },
+          onError: () => {
+            toast.error('Failed to upload profile photo.');
+          },
+        },
+      );
+    }, 'image/png');
+
+    setOpen(false);
+  }, [imageSrc, croppedAreaPixels, uploadProfilePhoto]);
+
   return (
     <>
       <Card className="h-fit m-5 bg-white shadow-md">
         <CardHeader>
           <div className="flex flex-row items-start w-full">
-            <div className="hidden sm:inline">
-              <Avatar className="pl-[25%] h-auto w-[10rem] content-center pr-6">
-                <AvatarImage src="/Superadmin.png" />
-              </Avatar>
+            <div className="hidden sm:flex flex-col items-center space-y-2">
+              <div className="relative w-fit mx-auto mt-4">
+                {/* Floating Camera Button */}
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute top-[6rem] right-[1rem] z-10 bg-white hover:bg-gray-100 border-gray-300 shadow-sm rounded-full"
+                >
+                  <Camera className="h-4 w-4 text-gray-700" />
+                </Button>
+
+                {/* Circular Avatar */}
+                <Avatar className="w-[8rem] h-[8rem] rounded-full overflow-hidden mx-5 border-gray-600">
+                  <AvatarImage
+                    src={`${user?.employee?.profile_pic_url}?${Date.now()}`}
+                    alt="Profile"
+                    className="object-cover w-full h-full"
+                  />
+                </Avatar>
+
+                {/* Hidden file input */}
+                <input type="file" accept="image/*" ref={fileInputRef} onChange={onFileChange} className="hidden" />
+              </div>
+
+              <input type="file" accept="image/*" ref={fileInputRef} onChange={onFileChange} className="hidden" />
+
+              {/* Modal for cropping */}
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogContent className="w-[600px] h-[600px] p-0 bg-white rounded-lg flex flex-col justify-between">
+                  <DialogHeader className="p-4 pt-6">
+                    <DialogTitle>Crop your photo</DialogTitle>
+                  </DialogHeader>
+
+                  <div className="relative flex-grow m-4 p-5 rounded-md">
+                    {imageSrc && (
+                      <Cropper
+                        image={imageSrc}
+                        crop={crop}
+                        zoom={zoom}
+                        aspect={1}
+                        cropShape="rect"
+                        showGrid={false}
+                        onCropChange={setCrop}
+                        onZoomChange={setZoom}
+                        onCropComplete={onCropComplete}
+                      />
+                    )}
+                  </div>
+
+                  <div className="flex justify-center gap-x-6 p-3">
+                    <Button className="w-[10rem] bg-[#EE7A2A] text-white" onClick={showCroppedImage}>
+                      Save
+                    </Button>
+                    <Button
+                      className="w-[10rem] border-2 border-[#EE7A2A] bg-white text-[#EE7A2A]"
+                      variant="outline"
+                      onClick={() => setOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
 
             <div>

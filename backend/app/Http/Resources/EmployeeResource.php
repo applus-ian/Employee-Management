@@ -45,7 +45,7 @@ class EmployeeResource extends JsonResource
             'date_hired' => $this->date_hired,
             'employment_type' => new EmploymentTypeResource($this->whenLoaded('employmentType')),
             'manager' => new ManagerResource($this->whenLoaded('manager')),
-            'profile_pic_url' => $this->profile_pic_url,
+            'profile_pic_url' => $this->profile_pic_url ? asset('/' . $this->profile_pic_url) : null,
             'tin_number' => $this->tin_number,
             'sss_number' => $this->sss_number,
             'pagibig_number' => $this->pagibig_number,
